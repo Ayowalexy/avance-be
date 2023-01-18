@@ -55,11 +55,48 @@ const passwordSchema = Joi.object({
         .required()
 })
 
+const applicantsSchema = Joi
+    .object()
+    .keys({
+        name: Joi.string().required(),
+        applicationNo: Joi.string().allow(null).allow('')
+  })
+
+const automaticProcessingSchema = Joi.object({
+
+    accountNo: Joi
+        .string()
+        .required(),
+    phone: Joi
+        .number()
+        .required(),
+    startDate: Joi
+        .string()
+        .required(),
+    endDate: Joi
+        .string()
+        .required(),
+    bankId: Joi 
+        .number()
+        .required(),
+    role: Joi
+        .string()
+        .valid('Applicant', 'Sponsor', 'Guarantor')
+        .required(),
+    country: Joi
+        .string()
+        .required(),
+    applicants: Joi
+        .array()
+        .items(applicantsSchema)
+})
+
 
 export {
     signupscchema,
     loginSchema,
     emailSchema,
     otpSchema,
-    passwordSchema
+    passwordSchema,
+    automaticProcessingSchema
 }

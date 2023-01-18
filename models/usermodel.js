@@ -16,8 +16,20 @@ const userSchema = new Schema({
     canResetPassword: {
         type: Boolean,
         default: false
+    },
+    accountsLinked: {
+        type: Number,
+        default: 0
+    },
+    analyzedReports: {
+        type: Number,
+        default: 0
+    },
+    amountRecouped : {
+        type: Number,
+        default: 0
     }
-})
+}, { timestamps: true})
 
 userSchema.plugin(mongooseUniqueValidator, {
     message: 'Error, {VALUE} already exists.'

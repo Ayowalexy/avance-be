@@ -63,13 +63,22 @@ const loginUser = asyncHandler(async (req, res) => {
         const match = await bcrypt.compareSync(value.password, user.password);
 
         if (match) {
-            const token = sign({ email: user.email }, process.env.SECRET)
+            const token = sign({ email: user.email, id: user._id.toString() }, process.env.SECRET)
 
+            const userData = {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                accountsLinked: user.accountsLinked,
+                analyzedReports: user.analyzedReports,
+                amountRecouped : user.amountRecouped,
+                createdAt: user.createdAt
+            }
             res
                 .status(200)
                 .json(
                     {
-                        email: user.email,
+                        data: userData,
                         token: token,
                         status: "success",
                         meta: {}

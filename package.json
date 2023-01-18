@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "axios": "^1.2.3",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "compression": "^1.7.4",
@@ -22,6 +23,7 @@
     "express-session": "^1.17.3",
     "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
     "mongoose": "^6.8.3",
     "mongoose-unique-validator": "^3.1.0",
     "morgan": "^1.10.0",

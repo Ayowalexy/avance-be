@@ -7,13 +7,16 @@ import cors from "cors";
 import passport from "passport";
 import compression from "compression";
 import authRoutes from './routes/authRoutes.js'
+import statementRoutes from './routes/statementsRoutes.js'
 import session from "express-session";
+
 
 import colors from "colors";
 
 const app = express();
 
 dotenv.config();
+
 
 connectDB();
 
@@ -47,6 +50,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/users', authRoutes)
+app.use('/api/v1/statement', statementRoutes)
 
 
 app.use(notFound);
