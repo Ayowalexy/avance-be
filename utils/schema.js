@@ -11,6 +11,12 @@ const signupscchema = Joi.object({
     password: Joi
         .string()
         .required(),
+    confirm_password: Joi
+        .any()
+        .equal(Joi.ref('password'))
+        .required()
+        .label('Confirm password')
+        .options({ messages: { 'any.only': '{{#label}} does not match password'} }),
     email: Joi
         .string()
         .email()
