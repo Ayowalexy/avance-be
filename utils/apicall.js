@@ -20,4 +20,5 @@ const useAxios = async function apiRequest(request) {
 
     return resp;
 };
+
 export default useAxios;

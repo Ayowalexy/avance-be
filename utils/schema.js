@@ -89,12 +89,12 @@ const automaticProcessingSchema = Joi.object({
         .string()
         .valid('Applicant', 'Sponsor', 'Guarantor')
         .required(),
-    country: Joi
-        .string()
-        .required(),
-    applicants: Joi
-        .array()
-        .items(applicantsSchema)
+    // country: Joi
+    //     .string()
+    //     .required(),
+    // applicants: Joi
+    //     .array()
+    //     .items(applicantsSchema)
 })
 
 
