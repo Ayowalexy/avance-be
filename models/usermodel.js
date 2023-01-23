@@ -28,12 +28,34 @@ const userSchema = new Schema({
     amountRecouped : {
         type: Number,
         default: 0
-    }
+    },
+    emailVerified: {
+        type: Boolean,
+        default: false
+    },
+    requestId: {
+        type: String,
+        default: ""
+    },
+    ticketId: {
+        type: String,
+        default: ""
+    },
+    ticketStatus: {
+        type: String,
+        default: "idle",
+        enum: ["sent", "verified", "pending", "idle"]
+    },
+
 }, { timestamps: true})
 
 userSchema.plugin(mongooseUniqueValidator, {
     message: 'Error, {VALUE} already exists.'
 });
+
+userSchema.methods.isEmailVerified = async function() {
+    return this.emailVerified
+}
 
 const User = mongoose.model("User", userSchema);
 

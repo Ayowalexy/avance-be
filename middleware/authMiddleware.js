@@ -17,10 +17,14 @@ const protect = asyncHandler(async (req, res, next) => {
 
       const decoded = verify(token, process.env.SECRET)
 
-      
-      req.user = await User.findById(decoded.id)
-
-      next()
+      const user = await User.findById(decoded.id)
+      if (user) {
+        req.user = user
+        next()
+      } else {
+        res.status(401)
+        throw new Error('User does not exists')
+      }
     } catch (error) {
       console.error(error)
       res.status(401)
@@ -34,7 +38,31 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 })
 
+const hasTicketId = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (user.ticketId) {
+    next()
+    return
+  } else {
+    res.status(401)
+    throw new Error('No ticket id, request for bank statement')
+  }
+})
+
+const hasRequestId = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (user.requestId) {
+    next()
+    return
+  } else {
+    res.status(401)
+    throw new Error('No request id, request for bank statement')
+  }
+})
+
 
 export {
-  protect
+  protect,
+  hasRequestId,
+  hasTicketId
 }

@@ -98,11 +98,24 @@ const automaticProcessingSchema = Joi.object({
 })
 
 
+const confirmSchema = Joi.object({
+    ticketNo: Joi
+        .string()
+        .required(),
+    password: Joi
+        .string()
+        .required()
+})
+
+
+
 export {
     signupscchema,
     loginSchema,
     emailSchema,
     otpSchema,
     passwordSchema,
-    automaticProcessingSchema
+    automaticProcessingSchema,
+    confirmSchema,
+    
 }
