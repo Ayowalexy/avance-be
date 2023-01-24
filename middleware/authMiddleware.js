@@ -49,6 +49,17 @@ const hasTicketId = asyncHandler(async (req, res, next) => {
   }
 })
 
+const hasStatemetKey = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (user.statementKey) {
+    next()
+    return
+  } else {
+    res.status(401)
+    throw new Error('No statement key, upload your bank statement')
+  }
+})
+
 const hasRequestId = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   if (user.requestId) {
@@ -61,8 +72,24 @@ const hasRequestId = asyncHandler(async (req, res, next) => {
 })
 
 
+const bankExist = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).populate('bankAccounts')
+
+  const hasbank = user.bankAccounts.some(ele => ele._id.toString() === req.params.id)
+  if (hasbank) {
+    next()
+    return
+  } else {
+    res.status(401)
+    throw new Error(`Bank with the given id, ${req.params.id} does not exit`)
+  }
+})
+
+
 export {
   protect,
   hasRequestId,
-  hasTicketId
+  hasTicketId,
+  hasStatemetKey,
+  bankExist
 }

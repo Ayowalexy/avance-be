@@ -6,7 +6,14 @@ import User from '../models/usermodel.js'
 import moment from "moment/moment.js";
 import { formarDate } from "../utils/dateFormat.js";
 import { automaticProcessingSchema, confirmSchema } from "../utils/schema.js";
-import getPericulumAccessToken from "../utils/periculumAccessToken.js";
+import Customer from "../models/customerParameters.js";
+import { addMessageToQueue } from "../utils/queue.js";
+import FormData from "form-data";
+import { getAllBanks } from "../utils/utils.js";
+import Account from "../models/banksAccountModel.js";
+
+const access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc0MzQ2Njk3LCJleHAiOjE2NzQ5NTE0OTcsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.TH1_KUdGNXeHhKO0kHSW_QCR56kPs-4MiNfqjri5BeIAm9XuRp9zTBs07FZRRR26P1q_4xJCVd2yjUDu1X2YRD0RiyvDuEjZKfQ2L51ruOL-gfklEqsFazn6xVtx8y4uWm0kBotbcXhNa7h3YgHIGkShw3SrMwYBFmQnupberkEhVlxb1oCCtPS4U8SbWZzyz62b4ik797dZN2qmWlBI4pMwF-N8x705KCzbyMv2V4XqavY7xkhBd6g_yAYCnT-Me1jwsjqPInRldcdnr1oqfK9I440E9rVOIZMvndysW60HabUcihjE4DPT8uJvQ9QufWBY55-kZAJgOZHmG0ouyA'
+
 
 dotenv.config()
 
@@ -59,7 +66,7 @@ const automateStatements = asyncHandler(async (req, res) => {
 
 
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).populate("bankAccounts")
 
     if (user) {
         const applicants = [
@@ -80,6 +87,9 @@ const automateStatements = asyncHandler(async (req, res) => {
             endDate: formarDate(value.endDate)
         }
 
+        const customer = new Customer(data)
+
+
         try {
             const response = await useAxios({
                 url: `${MY_BANK_STATEMENT}/RequestStatement`,
@@ -87,8 +97,27 @@ const automateStatements = asyncHandler(async (req, res) => {
                 data: data
             });
 
+            const bank = await getAllBanks(value.bankName)
+
+            const userHasAlreadyAddedBankAccount = user.bankAccounts.some(bank => bank.accountNumber === value.accountNo);
+
+            if (!userHasAlreadyAddedBankAccount) {
+                const bankData = {
+                    bankName: value.bankName,
+                    accountNumber: value.accountNo,
+                    bankLogo: bank.logo,
+                    status: "Ongoing"
+                }
+
+                const newAccount = new Account(bankData)
+                await newAccount.save();
+                user.bankAccounts.push(newAccount)
+            }
+
             user.requestId = response.data.result;
 
+            await customer.save();
+            user.customer = customer;
             await user.save();
 
             return res
@@ -157,6 +186,10 @@ const confirmChargeCustomer = asyncHandler(async (req, res) => {
 
         await user.save();
 
+        const queueResp = await addMessageToQueue(value.ticketNo, value.password, user._id.toString());
+
+        console.log(queueResp)
+
         return res
             .status(200)
             .json(
@@ -168,6 +201,7 @@ const confirmChargeCustomer = asyncHandler(async (req, res) => {
 
     } catch (e) {
         const error = e?.response?.data?.message || "provider not available"
+        console.log(e)
         res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": error } })
     }
 
@@ -271,42 +305,80 @@ const getPdfStatement = asyncHandler(async (req, res) => {
 
 
 const manualStatement = asyncHandler(async (req, res) => {
-    console.log(req.file)
 
-    const access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc0MzQ2Njk3LCJleHAiOjE2NzQ5NTE0OTcsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.TH1_KUdGNXeHhKO0kHSW_QCR56kPs-4MiNfqjri5BeIAm9XuRp9zTBs07FZRRR26P1q_4xJCVd2yjUDu1X2YRD0RiyvDuEjZKfQ2L51ruOL-gfklEqsFazn6xVtx8y4uWm0kBotbcXhNa7h3YgHIGkShw3SrMwYBFmQnupberkEhVlxb1oCCtPS4U8SbWZzyz62b4ik797dZN2qmWlBI4pMwF-N8x705KCzbyMv2V4XqavY7xkhBd6g_yAYCnT-Me1jwsjqPInRldcdnr1oqfK9I440E9rVOIZMvndysW60HabUcihjE4DPT8uJvQ9QufWBY55-kZAJgOZHmG0ouyA'
 
-    // console.log('token', access_token)
+    const user = await User.findById(req.user.id);
+
+    const form = new FormData()
+
+    form.append("password", req.body.password)
+    form.append("file", req.file.buffer, req.file.originalname)
+    form.append("statementType", "consumer")
+
 
     try {
-        const periculum = await axios(`${PERICULUM_BASE_URL}`, {
-            method: 'post',
+        const periculum = await axios.put(`${PERICULUM_BASE_URL}/statements`, form, {
             headers: {
-                "Content-Type": "application/multipart/form-data",
-                "Authorization": `Bearer ${access_token}`
-            },
-            data: {
-                "file": req.file,
-                "password": `0739676183`,
-                "statementType": "consumer"
+                "Authorization": `Bearer ${access_token}`,
+                ...form.getHeaders(),
             }
-
         })
 
-        console.log(periculum.data)
+        user.statementProcessingStatus = periculum?.data?.processingStatus;
+        user.statementKey = periculum?.data?.key
+        user.analyzedReports = Number(user.analyzedReports) + 1
+        await user.save();
+
         return res
             .status(200)
             .json(
                 {
-                    // ...response.data,
                     status: 'success',
-                    message: "We have sent your retrieved statements to our partners, we're sent your a feedback shortly",
+                    message: "We have sent your retrieved statements to our partners, we'll send your a feedback shortly",
                     meta: {}
                 })
     } catch (e) {
-        console.log(e.response)
-        res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": "provider not available" } })
+        const error = e?.response?.data?.message || "provider not available"
+        res.status(400).json({ "status": "error", "message": "invalid error", "meta": { "error": error } })
 
     }
+})
+
+
+const getStatementAnalytics = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user.id);
+
+    const statementKey = user.statementKey;
+
+    try {
+        const response = await axios(`${PERICULUM_BASE_URL}/statements/${statementKey}`, {
+            headers: {
+                "Authorization": `Bearer ${access_token}`,
+                "Content-Type": "application/json"
+            },
+            method: 'get'
+        })
+
+        console.log(response.data)
+        return res
+            .status(200)
+            .json(
+                {
+                    status: 'success',
+                    message: "Staement Retrieved successfully",
+                    meta: {}
+                })
+    } catch (e) {
+        console.log(e)
+        const error = e?.response?.data?.message || "provider not available"
+        res.status(400).json({ "status": "error", "message": "invalid error", "meta": { "error": error } })
+    }
+})
+
+
+const statementWebhook = asyncHandler(async (req, res) => {
+    console.log(req.body)
+    res.send("Ok")
 })
 
 
@@ -316,5 +388,7 @@ export {
     confirmChargeCustomer,
     getStatementStatus,
     getPdfStatement,
-    manualStatement
+    manualStatement,
+    statementWebhook,
+    getStatementAnalytics
 }

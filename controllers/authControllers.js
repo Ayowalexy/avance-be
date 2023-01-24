@@ -58,7 +58,7 @@ const loginUser = asyncHandler(async (req, res) => {
                 })
     }
 
-    const user = await User.findOne({ email: value.email })
+    const user = await User.findOne({ email: value.email }).populate('bankAccounts')
 
     if (user) {
         if (await user.isEmailVerified()) {
@@ -76,7 +76,8 @@ const loginUser = asyncHandler(async (req, res) => {
                     analyzedReports: user.analyzedReports,
                     amountRecouped: user.amountRecouped,
                     createdAt: user.createdAt,
-                    emailVerified: user.emailVerified
+                    emailVerified: user.emailVerified,
+                    bankAccounts: user.bankAccounts
                 }
                 res
                     .status(200)

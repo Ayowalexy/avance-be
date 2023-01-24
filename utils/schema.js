@@ -89,6 +89,9 @@ const automaticProcessingSchema = Joi.object({
         .string()
         .valid('Applicant', 'Sponsor', 'Guarantor')
         .required(),
+    bankName: Joi   
+        .string()
+        .required()
     // country: Joi
     //     .string()
     //     .required(),
@@ -107,6 +110,11 @@ const confirmSchema = Joi.object({
         .required()
 })
 
+const deleteBankAccountSchema = Joi.object({
+    id: Joi
+        .string()
+        .required()
+})
 
 
 export {
@@ -117,5 +125,6 @@ export {
     passwordSchema,
     automaticProcessingSchema,
     confirmSchema,
+    deleteBankAccountSchema
     
 }

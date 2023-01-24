@@ -46,6 +46,18 @@ const userSchema = new Schema({
         default: "idle",
         enum: ["sent", "verified", "pending", "idle"]
     },
+    statementProcessingStatus: {
+        type: String,
+    },
+    statementKey: Number,
+    customer: {
+        type: Schema.Types.ObjectId,
+        ref: "customer"
+    },
+    bankAccounts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'account'
+    }]
 
 }, { timestamps: true})
 
