@@ -20,6 +20,7 @@ const getPericulumAccessToken = async () => {
         }
     })
 
+
     return response.data
 }
 
