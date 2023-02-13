@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import mongooseUniqueValidator from "mongoose-unique-validator";
+import Subscription from "./statementSubscription.js";
+import AnalysedStatement from "./analysedStatement.js";
 
 const Schema = mongoose.Schema
 
@@ -57,6 +59,14 @@ const userSchema = new Schema({
     bankAccounts: [{
         type: Schema.Types.ObjectId,
         ref: 'account'
+    }],
+    analyzedStatements: [{
+        type: Schema.Types.ObjectId,
+        ref: AnalysedStatement
+    }],
+    paidInsights: [{
+        type: Schema.Types.ObjectId,
+        ref: Subscription
     }]
 
 }, { timestamps: true})

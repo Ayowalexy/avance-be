@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import User from '../models/usermodel.js';
+import Admin from '../models/adminModel.js';
 
 const { verify } = jwt;
 
@@ -84,6 +85,8 @@ const bankExist = asyncHandler(async (req, res, next) => {
     throw new Error(`Bank with the given id, ${req.params.id} does not exit`)
   }
 })
+
+
 
 
 export {

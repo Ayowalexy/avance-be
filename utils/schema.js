@@ -16,7 +16,7 @@ const signupscchema = Joi.object({
         .equal(Joi.ref('password'))
         .required()
         .label('Confirm password')
-        .options({ messages: { 'any.only': '{{#label}} does not match password'} }),
+        .options({ messages: { 'any.only': '{{#label}} does not match password' } }),
     email: Joi
         .string()
         .email()
@@ -24,7 +24,7 @@ const signupscchema = Joi.object({
 })
 
 const loginSchema = Joi.object({
-   
+
     password: Joi
         .string()
         .required(),
@@ -66,7 +66,7 @@ const applicantsSchema = Joi
     .keys({
         name: Joi.string().required(),
         applicationNo: Joi.string().allow(null).allow('')
-  })
+    })
 
 const automaticProcessingSchema = Joi.object({
 
@@ -82,14 +82,14 @@ const automaticProcessingSchema = Joi.object({
     endDate: Joi
         .string()
         .required(),
-    bankId: Joi 
+    bankId: Joi
         .number()
         .required(),
     role: Joi
         .string()
         .valid('Applicant', 'Sponsor', 'Guarantor')
         .required(),
-    bankName: Joi   
+    bankName: Joi
         .string()
         .required()
     // country: Joi
@@ -117,6 +117,61 @@ const deleteBankAccountSchema = Joi.object({
 })
 
 
+const adminSchema = Joi.object({
+    firstName: Joi
+        .string()
+        .required(),
+    lastName: Joi
+        .string()
+        .required(),
+    email: Joi
+        .string()
+        .email()
+        .required(),
+    password: Joi
+        .string()
+        .required()
+})
+
+
+const adminLoginSchema = Joi.object({
+    email: Joi
+        .string()
+        .email()
+        .required(),
+    password: Joi
+        .string()
+        .required()
+})
+
+
+
+const statementProcessSchema = Joi.object({
+    key: Joi
+        .number()
+        .required(),
+
+})
+
+const statementReportSchema = Joi.object({
+    amount: Joi
+        .number()
+        .required(),
+    key: Joi.number().required(),
+    report: Joi
+        .any()
+})
+
+
+const statementStatusSchema = Joi.object({
+   
+    key: Joi.number().required(),
+    status: Joi.valid('processing', 'declined', 'completed').required()
+})
+
+
+
+
 export {
     signupscchema,
     loginSchema,
@@ -125,6 +180,10 @@ export {
     passwordSchema,
     automaticProcessingSchema,
     confirmSchema,
-    deleteBankAccountSchema
-    
+    deleteBankAccountSchema,
+    adminSchema,
+    adminLoginSchema,
+    statementProcessSchema,
+    statementReportSchema,
+    statementStatusSchema
 }

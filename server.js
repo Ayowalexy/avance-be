@@ -8,6 +8,8 @@ import passport from "passport";
 import compression from "compression";
 import authRoutes from './routes/authRoutes.js'
 import statementRoutes from './routes/statementsRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
+import accountOfficerRoutes from './routes/account-officer.js'
 import session from "express-session";
 
 
@@ -16,6 +18,7 @@ import colors from "colors";
 const app = express();
 
 dotenv.config();
+
 
 
 connectDB();
@@ -51,6 +54,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/users', authRoutes)
 app.use('/api/v1/statement', statementRoutes)
+app.use('/api/v1/admin', adminRoutes)
+app.use('/api/v1/account-officer', accountOfficerRoutes)
 
 
 app.use(notFound);

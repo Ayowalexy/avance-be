@@ -8,7 +8,8 @@ import {
     getPdfStatement,
     manualStatement,
     statementWebhook,
-    getStatementAnalytics
+    getStatementAnalytics,
+    insightPaymentWebhook
  } from "../controllers/statementControllers.js";
 //  import { addMessageToQueue } from "../controllers/queue.js";
 import { deletebankAccount } from "../controllers/statementControllers2.js";
@@ -24,10 +25,10 @@ router.route('/confirm').post(protect, confirmChargeCustomer)
 router.route('/status').get(protect, hasRequestId, getStatementStatus)
 router.route('/').get(protect, hasTicketId, getPdfStatement)
 // router.route('/automatic').post(protect, addMessageToQueue)
-router.route('/manual-upload', ).post(protect, hasTicketId, upload.single('file'), manualStatement)
+router.route('/manual-upload', ).post(protect, hasTicketId, upload.single('statement'), manualStatement)
 router.route('/analytics').get(protect, hasStatemetKey, getStatementAnalytics)
-router.route('/webhook').post(statementWebhook)
-
+router.route('/webhook').get(statementWebhook)
+router.route('/paystack-webhook').post(insightPaymentWebhook)
 router.route('/banks/:id').delete(protect, bankExist, deletebankAccount)
 
 

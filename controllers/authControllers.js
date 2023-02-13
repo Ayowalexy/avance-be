@@ -58,7 +58,11 @@ const loginUser = asyncHandler(async (req, res) => {
                 })
     }
 
-    const user = await User.findOne({ email: value.email }).populate('bankAccounts')
+    const user = await User.findOne({ email: value.email })
+                            .populate('bankAccounts')
+                            .populate('analyzedStatements')
+
+
 
     if (user) {
         if (await user.isEmailVerified()) {
@@ -67,6 +71,17 @@ const loginUser = asyncHandler(async (req, res) => {
 
             if (match) {
                 const token = sign({ email: user.email, id: user._id.toString() }, process.env.SECRET)
+                const statements = user?.analyzedStatements?.map(ele => {
+                    return {
+                        analysedBy: ele.analysedBy,
+                        key: ele.key,
+                        isPaid: ele.isPaid,
+                        accepted: ele.accepted,
+                        status: ele.status,
+                        amountThatCanBeRecouped: ele.amountThatCanBeRecouped,
+                        reportLink: ele.reportLink
+                    }
+                })
 
                 const userData = {
                     firstName: user.firstName,
@@ -77,7 +92,8 @@ const loginUser = asyncHandler(async (req, res) => {
                     amountRecouped: user.amountRecouped,
                     createdAt: user.createdAt,
                     emailVerified: user.emailVerified,
-                    bankAccounts: user.bankAccounts
+                    bankAccounts: user.bankAccounts,
+                    analyzedStatements: statements
                 }
                 res
                     .status(200)
