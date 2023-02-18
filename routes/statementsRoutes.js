@@ -9,7 +9,8 @@ import {
     manualStatement,
     statementWebhook,
     getStatementAnalytics,
-    insightPaymentWebhook
+    insightPaymentWebhook,
+    getManualBanks
  } from "../controllers/statementControllers.js";
 //  import { addMessageToQueue } from "../controllers/queue.js";
 import { deletebankAccount } from "../controllers/statementControllers2.js";
@@ -30,6 +31,7 @@ router.route('/analytics').get(protect, hasStatemetKey, getStatementAnalytics)
 router.route('/webhook').get(statementWebhook)
 router.route('/paystack-webhook').post(insightPaymentWebhook)
 router.route('/banks/:id').delete(protect, bankExist, deletebankAccount)
+router.route('/manual-banks').get(protect, getManualBanks)
 
 
 export default router

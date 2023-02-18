@@ -16,8 +16,7 @@ import Subscription from "../models/statementSubscription.js";
 import Account from "../models/banksAccountModel.js";
 import AnalysedStatement from "../models/analysedStatement.js";
 import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccountOfficerInsightEmail.js";
-
-
+import { banks } from "../utils/banks.js";
 
 
 const access_token_1 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc0MzQ2Njk3LCJleHAiOjE2NzQ5NTE0OTcsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.TH1_KUdGNXeHhKO0kHSW_QCR56kPs-4MiNfqjri5BeIAm9XuRp9zTBs07FZRRR26P1q_4xJCVd2yjUDu1X2YRD0RiyvDuEjZKfQ2L51ruOL-gfklEqsFazn6xVtx8y4uWm0kBotbcXhNa7h3YgHIGkShw3SrMwYBFmQnupberkEhVlxb1oCCtPS4U8SbWZzyz62b4ik797dZN2qmWlBI4pMwF-N8x705KCzbyMv2V4XqavY7xkhBd6g_yAYCnT-Me1jwsjqPInRldcdnr1oqfK9I440E9rVOIZMvndysW60HabUcihjE4DPT8uJvQ9QufWBY55-kZAJgOZHmG0ouyA'
@@ -371,7 +370,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
 
 
     const statementKey = user.statementKey;
-   
+
 
 
     try {
@@ -431,7 +430,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                     data: resData,
                     type,
                     key: data.key,
-                    hasUserPaidForInsight ,
+                    hasUserPaidForInsight,
                     meta: {}
                 })
     } catch (e) {
@@ -486,6 +485,16 @@ const insightPaymentWebhook = asyncHandler(async (req, res) => {
     res.sendStatus(200);
 })
 
+const getManualBanks = asyncHandler(async (req, res) => {
+    res.status(200).json(
+        {
+            status: 'success',
+            message: "Statement Retrieved successfully",
+            data: banks,
+            meta: {}
+        })
+})
+
 
 export {
     getListOfAvailableBanks,
@@ -496,5 +505,6 @@ export {
     manualStatement,
     statementWebhook,
     getStatementAnalytics,
-    insightPaymentWebhook
+    insightPaymentWebhook,
+    getManualBanks
 }
