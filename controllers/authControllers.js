@@ -93,7 +93,8 @@ const loginUser = asyncHandler(async (req, res) => {
                     createdAt: user.createdAt,
                     emailVerified: user.emailVerified,
                     bankAccounts: user.bankAccounts,
-                    analyzedStatements: statements
+                    analyzedStatements: statements,
+                    _id: user._id.toString()
                 }
                 res
                     .status(200)
