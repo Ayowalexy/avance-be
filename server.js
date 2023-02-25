@@ -11,6 +11,7 @@ import statementRoutes from './routes/statementsRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import accountOfficerRoutes from './routes/account-officer.js'
 import session from "express-session";
+import getPericulumAccessToken from "./utils/periculumAccessToken.js";
 
 
 import colors from "colors";
