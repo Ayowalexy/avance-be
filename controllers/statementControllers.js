@@ -323,8 +323,6 @@ const manualStatement = asyncHandler(async (req, res) => {
 
     const form = new FormData()
 
-    console.log(req.file)
-
     form.append("password", req.body.password)
     form.append("file", req.file.buffer, req.file.originalname)
     form.append("statementType", "consumer")
@@ -348,7 +346,7 @@ const manualStatement = asyncHandler(async (req, res) => {
             .json(
                 {
                     status: 'success',
-                    message: "We have sent your retrieved statements to our partners, we'll send your a feedback shortly",
+                    message: "We have sent your retrieved statements to our partners, we'll send you a feedback shortly",
                     meta: {}
                 })
     } catch (e) {
@@ -456,13 +454,15 @@ const insightPaymentWebhook = asyncHandler(async (req, res) => {
     const data = req.body;
     const amount = data?.data?.amount;
 
-    if (data.event === 'charge.success' && amount === 25000) {
+
+    if (data.event === 'charge.success' && amount === 2500000) {
         const meta = data.data.metadata;
         const userId = meta.userId;
         const key = meta.key;
         const reference = data.data.reference
 
         const user = await User.findById(userId);
+        console.log(user, key, 'here-0-')
 
         if (user && key) {
             await AnalysedStatement.findOneAndUpdate({ key }, { isPaid: true })
@@ -471,6 +471,8 @@ const insightPaymentWebhook = asyncHandler(async (req, res) => {
                 reference,
                 amount
             })
+            console.log('herer--')
+
 
             await subscription.save();
             // user.paidInsights.push(subscription);

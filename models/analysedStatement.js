@@ -18,7 +18,7 @@ const analysedStatement = new Schema({
     isPaid: {
         type: Boolean,
         default: false,
-       
+
     },
     reportOwnerId: String,
     accepted: {
@@ -30,6 +30,9 @@ const analysedStatement = new Schema({
         enum: ['idle', 'processing', 'declined', 'completed'],
         default: 'idle'
     },
+    documents: [{
+        type: Object
+    }],
     amountThatCanBeRecouped: Number,
     reportLink: String
 }, { timeseries: true })

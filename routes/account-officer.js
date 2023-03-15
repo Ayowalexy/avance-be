@@ -11,7 +11,7 @@ import {
     getAllAccountOfficersPendingReports,
     updateAnalysedStatementStatus
  } from '../controllers/accountOfficer.js';
-
+import { getAllUsers } from '../controllers/statementControllers2.js';
 import { adminProtect, isAdmin } from '../middleware/adminmiddleware.js';
 import { accountOfficerProtect, isAccountOfficer } from '../middleware/account_officer_middleware.js';
 import multer from 'multer';
@@ -33,7 +33,7 @@ router.route('/statement-report').post(
 )
 router.route('/pending-reports').get(accountOfficerProtect, isAccountOfficer, getAllAccountOfficersPendingReports)
 router.route('/report-status').patch(accountOfficerProtect, isAccountOfficer, updateAnalysedStatementStatus)
-
+router.route('/all-users').get(getAllUsers)
 
 
 export default router;

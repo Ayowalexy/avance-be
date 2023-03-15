@@ -164,12 +164,34 @@ const statementReportSchema = Joi.object({
 
 
 const statementStatusSchema = Joi.object({
-   
+
     key: Joi.number().required(),
     status: Joi.valid('processing', 'declined', 'completed').required()
 })
 
+const statement = Joi.object({
+    key: Joi.number().required(),
+    file: Joi.string().required()
+})
 
+
+const loand_d = Joi.object({
+    loans: Joi.array().items(
+        Joi.object({
+            type: Joi
+                .string()
+                .valid('Deposit', 'Loan')
+                .required(),
+            loan: Joi
+                .string()
+                .required(),
+            documents: Joi.array()
+        }).required()
+    ),
+    key: Joi
+        .number()
+        .required()
+})
 
 
 export {
@@ -185,5 +207,7 @@ export {
     adminLoginSchema,
     statementProcessSchema,
     statementReportSchema,
-    statementStatusSchema
+    statementStatusSchema,
+    loand_d,
+    statement
 }

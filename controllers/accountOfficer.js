@@ -10,6 +10,7 @@ import sendUserInsightCompletedEmail from "../utils/sendUserInsightLinkEmail.js"
 import sendUserInsightAcceptedEmail from "../utils/sendUserInsightAcceptedEmail.js";
 import axios from "axios";
 import { validateFiles } from "../utils/utils.js";
+import InvoiceGenerator from "../utils/generateTable.js";
 import User from "../models/usermodel.js";
 
 const { sign, verify } = jwt;
@@ -218,6 +219,9 @@ const updateAnalysedStatementStatus = asyncHandler(async (req, res) => {
 
     // const statement = await AnalysedStatement.findOne({key: })
 })
+
+
+
 
 
 export {
