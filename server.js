@@ -250,7 +250,7 @@ const invoiceData = {
 
 
 // const vl = async () => {
-  // await sendAccountOfficerEmailOfNewSignmentInsight(707)
+//   await getPericulumAccessToken()
 // }
 
 // vl()
