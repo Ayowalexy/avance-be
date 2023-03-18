@@ -428,6 +428,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                     type,
                     key: data.key,
                     hasUserPaidForInsight,
+                    pdfUkl: 'https://res.cloudinary.com/dquiwka6j/image/upload/v1677939492/gvceo2bn9qvko2fki9kh.pdf',
                     meta: {}
                 })
     } catch (e) {
