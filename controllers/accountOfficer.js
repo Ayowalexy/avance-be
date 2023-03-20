@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { statementProcessSchema, statementReportSchema, statementStatusSchema } from "../utils/schema.js";
+import { statementProcessSchema, statementReportSchema, statementStatusSchema, statusSchema, manualStatementAssign } from "../utils/schema.js";
 import bcrypt from 'bcryptjs'
 import Admin from "../models/adminModel.js";
 import AnalysedStatement from "../models/analysedStatement.js";
@@ -12,6 +12,9 @@ import axios from "axios";
 import { validateFiles } from "../utils/utils.js";
 import InvoiceGenerator from "../utils/generateTable.js";
 import User from "../models/usermodel.js";
+import Status from "../models/statusModel.js";
+import sendAccountOfficerEmail from "../utils/sendEmail.js";
+import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccountOfficerInsightEmail.js";
 
 const { sign, verify } = jwt;
 
@@ -57,6 +60,13 @@ const acceptStatementProcessing = asyncHandler(async (req, res) => {
         return
     } else {
         const account_officer = await AccountOfficer.findById(req.user.id);
+        const status = new Status({
+            message: "Your statement has been assigned to an account officer",
+            status: 'processing',
+            key: value.key
+        })
+        await status.save();
+
         statement.accepted = true;
         statement.analysedBy = account_officer;
         statement.status = 'processing';
@@ -209,7 +219,7 @@ const updateAnalysedStatementStatus = asyncHandler(async (req, res) => {
                 {
                     status: "error",
                     message: "invalid",
-                    meta: { error: `statement the key ${value.key} does not exist`}
+                    meta: { error: `statement the key ${value.key} does not exist` }
                 })
     }
 
@@ -220,13 +230,115 @@ const updateAnalysedStatementStatus = asyncHandler(async (req, res) => {
     // const statement = await AnalysedStatement.findOne({key: })
 })
 
+const addStatusReport = asyncHandler(async (req, res) => {
+    const { error, value } = statusSchema.validate(req.body);
+
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+
+    const user = await AccountOfficer.findById(req.user._id);
+
+    const status = new Status({
+        sender: user.firstName.concat(' ', user.lastName),
+        message: value.message,
+        status: 'pending',
+        key: value.key
+    })
+
+    await status.save();
+    res
+        .status(201)
+        .json(
+            {
+                status: "success",
+                message: 'status updated',
+                meta: {}
+            })
+})
+
+const getAllReports = asyncHandler(async (req, res) => {
+
+    // enum: ['idle', 'processing', 'declined', 'completed'],
+
+    let reports = [];
+    if (req.params.type === 'all') {
+        reports = await AnalysedStatement.find()
+    } else {
+        reports = await AnalysedStatement.find({ status: req.params.type })
+    }
+
+    res
+        .status(201)
+        .json(
+            {
+                status: "success",
+                message: 'status updated',
+                data: reports,
+
+                meta: {}
+            })
+})
 
 
+const getAllAccountOfficers = asyncHandler(async (req, res) => {
 
+    const account_officers = await AccountOfficer.find();
+    res
+        .status(209)
+        .json(
+            {
+                status: "success",
+                message: 'All account officers',
+                data: account_officers,
+                meta: {}
+            })
+})
+
+const manualAssign = asyncHandler(async (req, res) => {
+    const { error, value } = manualStatementAssign.validate(req.body);
+
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+
+    await sendAccountOfficerEmailOfNewSignmentInsight(value.key, value.id);
+    res
+        .status(209)
+        .json(
+            {
+                status: "success",
+                message: 'Assignsed sucessfully',
+                meta: {}
+            })
+
+})
 
 export {
     acceptStatementProcessing,
     statementReport,
     getAllAccountOfficersPendingReports,
-    updateAnalysedStatementStatus
+    updateAnalysedStatementStatus,
+    addStatusReport,
+    getAllReports,
+    getAllAccountOfficers,
+    manualAssign
 }

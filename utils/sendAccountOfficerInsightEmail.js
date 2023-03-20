@@ -9,23 +9,39 @@ import path from "path"
 
 dotenv.config();
 
-const getFreeAccountOfficer = async () => {
+const getFreeAccountOfficer = async (accountOfficerId) => {
 
-    // const account_officers = await AccountOfficer.find(
-    //     { status: 'active', analyseStatus: 'idle' },
-    // ).sort({ queueNumber: -1 })
+    let free_officer;
 
-    const account_officers = await AccountOfficer.find()
+    if (accountOfficerId) {
+        let acc_officer = await AccountOfficer.findById(accountOfficerId.toString())
+        if(acc_officer){
+            free_officer = acc_officer
+        } else {
+            throw new Error(`Account officer with id ${accountOfficerId} does not exit`)
+        }
+    } else {
+        const account_officers = await AccountOfficer.find(
+            { status: 'active', analyseStatus: 'idle' },
+        ).sort({ queueNumber: -1 })
+        free_officer = account_officers.pop();
+    }
 
-    const free_officer = account_officers.pop();
     return free_officer
 }
 
 
 
-export const sendAccountOfficerEmailOfNewSignmentInsight = async (key) => {
+export const sendAccountOfficerEmailOfNewSignmentInsight = async (key, accountOfficerId) => {
     try {
-        const freeOfficer = await getFreeAccountOfficer();
+        let freeOfficer;
+
+        if (accountOfficerId) {
+            await getFreeAccountOfficer(accountOfficerId);
+        } else {
+            freeOfficer = await getFreeAccountOfficer();
+        }
+
 
         if (freeOfficer) {
             let user = await AccountOfficer.findById({ _id: freeOfficer._id.toString() })
@@ -51,11 +67,11 @@ export const sendAccountOfficerEmailOfNewSignmentInsight = async (key) => {
 
             const reportPdf = new InvoiceGenerator(data);
             reportPdf.generate()
-            console.log(data)
-            console.log(path.resolve('Biyi.pdf'))
-            const url = await uploadToCloudinary(path.resolve('Biyi.pdf'))
-            console.log(url)
-            // await sendAccountOfficerEmail(freeOfficer._id.toString());
+            // console.log(data)
+            // console.log(path.resolve('Biyi.pdf'))
+            // const url = await uploadToCloudinary(path.resolve('Biyi.pdf'))
+            // console.log(url)
+            await sendAccountOfficerEmail(freeOfficer._id.toString());
 
             return 'success'
 

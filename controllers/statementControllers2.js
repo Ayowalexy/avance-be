@@ -2,8 +2,9 @@ import asyncHandler from "express-async-handler";
 import dotenv from "dotenv";
 import User from '../models/usermodel.js'
 import Account from "../models/banksAccountModel.js";
-import { loand_d, statement } from "../utils/schema.js";
+import { loand_d, statement, statusSchema } from "../utils/schema.js";
 import AnalysedStatement from "../models/analysedStatement.js";
+import Status from "../models/statusModel.js";
 
 
 dotenv.config()
@@ -188,6 +189,78 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
 })
 
 
+const getAllStatus = asyncHandler(async (req, res) => {
+    const key = req.params.key;
+    if (key) {
+        const status = await Status.find({ key });
+        if (status.length) {
+            res
+                .status(201)
+                .json(
+                    {
+                        status: "success",
+                        message: 'statement status',
+                        data: status,
+                        meta: {}
+                    })
+        } else {
+            res
+                .status(403)
+                .json(
+                    {
+                        status: "error",
+                        meta: { error: `Statement with key ${key} not found` }
+                    })
+        }
+    } else {
+        res
+            .status(403)
+            .json(
+                {
+                    status: "error",
+                    meta: { error: 'Not found' }
+                })
+    }
+})
+
+const addStatusReport = asyncHandler(async (req, res) => {
+    const { error, value } = statusSchema.validate(req.body);
+
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+
+    const user = await User.findById(req.user._id);
+
+    const status = new Status({
+        sender: user.firstName.concat(' ', user.lastName),
+        message: value.message,
+        status: 'pening',
+        key: value.key
+    })
+
+    await status.save();
+    res
+        .status(201)
+        .json(
+            {
+                status: "success",
+                message: 'status updated',
+                meta: {}
+            })
+})
+
+
+
 export {
     deletebankAccount,
     getAllUsers,
@@ -195,5 +268,7 @@ export {
     getAllLoanTypes,
     addDocumentToLoan,
     addBankStatementFile,
-    getAllAnalysedStatements
+    getAllAnalysedStatements,
+    getAllStatus,
+    addStatusReport
 }

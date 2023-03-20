@@ -13,11 +13,18 @@ import {
     getManualBanks
 } from "../controllers/statementControllers.js";
 //  import { addMessageToQueue } from "../controllers/queue.js";
-import { deletebankAccount } from "../controllers/statementControllers2.js";
 import multer from "multer";
 import { protect, hasRequestId, hasTicketId, hasStatemetKey, bankExist } from "../middleware/authMiddleware.js";
-import { getAllDepositTypes, getAllLoanTypes, addDocumentToLoan, addBankStatementFile } from "../controllers/statementControllers2.js";
-import { getAllAnalysedStatements } from "../controllers/statementControllers2.js";
+import {
+    getAllDepositTypes,
+    getAllLoanTypes,
+    addDocumentToLoan,
+    addBankStatementFile,
+    getAllAnalysedStatements,
+    getAllStatus,
+    deletebankAccount,
+    addStatusReport
+} from "../controllers/statementControllers2.js";
 
 
 const upload = multer()
@@ -35,11 +42,14 @@ router.route('/paystack-webhook').post(insightPaymentWebhook)
 router.route('/banks/:id').delete(protect, bankExist, deletebankAccount)
 router.route('/manual-banks').get(protect, getManualBanks)
 
-router.route('/deposit-types').get( getAllDepositTypes)
-router.route('/loan-types').get( getAllLoanTypes)
+router.route('/deposit-types').get(getAllDepositTypes)
+router.route('/loan-types').get(getAllLoanTypes)
 router.route('/add-document').post(addDocumentToLoan)
 router.route('/add-statement').post(addBankStatementFile)
 router.route('/get-statements').get(protect, getAllAnalysedStatements)
+
+router.route('/track-statement/:key').get(protect, getAllStatus);
+router.route('/statement-status').post(protect, addStatusReport);
 
 
 export default router

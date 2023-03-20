@@ -5,12 +5,16 @@ import {
     accountOfficerLogin
 } from '../controllers/admin.js';
 
-import { 
+import {
     acceptStatementProcessing,
     statementReport,
     getAllAccountOfficersPendingReports,
-    updateAnalysedStatementStatus
- } from '../controllers/accountOfficer.js';
+    updateAnalysedStatementStatus,
+    addStatusReport,
+    getAllReports,
+    getAllAccountOfficers,
+    manualAssign
+} from '../controllers/accountOfficer.js';
 import { getAllUsers } from '../controllers/statementControllers2.js';
 import { adminProtect, isAdmin } from '../middleware/adminmiddleware.js';
 import { accountOfficerProtect, isAccountOfficer } from '../middleware/account_officer_middleware.js';
@@ -34,6 +38,11 @@ router.route('/statement-report').post(
 router.route('/pending-reports').get(accountOfficerProtect, isAccountOfficer, getAllAccountOfficersPendingReports)
 router.route('/report-status').patch(accountOfficerProtect, isAccountOfficer, updateAnalysedStatementStatus)
 router.route('/all-users').get(getAllUsers)
+router.route('/statement-status').post(accountOfficerProtect, addStatusReport);
+
+router.route('/all-reports/:type').get(accountOfficerProtect, getAllReports)
+router.route('/all-account-officer').get(accountOfficerProtect, getAllAccountOfficers)
+router.route('/manual-assign').post(accountOfficerProtect, manualAssign)
 
 
 export default router;

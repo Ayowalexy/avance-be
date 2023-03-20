@@ -194,6 +194,17 @@ const loand_d = Joi.object({
 })
 
 
+const statusSchema = Joi.object({
+    message: Joi.string().required(),
+    key: Joi.number().required()
+})
+
+const manualStatementAssign = Joi.object({
+    key: Joi.number().required(),
+    id: Joi.string().required()
+})
+
+
 export {
     signupscchema,
     loginSchema,
@@ -209,5 +220,7 @@ export {
     statementReportSchema,
     statementStatusSchema,
     loand_d,
-    statement
+    statement,
+    statusSchema,
+    manualStatementAssign
 }
