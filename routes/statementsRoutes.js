@@ -23,7 +23,8 @@ import {
     getAllAnalysedStatements,
     getAllStatus,
     deletebankAccount,
-    addStatusReport
+    addStatusReport,
+    getUserbanks
 } from "../controllers/statementControllers2.js";
 
 
@@ -50,6 +51,8 @@ router.route('/get-statements').get(protect, getAllAnalysedStatements)
 
 router.route('/track-statement/:key').get(protect, getAllStatus);
 router.route('/statement-status').post(protect, addStatusReport);
+
+router.route('/get-user-banks').get(protect, getUserbanks)
 
 
 export default router

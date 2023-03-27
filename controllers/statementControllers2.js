@@ -164,6 +164,7 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id)
         .populate('bankAccounts')
         .populate('analyzedStatements')
+
     const statements = user?.analyzedStatements?.map(ele => {
         return {
             analysedBy: ele.analysedBy,
@@ -172,11 +173,13 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
             accepted: ele.accepted,
             status: ele.status,
             amountThatCanBeRecouped: ele.amountThatCanBeRecouped,
-            reportLink: ele.reportLink
+            reportLink: ele.reportLink,
+            bankName: ele.report.bankName ? ele.report.bankName : 'Not resolved' ,
+            accountId: ele.report.accountId ? ele.report.accountId : 'Not resolved',
+            createdAt: ele.report.createdDate
         }
     })
 
-    console.log(user.analyzedStatements)
     res
         .status(201)
         .json(
@@ -259,6 +262,24 @@ const addStatusReport = asyncHandler(async (req, res) => {
             })
 })
 
+const getUserbanks = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id)
+        .populate('bankAccounts')
+
+
+    const data = user.bankAccounts;
+    console.log(user.bankAccounts)
+    res
+        .status(200)
+        .json(
+            {
+                data: data,
+                status: "success",
+                meta: {}
+            })
+
+})
+
 
 
 export {
@@ -270,5 +291,6 @@ export {
     addBankStatementFile,
     getAllAnalysedStatements,
     getAllStatus,
-    addStatusReport
+    addStatusReport,
+    getUserbanks
 }
