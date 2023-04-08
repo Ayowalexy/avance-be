@@ -24,8 +24,8 @@ const upload = multer();
 
 
 const router = express.Router();
-
-router.route('/signup').post(adminProtect, isAdmin, createAccountOfficerAccount)
+// adminProtect, isAdmin,
+router.route('/signup').post( createAccountOfficerAccount)
 router.route('/login').post(accountOfficerLogin);
 
 router.route('/accept-statement').post(accountOfficerProtect, isAccountOfficer, acceptStatementProcessing)
@@ -43,6 +43,7 @@ router.route('/statement-status').post(accountOfficerProtect, addStatusReport);
 router.route('/all-reports/:type').get(accountOfficerProtect, getAllReports)
 router.route('/all-account-officer').get(accountOfficerProtect, getAllAccountOfficers)
 router.route('/manual-assign').post(accountOfficerProtect, manualAssign)
+
 
 
 export default router;

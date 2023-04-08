@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statement</title>
+</head>
+
+<body style="font-family: Poppins-SemiBold; src: url(./assets/Poppins-SemiBold.ttf);">
+    <div
+        style="width: 100%; background-color: #fff; font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf);">
+        <div
+            style="display: flex; flex-direction: column; justify-content: center; padding-top: 30px; align-items: center; width: 100%; gap: 10px;">
+            <img width="180px" height="50px" src="./assets/logo.png" />
+            <p style="font-family: Poppins-SemiBold; color: #000;">Copy of Full Report Analysis Done on your Account</p>
+            <div style=" width: 90%; border: 0.6px solid #116CFD;"></div>
+        </div>
+
+        <div style="padding: 30px; padding-top: 100px;">
+            <div>
+                <div style="font-size: 16px; font-family: Poppins-SemiBold;">Spend analysis</div>
+                <div style="font-family: Poppins-Regular; color: #8F8F8F; font-size: 15px;">Here is a report of your
+                    spending analysed over a month period.</div>
+                <div
+                    style="display: flex; width: 100%; justify-content: space-between; align-items: center; padding-top: 40px;">
+                    <div
+                        style="width: 28%; padding: 20px; height: 78px; border-radius: 8px; background-color: #F6F6F6; border: 1px solid rgba(38, 119, 249, 0.4);">
+                        <div style="font-size: 14px; color: #243656; font-family: Poppins-SemiBold;">Highest Spend
+                            <br /><span style="color: #116CFD;">₦{spendAnalysisReport.highestSpend}</span>
+                        </div>
+                        <div
+                            style="font-family: Poppins-Light; src: url(./assets/Poppins-Light.ttf); color: #243656; font-size: 13px; padding-top: 10px; font-family: Poppins-Light;">
+                            On October 2022</div>
+                    </div>
+                    <div
+                        style="width: 28%; padding: 20px; height: 78px; border-radius: 8px; background-color: #F6F6F6; border: 1px solid rgba(38, 119, 249, 0.4);">
+                        <div style="font-size: 14px; color: #243656; font-family: Poppins-SemiBold;">Total Expenses
+                            <br /><span style="color: #116CFD;">₦{spendAnalysisReport.totalExpenses}</span>
+                        </div>
+                        <div
+                            style="font-family: Poppins-Light; src: url(./assets/Poppins-Light.ttf); color: #243656; font-size: 13px; padding-top: 10px; font-family: Poppins-Light;">
+                            On October 2022</div>
+                    </div>
+                    <div
+                        style="width: 28%; padding: 20px; height: 78px; border-radius: 8px; background-color: #F6F6F6; border: 1px solid rgba(38, 119, 249, 0.4);">
+                        <div style="font-size: 14px; color: #243656; font-family: Poppins-SemiBold;">Average Monthly
+                            Expense
+                            <br /><span
+                                style="color: #116CFD;">₦{spendAnalysisReport.averageMonthlyTotalExpenses}</span>
+                        </div>
+                        <div
+                            style="font-family: Poppins-Light; src: url(./assets/Poppins-Light.ttf); color: #243656; font-size: 13px; padding-top: 10px; font-family: Poppins-Light;">
+                            On October 2022</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div style="padding-top: 80px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="width: 28%;">
+                    <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
+                        Expense</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">ATM
+                        Withdrawls And POS</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        Airtime And Data</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        Charges And Stamp Duty</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        Entertainment</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        Online and Web</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        others</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        Transfer</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        USSD</div>
+                </div>
+                <div style="width: 28%;">
+                    <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
+                        Expense</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.averageMonthlySpendOnAtmAndPOS}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.averageMonthlySpendOnAirtimeAndData}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.averageMonthlySpendOnChargesAndStampDuty}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.averageMonthlySpendOnEntertainment}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.averageMonthlySpendOnOnlineAndWeb}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.averageMonthlySpendOnOthers}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.averageMonthlySpendOnTransfer}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.averageMonthlySpendOnUSSD}</div>
+                </div>
+                <div style="width: 28%;">
+                    <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
+                        Total Spending</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.totalSpendOnAtmAndPOS}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.totalSpendOnAirtimeAndData}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.totalSpendOnChargesAndStampDuty}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.totalSpendOnEntertainment}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.totalSpendOnOnlineAndWeb}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.totalSpendOnOthers}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.totalSpendOnTransfer}</div>
+                    <div style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                        ₦{spendAnalysisReport.totalSpendOnUSSD}</div>
+                </div>
+            </div>
+            <div
+                style="height: 7px; width: 200%; margin-top: 100px; margin-bottom: 100px; background-color: rgba(217, 217, 217, 0.7); margin-left: -400px;">
+            </div>
+
+            <div>
+                <div style="font-size: 16px; font-family: Poppins-SemiBold;">Transaction Pattern</div>
+                <div style="font-family: Poppins-Regular; color: #8F8F8F; font-size: 15px;">Here is a report of your
+                    debit and credit pattern analysed over a month period (Oct 1st-Oct 31st 2022).</div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="width: 48%;">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div style="width: 28%;">
+                        <div
+                            style="display: flex; padding-bottom: 40px; justify-content: space-between; align-items: center; gap: 50px;">
+                            <div style="color: #5478B7; font-family: Poppins-Regular; font-size: 14px;">Total Number of
+                                Transactions</div>
+                            <div style="color: #5478B7; font-family: Poppins-Regular; font-size: 14px;">
+                                {transactionpattern.totalNumberOfTransactions}</div>
+                        </div>
+                        <div
+                            style="display: flex; padding-bottom: 40px; justify-content: space-between; align-items: center; gap: 50px;">
+                            <div style="color: #5478B7; font-family: Poppins-Regular; font-size: 14px;">Debit
+                                Transactions</div>
+                            <div style="color: #5478B7; font-family: Poppins-Regular; font-size: 14px;">
+                                {transactionpattern.percentDebitTransactions}%</div>
+                        </div>
+                        <div
+                            style="display: flex; padding-bottom: 40px; justify-content: space-between; align-items: center; gap: 50px;">
+                            <div style="color: #5478B7; font-family: Poppins-Regular; font-size: 14px;">Credit
+                                Transactions</div>
+                            <div style="color: #5478B7; font-family: Poppins-Regular; font-size: 14px;">
+                                {transactionpattern.percentCreditTransactions}%</div>
+                        </div>
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
+
+                <div style="padding-top: 80px; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="width: 25%;">
+                        <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
+                            Transaction</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦0-10,000</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦10,000-100,000</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦100,000-500,000</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦500,000-1,000,000</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦1,000,000 and Above</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            others</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            Transfer</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            USSD</div>
+                    </div>
+                    <div style="width: 25%;">
+                        <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
+                            Transaction Percentage</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfTransactionsLessThan10ThousandNaira}</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfTransactionsBetween10ThousandTo100ThousandNaira}</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfTransactionsBetween100ThousandTo500ThousandNaira}</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfTransactionsBetween500ThousandToOneMillionNaira}</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfTransactionsBetween500ThousandToOneMillionNaira}</div>
+
+                    </div>
+                    <div style="width: 25%;">
+                        <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
+                            Balance</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦0-10,000</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦10,000-100,000</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦100,000-500,000</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦500,000-1,000,000</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            ₦1,000,000 and above</div>
+
+                    </div>
+                    <div style="width: 25%;">
+                        <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
+                            Balance amount(%)</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfBalancesLessThan10ThousandNaira}</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfBalancesBetween10ThousandTo100ThousandNaira}</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfBalancesBetween500ThousandToOneMillionNaira}</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfBalancesGreaterThanOneMillionNaira}</div>
+                        <div
+                            style="font-family: Poppins-Regular; font-size: 14px; color:#243656; padding-bottom: 20px;">
+                            {transactionpattern.percentOfBalancesGreaterThanOneMillionNaira}</div>
+
+                    </div>
+
+                </div>
+
+                <div style="padding-top: 80px;">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 100px;">
+                        <div style="color: #324B78; font-family: Poppins-Regular; font-size: 16px;">
+                            Most Frequent Balance Range
+                        </div>
+                        <div style="color: #324B78; font-family: Poppins-Regular; font-size: 16px;">
+                            ₦{transactionpattern.mostFrequentBalanceRange}
+                        </div>
+                    </div>
+                    <div
+                        style="display: flex; padding-top: 40px; justify-content: center; align-items: center; gap: 100px;">
+                        <div style="color: #324B78; font-family: Poppins-Regular; font-size: 16px;">
+                            Most Frequent Transaction Range
+                        </div>
+                        <div style="color: #324B78; font-family: Poppins-Regular; font-size: 16px;">
+                            ₦{transactionpattern.mostFrequentTransactionRange}
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="height: 7px; width: 200%; margin-top: 100px; margin-bottom: 100px; background-color: rgba(217, 217, 217, 0.7); margin-left: -400px;">
+                </div>
+
+                <div>
+                    <div style="font-size: 16px; font-family: Poppins-SemiBold;">Cash Flow </div>
+                    <div style="font-family: Poppins-Regular; color: #8F8F8F; font-size: 15px;">Here is a report of your
+                        cash inflow and outflow analysed over a month period</div>
+                    <div
+                        style="display: flex; width: 100%; justify-content: space-between; align-items: center; padding-top: 40px;">
+                        <div
+                            style="width: 28%; padding: 20px; height: 78px; border-radius: 8px; background-color: #F6F6F6; border: 1px solid rgba(38, 119, 249, 0.4);">
+                            <div style="font-size: 14px; color: #243656; font-family: Poppins-SemiBold;">Valid Credit
+                                <br /><br /><span
+                                    style="color: #116CFD; padding-top: 30px;">₦{cashFlowAnalysisPattern.validCredit}</span>
+                            </div>
+
+                        </div>
+                        <div
+                            style="width: 28%; padding: 20px; height: 78px; border-radius: 8px; background-color: #F6F6F6; border: 1px solid rgba(38, 119, 249, 0.4);">
+                            <div style="font-size: 14px; color: #243656; font-family: Poppins-SemiBold;">Closing Balance
+                                <br /><br /><span
+                                    style="color: #116CFD;">₦{cashFlowAnalysisPattern.closingBalance}</span>
+                            </div>
+
+                        </div>
+                        <div
+                            style="width: 28%; padding: 20px; height: 78px; border-radius: 8px; background-color: #F6F6F6; border: 1px solid rgba(38, 119, 249, 0.4);">
+                            <div style="font-size: 14px; color: #243656; font-family: Poppins-SemiBold;">
+                                Percentage of Expense Over Inflow
+                                <br /><br /><span
+                                    style="color: #116CFD;">₦{cashFlowAnalysisPattern.percentageOfExpenseOverInflow}</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding-top: 60px;">
+                    <div style="border: 1px solid #116CFD; display: flex;">
+                        <div
+                            style="width: 50%; color: #243656; height: 54px; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>Total Credit Turnover</div>
+                        </div>
+                        <div
+                            style="width: 50%; color: #116CFD; border-left: 1px solid #116CFD; height: 54px; font-family: Poppins-SemiBold; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>₦{cashFlowAnalysisPattern.totalCreditTurnover}</div>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid #116CFD; background-color: #f0f7fe; display: flex;">
+                        <div
+                            style="width: 50%; height: 54px; color: #243656; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>Total Debit Turnover</div>
+                        </div>
+                        <div
+                            style="width: 50%; color: #116CFD; border-left: 1px solid #116CFD; height: 54px; font-family: Poppins-SemiBold; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>₦{cashFlowAnalysisPattern.totalDebitTurnOver}</div>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid #116CFD;  display: flex;">
+                        <div
+                            style="width: 50%; height: 54px; color: #243656; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>Average Monthly Credits</div>
+                        </div>
+                        <div
+                            style="width: 50%; color: #116CFD; border-left: 1px solid #116CFD; height: 54px; font-family: Poppins-SemiBold; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>₦{cashFlowAnalysisPattern.averageWeeklyCredits}</div>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid #116CFD; background-color: #f0f7fe; display: flex;">
+                        <div
+                            style="width: 50%; height: 54px; color: #243656; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>Average Monthly Debits</div>
+                        </div>
+                        <div
+                            style="width: 50%; color: #116CFD; border-left: 1px solid #116CFD; height: 54px; font-family: Poppins-SemiBold; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>₦{cashFlowAnalysisPattern.averageMonthlyDebits}</div>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid #116CFD; display: flex;">
+                        <div
+                            style="width: 50%; height: 54px; color: #243656; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>Average Weekly Credits</div>
+                        </div>
+                        <div
+                            style="width: 50%; color: #116CFD; border-left: 1px solid #116CFD; height: 54px; font-family: Poppins-SemiBold; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>₦{cashFlowAnalysisPattern.averageWeeklyCredits}</div>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid #116CFD; background-color: #f0f7fe; display: flex;">
+                        <div
+                            style="width: 50%; height: 54px; color: #243656; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>Average Weekly Debits</div>
+                        </div>
+                        <div
+                            style="width: 50%; color: #116CFD; border-left: 1px solid #116CFD; height: 54px; font-family: Poppins-SemiBold; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>₦{cashFlowAnalysisPattern.averageWeeklyCredits}</div>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid #116CFD;  display: flex;">
+                        <div
+                            style="width: 50%; height: 54px; color: #243656; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>Average Monthly Balance</div>
+                        </div>
+                        <div
+                            style="width: 50%; color: #116CFD; border-left: 1px solid #116CFD; height: 54px; font-family: Poppins-SemiBold; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>₦{cashFlowAnalysisPattern.averageMonthlyBalance}</div>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid #116CFD; background-color: #f0f7fe; display: flex;">
+                        <div
+                            style="width: 50%; height: 54px; color: #243656; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>Average Weekly Balance</div>
+                        </div>
+                        <div
+                            style="width: 50%; color: #116CFD; border-left: 1px solid #116CFD; height: 54px; font-family: Poppins-SemiBold; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                            <div>₦{cashFlowAnalysisPattern.averageWeeklyBalance}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="height: 7px; width: 200%; margin-top: 100px; margin-bottom: 100px; background-color: rgba(217, 217, 217, 0.7); margin-left: -400px;">
+            </div>
+
+
+            <div style="font-size: 16px; font-family: Poppins-SemiBold;">Behavioral Analysis</div>
+            <div style="font-family: Poppins-Regular; color: #8F8F8F; font-size: 15px;">Here is a report of your loan
+                repayment behaviour analysed over a month period.</div>
+            <div
+                style="display: flex; width: 100%; justify-content: space-between; align-items: center; padding-top: 40px;">
+                <div
+                    style="width: 45%; padding: 20px; height: fit-content; padding-bottom: 20px; border-radius: 8px; background-color: #F6F6F6; border: 1px solid rgba(38, 119, 249, 0.4);">
+                    <div style="font-size: 14px; color: #243656; font-family: Poppins-SemiBold;">Loan Amount
+                        <br /><span style="color: #116CFD;">₦{behavioralAnalysisReport.totalLoanAmount}</span>
+                    </div>
+                    <div
+                        style="font-family: Poppins-Light; src: url(./assets/Poppins-Light.ttf); color: #243656; font-size: 13px; padding-top: 10px; font-family: Poppins-Light;">
+                        On October 2022</div>
+                    <br /><br />
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 40px;">
+                        <div style="font-family: Poppins-Regular; color: #000; font-size: 14px;">Loan To Inflow Rate
+                        </div>
+                        <div>{behavioralAnalysisReport.loanRepaymentToInflowRate}%</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 40px;">
+                        <div style="font-family: Poppins-Regular; color: #000; font-size: 14px;">Average Monthly Loan
+                            Amount
+                        </div>
+                        <div>₦{behavioralAnalysisReport.averageMonthlyLoanAmount}</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 40px;">
+                        <div style="font-family: Poppins-Regular; color: #000; font-size: 14px;">Number Of Loan
+                            Transaction(s)
+                        </div>
+                        <div>{behavioralAnalysisReport.numberLoanTransactions}</div>
+                    </div>
+                </div>
+                <div
+                    style="width: 45%; padding: 20px; height: fit-content; padding-bottom: 20px; border-radius: 8px; background-color: #F6F6F6; border: 1px solid rgba(38, 119, 249, 0.4);">
+                    <div style="font-size: 14px; color: #243656; font-family: Poppins-SemiBold;">Loan Repayment Amount
+                        <br /><span style="color: #116CFD;">₦{behavioralAnalysisReport.totalLoanRepaymentAmount}</span>
+                    </div>
+                    <div
+                        style="font-family: Poppins-Light; src: url(./assets/Poppins-Light.ttf); color: #243656; font-size: 13px; padding-top: 10px; font-family: Poppins-Light;">
+                        On October 2022</div>
+                    <br /><br />
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 40px;">
+                        <div style="font-family: Poppins-Regular; color: #000; font-size: 14px;">Loan Repayment to
+                            Inflow Rate
+                        </div>
+                        <div>{behavioralAnalysisReport.loanRepaymentToInflowRate}%</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 40px;">
+                        <div style="font-family: Poppins-Regular; color: #000; font-size: 14px;">Average Monthly Loan
+                            Repayments
+                        </div>
+                        <div>₦{behavioralAnalysisReport.averageMonthlyLoanAmount}div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+                            <div style="font-family: Poppins-Regular; color: #000; font-size: 14px;">Number Of Repayment
+                                Transaction(s)
+                            </div>
+                            <div>{behavioralAnalysisReport.numberLoanTransactions}</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br />
+
+            <div style="padding-top: 60px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div style="width: 45%; ">
+                        <div
+                            style="display: flex; justify-content: space-between; padding-bottom: 20px; align-items: center; width: 100%;">
+                            <div style="font-family: Poppins-Regular;">Account Activity</div>
+                            <div style="font-family: Poppins-Regular;">{behavioralAnalysisReport.accountActivity}%
+                            </div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between;padding-bottom: 20px;  align-items: center; width: 100%;">
+                            <div style="font-family: Poppins-Regular;">Gambling Rate</div>
+                            <div style="font-family: Poppins-Regular;">{behavioralAnalysisReport.gamblingRate}%
+                            </div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between;padding-bottom: 20px;  align-items: center; width: 100%;">
+                            <div style="font-family: Poppins-Regular;">Inflow to Outflow</div>
+                            <div style="font-family: Poppins-Regular;">
+                                {behavioralAnalysisReport.overallInflowToOutflowRate}</div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between;padding-bottom: 20px;  align-items: center; width: 100%;">
+                            <div style="font-family: Poppins-Regular;">Self Transfer Inflow</div>
+                            <div style="font-family: Poppins-Regular;">
+                                {behavioralAnalysisReport.overallInflowToOutflowRate}</div>
+                        </div>
+                    </div>
+                    <div style="width: 45%; ">
+                        <div
+                            style="display: flex; justify-content: space-between; padding-bottom: 20px; align-items: center; width: 100%;">
+                            <div style="font-family: Poppins-Regular;">Account Sweep</div>
+                            <div style="font-family: Poppins-Regular;">{behavioralAnalysisReport.accountSweep}</div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between;padding-bottom: 20px;  align-items: center; width: 100%;">
+                            <div style="font-family: Poppins-Regular;">Inflow Irregularity</div>
+                            <div style="font-family: Poppins-Regular;">
+                                {behavioralAnalysisReport.percentOfInflowIrregularity}</div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between;padding-bottom: 20px;  align-items: center; width: 100%;">
+                            <div style="font-family: Poppins-Regular;">Gambling status</div>
+                            <div style="font-family: Poppins-Regular;">
+                                {behavioralAnalysisReport.percentOfInflowIrregularity}</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</body>
+<script src="./assets/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                'Debit Transactions',
+                'Credit Transactions',
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [300, 50],
+                backgroundColor: [
+                    '#2075FD',
+                    '#324B78',
+                ],
+                hoverOffset: 4
+            }]
+        },
+
+    });
+</script>
+
+</html>

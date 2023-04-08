@@ -17,6 +17,8 @@ import Account from "../models/banksAccountModel.js";
 import AnalysedStatement from "../models/analysedStatement.js";
 import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccountOfficerInsightEmail.js";
 import { banks } from "../utils/banks.js";
+import generator from "../utils/generate-pdf-statement.js";
+import { create_pdf } from "../utils/pdf.js";
 
 
 const access_token_1 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc0MzQ2Njk3LCJleHAiOjE2NzQ5NTE0OTcsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.TH1_KUdGNXeHhKO0kHSW_QCR56kPs-4MiNfqjri5BeIAm9XuRp9zTBs07FZRRR26P1q_4xJCVd2yjUDu1X2YRD0RiyvDuEjZKfQ2L51ruOL-gfklEqsFazn6xVtx8y4uWm0kBotbcXhNa7h3YgHIGkShw3SrMwYBFmQnupberkEhVlxb1oCCtPS4U8SbWZzyz62b4ik797dZN2qmWlBI4pMwF-N8x705KCzbyMv2V4XqavY7xkhBd6g_yAYCnT-Me1jwsjqPInRldcdnr1oqfK9I440E9rVOIZMvndysW60HabUcihjE4DPT8uJvQ9QufWBY55-kZAJgOZHmG0ouyA'
@@ -280,7 +282,7 @@ const getPdfStatement = asyncHandler(async (req, res) => {
                 // const token = await getPericulumAccessToken();
                 // console.log(token)
                 // const access_token = token.access_token;
-                
+
                 // console.log('token', access_token)
 
                 const periculum = await axios(`${PERICULUM_BASE_URL}`, {
@@ -382,6 +384,8 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         })
 
         const data = response.data;
+        const statement = await AnalysedStatement.findOne({ key: data.key });
+
 
         let hasUserPaidForInsight = false;
 
@@ -409,13 +413,91 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
             await user.save();
 
         } else {
-            const statement = await AnalysedStatement.findOne({ key: data.key });
+
 
             if (statement) {
                 hasUserPaidForInsight = statement.isPaid;
             }
         }
 
+        if (!Boolean(statement.reportLink)) {
+            const spendAnalysis = data?.spendAnalysis;
+            const transactionPatternAnalysis = data?.transactionPatternAnalysis;
+            const behavioralAnalysis = data?.behavioralAnalysis
+            const cashFlowAnalysis = data?.cashFlowAnalysis
+
+            const spendAnalysisReport = {
+                highestSpend: spendAnalysis.highestSpend,
+                totalExpenses: spendAnalysis.totalExpenses,
+                averageMonthlyTotalExpenses: spendAnalysis.averageMonthlyTotalExpenses,
+                averageMonthlySpendOnAtmAndPOS: spendAnalysis.averageMonthlySpendOnAtmAndPOS,
+                averageMonthlySpendOnAirtimeAndData: spendAnalysis.averageMonthlySpendOnAirtimeAndData,
+                averageMonthlySpendOnChargesAndStampDuty: spendAnalysis.averageMonthlySpendOnChargesAndStampDuty,
+                averageMonthlySpendOnEntertainment: spendAnalysis.averageMonthlySpendOnEntertainment,
+                averageMonthlySpendOnOnlineAndWeb: spendAnalysis.averageMonthlySpendOnOnlineAndWeb,
+                averageMonthlySpendOnOthers: spendAnalysis.averageMonthlySpendOnOthers,
+                averageMonthlySpendOnTransfer: spendAnalysis.averageMonthlySpendOnTransfer,
+                averageMonthlySpendOnUSSD: spendAnalysis.averageMonthlySpendOnUSSD,
+                totalSpendOnAtmAndPOS: spendAnalysis.totalSpendOnAtmAndPOS,
+                totalSpendOnAirtimeAndData: spendAnalysis.totalSpendOnAirtimeAndData,
+                totalSpendOnChargesAndStampDuty: spendAnalysis.totalSpendOnChargesAndStampDuty,
+                totalSpendOnEntertainment: spendAnalysis.totalSpendOnEntertainment,
+                totalSpendOnOnlineAndWeb: spendAnalysis.totalSpendOnOnlineAndWeb,
+                totalSpendOnOthers: spendAnalysis,
+                totalSpendOnTransfer: spendAnalysis.totalSpendOnTransfer,
+                totalSpendOnUSSD: spendAnalysis.totalSpendOnUSSD
+            }
+
+            const transactionpattern = {
+                percentDebitTransactions: transactionPatternAnalysis.percentDebitTransactions * 100,
+                percentCreditTransactions: transactionPatternAnalysis.percentCreditTransactions * 100,
+                totalNumberOfTransactions: transactionPatternAnalysis.totalNumberOfTransactions,
+                percentOfTransactionsLessThan10ThousandNaira: transactionPatternAnalysis.percentOfTransactionsLessThan10ThousandNaira * 100,
+                percentOfTransactionsBetween10ThousandTo100ThousandNaira: transactionPatternAnalysis.percentOfTransactionsBetween10ThousandTo100ThousandNaira * 100,
+                percentOfTransactionsBetween100ThousandTo500ThousandNaira: transactionPatternAnalysis.percentOfTransactionsBetween100ThousandTo500ThousandNaira * 100,
+                percentOfTransactionsBetween500ThousandToOneMillionNaira: transactionPatternAnalysis.percentOfTransactionsBetween500ThousandToOneMillionNaira * 100,
+                percentNumberOfDaysTransactionsWasLessThan10ThousandNaira: transactionPatternAnalysis.percentNumberOfDaysTransactionsWasLessThan10ThousandNaira * 100,
+                percentOfBalancesLessThan10ThousandNaira: transactionPatternAnalysis.percentOfBalancesLessThan10ThousandNaira * 100,
+                percentOfBalancesBetween10ThousandTo100ThousandNaira: transactionPatternAnalysis.percentOfBalancesBetween10ThousandTo100ThousandNaira * 100,
+                percentOfBalancesBetween500ThousandToOneMillionNaira: transactionPatternAnalysis.percentOfBalancesBetween500ThousandToOneMillionNaira * 100,
+                percentOfBalancesGreaterThanOneMillionNaira: transactionPatternAnalysis.percentOfBalancesGreaterThanOneMillionNaira * 100,
+                percentNumberOfDaysBalanceWasLessThan10ThousandNaira: transactionPatternAnalysis.percentNumberOfDaysBalanceWasLessThan10ThousandNaira * 100,
+                mostFrequentBalanceRange: transactionPatternAnalysis.mostFrequentBalanceRange,
+                mostFrequentTransactionRange: transactionPatternAnalysis.mostFrequentTransactionRange
+            }
+
+
+            const behavioralAnalysisReport = {
+                totalLoanRepaymentAmount: behavioralAnalysis.totalLoanRepaymentAmount,
+                loanRepaymentToInflowRate: behavioralAnalysis.loanRepaymentToInflowRate * 100,
+                numberLoanTransactions: behavioralAnalysis.numberLoanTransactions,
+                totalLoanAmount: behavioralAnalysis.totalLoanAmount ? behavioralAnalysis.totalLoanAmount : 0,
+                numberRepaymentTransactions: behavioralAnalysis.numberRepaymentTransactions,
+                accountActivity: behavioralAnalysis.accountActivity * 100,
+                gamblingRate: behavioralAnalysis.gamblingRate,
+                overallInflowToOutflowRate: behavioralAnalysis.overallInflowToOutflowRate,
+                accountSweep: behavioralAnalysis.accountSweep,
+                percentOfInflowIrregularity: behavioralAnalysis.percentOfInflowIrregularity * 100,
+                averageMonthlyLoanAmount: behavioralAnalysis.averageMonthlyLoanAmount,
+            }
+
+
+            const cashFlowAnalysisPattern = {
+                validCredit: cashFlowAnalysis.validCredit,
+                closingBalance: cashFlowAnalysis.closingBalance,
+                percentageOfExpenseOverInflow: cashFlowAnalysis.percentageOfExpenseOverInflow * 100,
+                totalCreditTurnover: cashFlowAnalysis.totalCreditTurnover,
+                totalDebitTurnOver: cashFlowAnalysis.totalDebitTurnOver,
+                averageMonthlyDebits: cashFlowAnalysis.averageMonthlyDebits,
+                averageWeeklyCredits: cashFlowAnalysis.averageWeeklyCredits,
+                averageMonthlyBalance: cashFlowAnalysis.averageMonthlyBalance,
+                averageWeeklyBalance: cashFlowAnalysis.averageWeeklyBalance,
+            }
+
+            const str_html = create_pdf(spendAnalysisReport, transactionpattern, cashFlowAnalysisPattern, behavioralAnalysisReport);
+            await generator(str_html, data.key)
+
+        }
         const { type } = req.query
         console.log(data)
         const resData = data[type]
@@ -430,7 +512,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                     type,
                     key: data.key,
                     hasUserPaidForInsight,
-                    pdfUkl: 'https://res.cloudinary.com/dquiwka6j/image/upload/v1677939492/gvceo2bn9qvko2fki9kh.pdf',
+                    pdfUkl: statement.reportLink || 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',
                     meta: {}
                 })
     } catch (e) {

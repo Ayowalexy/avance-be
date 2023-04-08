@@ -24,7 +24,8 @@ import {
     getAllStatus,
     deletebankAccount,
     addStatusReport,
-    getUserbanks
+    getUserbanks,
+    deleteUserStatment
 } from "../controllers/statementControllers2.js";
 
 
@@ -53,6 +54,8 @@ router.route('/track-statement/:key').get(protect, getAllStatus);
 router.route('/statement-status').post(protect, addStatusReport);
 
 router.route('/get-user-banks').get(protect, getUserbanks)
+
+router.route('/delete-user-statement/:key').delete(protect, deleteUserStatment)
 
 
 export default router

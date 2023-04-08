@@ -14,6 +14,7 @@ import session from "express-session";
 import getPericulumAccessToken from "./utils/periculumAccessToken.js";
 import InvoiceGenerator from "./utils/generateTable.js";
 import { sendAccountOfficerEmailOfNewSignmentInsight } from "./utils/sendAccountOfficerInsightEmail.js";
+import generator from "./utils/generate-pdf-statement.js";
 
 const invoiceData = {
   spendAnalysis:
@@ -257,6 +258,7 @@ const invoiceData = {
 import colors from "colors";
 
 const app = express();
+// generator()
 
 dotenv.config();
 

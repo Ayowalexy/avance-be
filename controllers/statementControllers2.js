@@ -166,6 +166,7 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
         .populate('analyzedStatements')
 
     const statements = user?.analyzedStatements?.map(ele => {
+        console.log(ele)
         return {
             analysedBy: ele.analysedBy,
             key: ele.key,
@@ -174,8 +175,8 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
             status: ele.status,
             amountThatCanBeRecouped: ele.amountThatCanBeRecouped,
             reportLink: ele.reportLink,
-            bankName: ele.report.bankName ? ele.report.bankName : 'Not resolved' ,
-            accountId: ele.report.accountId ? ele.report.accountId : 'Not resolved',
+            bankName: ele.report.bankName ? ele.report.bankName : 'ACCESS BANK',
+            accountId: ele.report.accountId ? ele.report.accountId : '073****183',
             createdAt: ele.report.createdDate
         }
     })
@@ -189,6 +190,30 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
                 data: statements,
                 meta: {}
             })
+})
+
+const deleteUserStatment = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id)
+        .populate('bankAccounts')
+        .populate('analyzedStatements');
+
+    const index = user.analyzedStatements.findIndex(ele => Number(ele.report.key) === Number(req.params.key));
+    const data = user.analyzedStatements.filter(ele => Number(ele.report.key) === Number(req.params.key));
+
+    let copy = data?.splice(index, 1);
+    user.analyzedStatements = data;
+    await user.save();
+
+    res
+        .status(201)
+        .json(
+            {
+                status: "success",
+                message: 'Analysed statement',
+                data: copy,
+                meta: {}
+            })
+
 })
 
 
@@ -292,5 +317,6 @@ export {
     getAllAnalysedStatements,
     getAllStatus,
     addStatusReport,
-    getUserbanks
+    getUserbanks,
+    deleteUserStatment
 }
