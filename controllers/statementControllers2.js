@@ -181,6 +181,7 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
         }
     })
 
+    
     res
         .status(201)
         .json(
