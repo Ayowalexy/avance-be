@@ -256,9 +256,24 @@ const invoiceData = {
 
 // vl()
 import colors from "colors";
+import User from "./models/usermodel.js";
+import AnalysedStatement from "./models/analysedStatement.js";
+import Subscription from "./models/statementSubscription.js";
 
 const app = express();
+
+
+
 // generator()
+
+
+const clearBd = async() => {
+ await User.deleteMany({});
+ await AnalysedStatement.deleteMany({})
+ await Subscription.deleteMany({})
+}
+
+// clearBd()
 
 dotenv.config();
 

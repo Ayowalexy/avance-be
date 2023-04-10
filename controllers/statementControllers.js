@@ -394,6 +394,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         console.log(hasUserPaidForInsight)
 
         const userHasAddedReport = user?.analyzedStatements?.some(ele => ele.report.key === data.key)
+        console.log('')
         // const hasUserPaidForInsight = user.paidInsights.some(ele => ele.key === data.key);
         if (!userHasAddedReport) {
             const newStatement = new AnalysedStatement({
@@ -422,7 +423,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
             }
         }
 
-        if (!Boolean(statement.reportLink)) {
+        if (!Boolean(statement?.reportLink)) {
             const spendAnalysis = data?.spendAnalysis;
             const transactionPatternAnalysis = data?.transactionPatternAnalysis;
             const behavioralAnalysis = data?.behavioralAnalysis
