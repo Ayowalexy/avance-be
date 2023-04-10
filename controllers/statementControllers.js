@@ -497,8 +497,8 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                 averageWeeklyBalance: cashFlowAnalysis.averageWeeklyBalance,
             }
 
-            const str_html = create_pdf(spendAnalysisReport, transactionpattern, cashFlowAnalysisPattern, behavioralAnalysisReport);
-            await generator(str_html, data.key)
+            // const str_html = create_pdf(spendAnalysisReport, transactionpattern, cashFlowAnalysisPattern, behavioralAnalysisReport);
+            // await generator(str_html, data.key)
 
         }
         const { type } = req.query
@@ -515,7 +515,9 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                     type,
                     key: data.key,
                     hasUserPaidForInsight,
-                    pdfUkl: statement.reportLink || 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',
+                    pdfUkl: 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',
+
+                    // pdfUkl: statement.reportLink || 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',
                     meta: {}
                 })
     } catch (e) {
