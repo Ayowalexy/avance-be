@@ -394,7 +394,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         console.log(hasUserPaidForInsight)
 
         const userHasAddedReport = user?.analyzedStatements?.some(ele => ele.report.key === data.key)
-        console.log('')
+        
         // const hasUserPaidForInsight = user.paidInsights.some(ele => ele.key === data.key);
         if (!userHasAddedReport) {
             const newStatement = new AnalysedStatement({
@@ -504,6 +504,16 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         const { type } = req.query
         console.log(data)
         const resData = data[type]
+        const accountBalance = data?.accountBalance;
+
+        let amountPayable = 0;
+        if(accountBalance < 5000000000){
+            amountPayable = Number(accountBalance) * 0.05
+        } else if(accountBalance > 5000000000 && accountBalance < 25000000000){
+            amountPayable = Number(accountBalance) * 0.025;
+        } else if(accountBalance > 25000000000){
+            amountPayable = Number(accountBalance) * 0.15;
+        }
 
         return res
             .status(200)
@@ -513,6 +523,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                     message: "Statement Retrieved successfully",
                     data: resData,
                     type,
+                    amountPayable,
                     key: data.key,
                     hasUserPaidForInsight,
                     pdfUkl: 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',

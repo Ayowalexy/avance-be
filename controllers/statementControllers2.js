@@ -110,6 +110,9 @@ const addDocumentToLoan = asyncHandler(async (req, res) => {
     const statement = await AnalysedStatement.findOne({ key: value.key });
     const loans = value.loans;
 
+
+
+    // statement.documents = [];
     for (let loan of loans) {
         statement.documents.push(loan);
     }
@@ -181,7 +184,7 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
         }
     })
 
-    
+
     res
         .status(201)
         .json(
