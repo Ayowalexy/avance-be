@@ -394,7 +394,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         console.log(hasUserPaidForInsight)
 
         const userHasAddedReport = user?.analyzedStatements?.some(ele => ele.report.key === data.key)
-        
+
         // const hasUserPaidForInsight = user.paidInsights.some(ele => ele.key === data.key);
         if (!userHasAddedReport) {
             const newStatement = new AnalysedStatement({
@@ -504,17 +504,19 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         const { type } = req.query
         console.log(data)
         const resData = data[type]
-        const accountBalance = data?.accountBalance;
+        // const accountBalance = data?.accountBalance;
+        const creditTurnOver = data?.cashFlowAnalysis?.totalCreditTurnover
 
         let amountPayable = 0;
-        if(accountBalance < 5000000000){
-            amountPayable = Number(accountBalance) * 0.05
-        } else if(accountBalance > 5000000000 && accountBalance < 25000000000){
-            amountPayable = Number(accountBalance) * 0.025;
-        } else if(accountBalance > 25000000000){
-            amountPayable = Number(accountBalance) * 0.15;
+        if (creditTurnOver < 5000000000) {
+            amountPayable = Number(creditTurnOver) * 0.05
+        } else if (creditTurnOver > 5000000000 && creditTurnOver < 25000000000) {
+            amountPayable = Number(creditTurnOver) * 0.025;
+        } else if (creditTurnOver > 25000000000) {
+            amountPayable = Number(creditTurnOver) * 0.15;
         }
 
+        const rate = creditTurnOver < 5000000000 ? '0.05%' : creditTurnOver > 5000000000 && creditTurnOver < 25000000000 ? '0.025%' : creditTurnOver > 25000000000 ? '0.15%' : ''
         return res
             .status(200)
             .json(
@@ -525,6 +527,8 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                     type,
                     amountPayable: Number(amountPayable) + 25000,
                     key: data.key,
+                    rate,
+                    creditTurnOver,
                     hasUserPaidForInsight,
                     pdfUkl: 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',
 
