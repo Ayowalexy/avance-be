@@ -523,7 +523,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                     message: "Statement Retrieved successfully",
                     data: resData,
                     type,
-                    amountPayable,
+                    amountPayable: Number(amountPayable) + 25000,
                     key: data.key,
                     hasUserPaidForInsight,
                     pdfUkl: 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',
