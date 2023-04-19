@@ -322,6 +322,19 @@ const manualAssign = asyncHandler(async (req, res) => {
     }
 
     await sendAccountOfficerEmailOfNewSignmentInsight(value.key, value.id);
+    const statement = await AnalysedStatement.findOne({ key: value.key });
+    const account_officer = await AccountOfficer.findOne({ _id: value.id })
+    statement.accepted = true;
+    statement.analysedBy = account_officer;
+    statement.status = 'processing';
+    account_officer.analyseStatus = 'processing';
+    account_officer.pendingReportCount = account_officer.pendingReportCount - 1;;
+    account_officer.pendingReports = account_officer?.pendingReports.splice(account_officer?.pendingReports.indexOf(value.key), 1);
+
+    await account_officer.save();
+    await statement.save();
+    await sendUserInsightAcceptedEmail(statement.reportOwnerId);
+
     res
         .status(209)
         .json(

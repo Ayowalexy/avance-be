@@ -37,11 +37,12 @@ export const sendAccountOfficerEmailOfNewSignmentInsight = async (key, accountOf
         let freeOfficer;
 
         if (accountOfficerId) {
-            await getFreeAccountOfficer(accountOfficerId);
+            freeOfficer = await getFreeAccountOfficer(accountOfficerId);
         } else {
             freeOfficer = await getFreeAccountOfficer();
         }
 
+        console.log('free officer', freeOfficer)
 
         if (freeOfficer) {
             let user = await AccountOfficer.findById({ _id: freeOfficer._id.toString() })
@@ -65,8 +66,8 @@ export const sendAccountOfficerEmailOfNewSignmentInsight = async (key, accountOf
                 name: 'Biyi'
             }
 
-            const reportPdf = new InvoiceGenerator(data);
-            reportPdf.generate()
+            // const reportPdf = new InvoiceGenerator(data);
+            // reportPdf.generate()
             // console.log(data)
             // console.log(path.resolve('Biyi.pdf'))
             // const url = await uploadToCloudinary(path.resolve('Biyi.pdf'))

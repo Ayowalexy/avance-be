@@ -180,7 +180,7 @@ const loand_d = Joi.object({
         Joi.object({
             type: Joi
                 .string()
-                .valid('Deposit', 'Loan')
+                .valid('Deposit', 'Loan', 'Bank statement', 'Engagement letter')
                 .required(),
             loan: Joi
                 .string()

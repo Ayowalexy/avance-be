@@ -113,7 +113,9 @@ const addDocumentToLoan = asyncHandler(async (req, res) => {
 
 
     // statement.documents = [];
+    console.log(loans, value.key, statement)
     for (let loan of loans) {
+        
         statement.documents.push(loan);
     }
     await statement.save()

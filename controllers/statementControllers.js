@@ -396,7 +396,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         const userHasAddedReport = user?.analyzedStatements?.some(ele => ele.report.key === data.key)
 
         // const hasUserPaidForInsight = user.paidInsights.some(ele => ele.key === data.key);
-        if (!userHasAddedReport) {
+        if (!userHasAddedReport && Boolean(data?.cashFlowAnalysis?.totalCreditTurnover)) {
             const newStatement = new AnalysedStatement({
                 report: data,
                 key: data.key,
@@ -560,7 +560,7 @@ const insightPaymentWebhook = asyncHandler(async (req, res) => {
     const amount = data?.data?.amount;
 
 
-    if (data.event === 'charge.success' && amount === 2500000) {
+    if (data.event === 'charge.success' && amount > 2500000) {
         const meta = data.data.metadata;
         const userId = meta.userId;
         const key = meta.key;
