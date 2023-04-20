@@ -20,7 +20,7 @@ const accountOfficerSchema = new Schema({
     },
     analyseStatus: {
         type: String,
-        default: 'idle',
+        default: 'processing',
         enum: ['analysing', 'idle', 'processing']
     },
     analysedReports: [{

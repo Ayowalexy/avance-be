@@ -45,10 +45,24 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 const getAllDepositTypes = asyncHandler(async (req, res) => {
     const depositTypes = [
-        'Savings bank account',
-        'Current deposit account',
-        'Fixed Deposit account',
-        'Recurring deposit account'
+        // 'Savings bank account',
+        // 'Current deposit account',
+        // 'Fixed Deposit account',
+        // 'Recurring deposit account'
+        'LPO financing',
+        'Development financing',
+        'Project financing',
+        "Public Private partnerships PPP's",
+        'Bonds and Guarantees',
+        'Letter of credits',
+        'Structured Trade and Commodity financing',
+        'Form A, M and Q',
+        'Supply chain finance',
+        'Form NXP and NCX',
+        'Treasury bills',
+        'Futures and forwards',
+        'FGN bonds',
+        'Fixed Deposits'
     ]
     res
         .status(201)
@@ -64,21 +78,32 @@ const getAllDepositTypes = asyncHandler(async (req, res) => {
 
 const getAllLoanTypes = asyncHandler(async (req, res) => {
     const loanTypes = [
-        'Credit card loan',
-        'Personal loan',
-        'Student loan',
-        'Mortgage',
-        'Auto loan',
-        'Payday loan',
-        'Small business loan',
-        'Credit builder loan',
-        'Debt Consolidation loan',
-        'Holiday loan',
-        'Medical loan',
-        'Vacation loan',
-        'Wedding loan',
-        'Pool loan',
-        'Family loan'
+        // 'Credit card loan',
+        // 'Personal loan',
+        // 'Student loan',
+        // 'Mortgage',
+        // 'Auto loan',
+        // 'Payday loan',
+        // 'Small business loan',
+        // 'Credit builder loan',
+        // 'Debt Consolidation loan',
+        // 'Holiday loan',
+        // 'Medical loan',
+        // 'Vacation loan',
+        // 'Wedding loan',
+        // 'Pool loan',
+        // 'Family loan'
+        'Term loans',
+        'Line of Credit',
+        'Working Capital loans',
+        'Venture loans',
+        'Real estate loans',
+        'Equipment loans',
+        'Loan against future lease rentals',
+        'Short-term loans',
+        'Invoice discounting',
+        'LPO financing',
+        'Development financing'
     ]
     res
         .status(201)
