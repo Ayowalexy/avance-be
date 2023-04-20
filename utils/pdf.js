@@ -97,7 +97,7 @@ export const create_pdf = (
             </div>
 
 
-            <div style="padding-top: 80px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="padding-top: 80px; display: flex; padding-bottom: 80px; justify-content: space-between; align-items: center;">
                 <div style="width: 28%;">
                     <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
                         Expense</div>
@@ -163,7 +163,7 @@ export const create_pdf = (
 
             <div>
                 <div style="font-size: 16px; font-family: Poppins-SemiBold;">Transaction Pattern</div>
-                <div style="font-family: Poppins-Regular; color: #8F8F8F; font-size: 15px;">Here is a report of your
+                <div style="font-family: Poppins-Regular; padding-bottom: 10px; color: #8F8F8F; font-size: 15px;">Here is a report of your
                     debit and credit pattern analysed over a month period (Oct 1st-Oct 31st 2022).</div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -202,7 +202,7 @@ export const create_pdf = (
                     </div>
                 </div>
 
-                <div style="padding-top: 80px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="padding-top: 150px; display: flex; justify-content: space-between; align-items: center;">
                     <div style="width: 25%;">
                         <div style="font-family: Poppins-SemiBold; font-size: 16px; color: #000; padding-bottom: 20px;">
                             Transaction</div>
@@ -338,7 +338,7 @@ export const create_pdf = (
                     </div>
                 </div>
 
-                <div style="padding-top: 60px;">
+                <div style="padding-top: 60px; padding-bottom: 50px">
                     <div style="border: 1px solid #116CFD; display: flex;">
                         <div
                             style="width: 50%; color: #243656; height: 54px; font-family: Poppins-Regular; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
@@ -427,7 +427,7 @@ export const create_pdf = (
             </div>
 
 
-            <div style="font-size: 16px; font-family: Poppins-SemiBold;">Behavioral Analysis</div>
+            <div style="font-size: 16px; padding-top: 50px; font-family: Poppins-SemiBold;">Behavioral Analysis</div>
             <div style="font-family: Poppins-Regular; color: #8F8F8F; font-size: 15px;">Here is a report of your loan
                 repayment behaviour analysed over a month period.</div>
             <div

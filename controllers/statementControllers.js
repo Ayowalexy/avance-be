@@ -423,7 +423,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
             }
         }
 
-        if (!Boolean(statement?.reportLink)) {
+        if (Boolean(statement?.reportLink)) {
             const spendAnalysis = data?.spendAnalysis;
             const transactionPatternAnalysis = data?.transactionPatternAnalysis;
             const behavioralAnalysis = data?.behavioralAnalysis
@@ -530,7 +530,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
                     rate,
                     creditTurnOver,
                     hasUserPaidForInsight,
-                    pdfUkl: 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',
+                    pdfUkl: 'https://res.cloudinary.com/dquiwka6j/image/upload/v1681987836/foo/s4sgdigzgxmme6t7iol0.pdf',
 
                     // pdfUkl: statement.reportLink || 'http://res.cloudinary.com/dquiwka6j/image/upload/v1680949770/foo/waspujbwosmye8fh0nca.pdf',
                     meta: {}
