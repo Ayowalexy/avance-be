@@ -103,7 +103,7 @@ const sendAccountOfficerEmail = async (id) => {
                         <div
                             style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 17px; padding-top: 30px; color: #121212;">
                             A customer has requested for an insight review and has been assigned to you, log into your dashboard to accept this
-                                    insight request. Be informed that this request will be withdrawn after 5 minutes if you do not accept
+                                    insight request. Be informed that this request will be withdrawn after 1 hour if you do not accept
                         </div>
             
                        
