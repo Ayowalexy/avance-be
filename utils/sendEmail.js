@@ -127,8 +127,8 @@ const sendAccountOfficerEmail = async (id) => {
                 <div>
                     <div
                         style="font-family: Poppins-Regular; text-align: center; src: url(./assets/Poppins-Regular.ttf); font-size: 13px; padding-top: 50px; color: #121212;">
-                        For enquiries, feedback, dispute or concerns, you may reach us on this number XXXXXXXXX or via this email
-                        XXXXXXXXX.
+                        For enquiries, feedback, dispute or concerns, you may reach us on this number 08145405006 or via this email
+                        08145405006.
                         <br /><br />
                         Thank You
                     </div>

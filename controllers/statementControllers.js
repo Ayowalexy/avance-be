@@ -329,7 +329,7 @@ const manualStatement = asyncHandler(async (req, res) => {
 
     const form = new FormData()
 
-    form.append("password", req.body.password)
+    form.append("password", req.body.password || '')
     form.append("file", req.file.buffer, req.file.originalname)
     form.append("statementType", "consumer")
 

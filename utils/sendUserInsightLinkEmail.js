@@ -103,7 +103,7 @@ const sendUserInsightCompletedEmail = async (id, key) => {
                         <div style="font-family: Poppins-SemiBold; font-size: 20px; padding-top: 40px; color: #243656;">Hi ${name},</div>
                         <div
                             style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 17px; padding-top: 30px; color: #121212;">
-                            Your account statement has been analysed and the amount the can be recouped has been updated in your dashboard.
+                            Your account statement has been analysed and the amount the can be recouped has been updated on your dashboard.
                                      Download the report made on your statement by our account officer. <a href=${statement.reportLink}>Account Report</a>
                                 </div>
             
@@ -128,8 +128,8 @@ const sendUserInsightCompletedEmail = async (id, key) => {
                 <div>
                     <div
                         style="font-family: Poppins-Regular; text-align: center; src: url(./assets/Poppins-Regular.ttf); font-size: 13px; padding-top: 50px; color: #121212;">
-                        For enquiries, feedback, dispute or concerns, you may reach us on this number XXXXXXXXX or via this email
-                        XXXXXXXXX.
+                        For enquiries, feedback, dispute or concerns, you may reach us on this number 08145405006 or via this email
+                        08145405006.
                         <br /><br />
                         Thank You
                     </div>
