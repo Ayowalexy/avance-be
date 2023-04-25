@@ -135,12 +135,8 @@ const addDocumentToLoan = asyncHandler(async (req, res) => {
     const statement = await AnalysedStatement.findOne({ key: value.key });
     const loans = value.loans;
 
-
-
     // statement.documents = [];
-    console.log(loans, value.key, statement)
     for (let loan of loans) {
-        
         statement.documents.push(loan);
     }
     await statement.save()
@@ -303,7 +299,7 @@ const addStatusReport = asyncHandler(async (req, res) => {
     const status = new Status({
         sender: user.firstName.concat(' ', user.lastName),
         message: value.message,
-        status: 'pening',
+        status: 'pending',
         key: value.key
     })
 

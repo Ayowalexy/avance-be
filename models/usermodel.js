@@ -27,7 +27,7 @@ const userSchema = new Schema({
         type: Number,
         default: 0
     },
-    amountRecouped : {
+    amountRecouped: {
         type: Number,
         default: 0
     },
@@ -51,7 +51,9 @@ const userSchema = new Schema({
     statementProcessingStatus: {
         type: String,
     },
-    statementKey: Number,
+    statementKey: [{
+        type: Number
+    }],
     customer: {
         type: Schema.Types.ObjectId,
         ref: "customer"
@@ -69,13 +71,13 @@ const userSchema = new Schema({
         ref: Subscription
     }]
 
-}, { timestamps: true})
+}, { timestamps: true })
 
 userSchema.plugin(mongooseUniqueValidator, {
     message: 'Error, {VALUE} already exists.'
 });
 
-userSchema.methods.isEmailVerified = async function() {
+userSchema.methods.isEmailVerified = async function () {
     return this.emailVerified
 }
 

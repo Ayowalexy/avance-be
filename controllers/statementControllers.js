@@ -19,6 +19,7 @@ import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccoun
 import { banks } from "../utils/banks.js";
 import generator from "../utils/generate-pdf-statement.js";
 import { create_pdf } from "../utils/pdf.js";
+import { uploadBankStatement } from "../utils/generate-pdf-statement.js";
 
 
 const access_token_1 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc0MzQ2Njk3LCJleHAiOjE2NzQ5NTE0OTcsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.TH1_KUdGNXeHhKO0kHSW_QCR56kPs-4MiNfqjri5BeIAm9XuRp9zTBs07FZRRR26P1q_4xJCVd2yjUDu1X2YRD0RiyvDuEjZKfQ2L51ruOL-gfklEqsFazn6xVtx8y4uWm0kBotbcXhNa7h3YgHIGkShw3SrMwYBFmQnupberkEhVlxb1oCCtPS4U8SbWZzyz62b4ik797dZN2qmWlBI4pMwF-N8x705KCzbyMv2V4XqavY7xkhBd6g_yAYCnT-Me1jwsjqPInRldcdnr1oqfK9I440E9rVOIZMvndysW60HabUcihjE4DPT8uJvQ9QufWBY55-kZAJgOZHmG0ouyA'
@@ -29,7 +30,9 @@ const access_token_5 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0
 const access_token_6 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc5NzM4MTM2LCJleHAiOjE2ODAzNDI5MzYsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.HkQKkmrSSsml1vt9gl0kaF_bwI46C89PJWwrFqYXLb5EZ4MGevYUl6WocNXEsA-1XLG2Fb9CuQo0hGPOAgh2n5XCO_U4CqVT07SRHGAlOVDJTicVey62KY3nFfunM4h1_KiMBo_WFwCNDpi--tCWtd10QxWsJvKlsEzJGK4_P9DChn2VszHB8m6VeJMdZF-xsek2zDv7INZzNQncqcurbYKBYJ45F6Z2ybhMFBW_DSd8ZAiJe3g8128njrXUvKWOHisXltYVmUrq80BfDiP3I0JQNw3HEnvZsnnA80cDZ7AgrQ9RtcvjJ_ECHoQ1Lllkv_IuPiVqzsC_ri3_Zb9LpA'
 const access_token_7 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjgwNjg4OTgzLCJleHAiOjE2ODEyOTM3ODMsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.fEQuSKNicGLKTd7lB3WjkZvTFUKXkmyGLKhZuRr7w7lPJaOwSrpmrkSMTiElwPBJMxenUJ0KUwy42DHUraB2To4oV_gbSxdX7O3B40Ohv2JO34y4fq1crOD7lAbAx_6NYC31sHMMumlXj3itbuFAI8CvY-qakqtLzMRmoqkwPAO2gTS3c9FAimYUUailgIVD1xNRFbbaEGDdmw05CkPJwgV5CpAIJxtsyXjrvbP9l_02aBp3dUqRFex2DAvIjBOV0iw2fEAQmkrxY_WcECw4TLtj2UsuxcT5C3X5Y5Lcd5cmHvzBHRmlPQYAseDprn-UX8ENnJZqhTia8oasKlQm9Q'
 const access_token_8 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjgxMDY4MzIxLCJleHAiOjE2ODE2NzMxMjEsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.Bx4qM_mw_NBIdh1-7qd2FFeOWWqEO2y8N2mzI2EP7NhC-RWjjkFdDzutNYyouR7ed1oqB35ox5TZMwcqmkFA1NtpJzGd5rDo_rTKvRnqCg3fjjFuzAID154vX5v7H6edIHQEjlw_wd7rso-q4ADtdwIbG1WUlgIMevv0KUddOwrObXkSp3sgVriG-T3_DhoKEKpVYczd2f5a9xe_DNHh9eaSB_GHDegh4cLE3awbfr6y15KWjVvwQalQzBRaT9EOReJWGznAp_wsLLQM9ZWPUHJNThQ0xWyBEH0Z_8N40qGABUMi_gDVV0Iujs3-fdA-KTZAUffnLTos7bUqNquIaA'
-const access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjgxODA1MTc5LCJleHAiOjE2ODI0MDk5NzksImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.BthyFnVK5Ww4j5Oh6668BgQKUt7_8LVtyOife--ORgTCMAejVXwFX0GTOSSVOxb-Aqv08-dKSPCV0hAchXiHvtYyJJESFAoQhav2Up3Cj0OhEsNZ_WunjVFAbv72ESRoV_G4ZDPIJ-b-h1PU1etouyPlFEzYab5gwEdrc9QPkURSFhlOjgyF1t-HCq9VyogMTj7s1O83pm8SDwctebx4Ku7VROd7SmijDw1bwZI05OQQhBEcXTFQUu1WQBXlLxLTE4akZUW_Fef7WFPq44m1g5k38w73GVll-lUlQckK8On6fi-0mFDudC75N1woCiaVzbnJeC3fhpYOHJKTrRhPXw'
+const access_token_9 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjgxODA1MTc5LCJleHAiOjE2ODI0MDk5NzksImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.BthyFnVK5Ww4j5Oh6668BgQKUt7_8LVtyOife--ORgTCMAejVXwFX0GTOSSVOxb-Aqv08-dKSPCV0hAchXiHvtYyJJESFAoQhav2Up3Cj0OhEsNZ_WunjVFAbv72ESRoV_G4ZDPIJ-b-h1PU1etouyPlFEzYab5gwEdrc9QPkURSFhlOjgyF1t-HCq9VyogMTj7s1O83pm8SDwctebx4Ku7VROd7SmijDw1bwZI05OQQhBEcXTFQUu1WQBXlLxLTE4akZUW_Fef7WFPq44m1g5k38w73GVll-lUlQckK8On6fi-0mFDudC75N1woCiaVzbnJeC3fhpYOHJKTrRhPXw'
+const access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjgyNDI2ODg0LCJleHAiOjE2ODMwMzE2ODQsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.KlIEnQylAF-B8PYnt-hlMYKclLMqrynzf7OK7zArBzV7mw3TKiq9TcJpri1qZuV_63iPhOTiuRRUvrUmY-ab8PsoWzHiu4dRkJdDXlZal4Yl9uj6R3XChn0vth2alft7iZkTNpGHyjgo5ayUyGeo4Y4_nJiZ_m2--mhSSEQeYUm3gycHJJMHHBc_fK3qedVktU6LH_DBk10Bs0fF9FzKlqOzNxRNojERjk6WRXbyXYwFeGgneOq4idMV2IFDohtMf6eFIDtmtNM_segZSvwWaz9BXm-XpjXPDm6vrB2eAsWc6VJ_BtskvfHj05JTK4AZCy53Ak6P1TxXq7vXgDVRIg'
+
 
 dotenv.config()
 
@@ -343,8 +346,9 @@ const manualStatement = asyncHandler(async (req, res) => {
         })
 
         user.statementProcessingStatus = periculum?.data?.processingStatus;
-        user.statementKey = periculum?.data?.key
-        user.analyzedReports = Number(user.analyzedReports) + 1
+        user.statementKey.push(periculum?.data?.key);
+        user.analyzedReports = Number(user.analyzedReports) + 1;
+        await uploadBankStatement(req.file.buffer, periculum?.data?.key);
         await user.save();
 
         return res
@@ -352,11 +356,12 @@ const manualStatement = asyncHandler(async (req, res) => {
             .json(
                 {
                     status: 'success',
+                    key: periculum?.data?.key,
                     message: "We have sent your retrieved statements to our partners, we'll send you a feedback shortly",
                     meta: {}
                 })
     } catch (e) {
-        console.log(e.response.data)
+        console.log(e)
         const error = e?.response?.data?.message || "provider not available"
         res.status(400).json({ "status": "error", "message": "invalid error", "meta": { "error": error } })
 
@@ -372,9 +377,9 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         .populate('analyzedStatements')
 
 
-    const statementKey = user.statementKey;
+    const AllstatementKey = user.statementKey;
 
-
+    const statementKey = AllstatementKey.find(ele => ele === Number(req.query?.key))
 
     try {
         const response = await axios(`${PERICULUM_BASE_URL}/statements/${statementKey}`, {
@@ -386,38 +391,39 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
         })
 
         const data = response.data;
-        const statement = await AnalysedStatement.findOne({ key: data.key });
 
+        let statement = await AnalysedStatement.findOne({ key: data.key });
+        console.log(statement)
 
         let hasUserPaidForInsight = false;
-
-        console.log(hasUserPaidForInsight)
 
         const userHasAddedReport = user?.analyzedStatements?.some(ele => ele.report.key === data.key)
 
         // const hasUserPaidForInsight = user.paidInsights.some(ele => ele.key === data.key);
-        if (!userHasAddedReport && Boolean(data?.cashFlowAnalysis?.totalCreditTurnover)) {
-            const newStatement = new AnalysedStatement({
-                report: data,
-                key: data.key,
-                reportOwnerId: user._id.toString()
-            })
+        const statementReportData = Object.keys(statement?.report);
+        console.log(Boolean(statementReportData.length))
 
-            await newStatement.save();
+        if (!Boolean(statementReportData.length) && Boolean(data?.cashFlowAnalysis?.totalCreditTurnover)) {
 
+            // const newStatement = new AnalysedStatement({
+            //     report: data,
+            //     key: data.key,
+            //     reportOwnerId: user._id.toString()
+            // })
+
+            statement.report = data;
+            statement.reportOwnerId = user._id.toString();
+            await statement.save();
             // if user has not added report, that means they have not paid for the insight
             hasUserPaidForInsight = false;
 
             // user.analyzedStatements.push(newStatement);
             await User.findOneAndUpdate({ _id: req.user.id }, {
-                $push: { analyzedStatements: newStatement }
+                $push: { analyzedStatements: statement }
             })
-
             await user.save();
 
         } else {
-
-
             if (statement) {
                 hasUserPaidForInsight = statement.isPaid;
             }
@@ -502,7 +508,6 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
 
         }
         const { type } = req.query
-        console.log(data)
         const resData = data[type]
         // const accountBalance = data?.accountBalance;
         const creditTurnOver = data?.cashFlowAnalysis?.totalCreditTurnover

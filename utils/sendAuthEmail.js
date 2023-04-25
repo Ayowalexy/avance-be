@@ -23,6 +23,8 @@ const sendAAuthOtp = async (id) => {
 
         const capitalizeOtp = otp.toString().toUpperCase();
 
+        console.log(capitalizeOtp)
+
         const signedToken = sign({ capitalizeOtp }, process.env.SECRET, {
             expiresIn: 60 * 2,
         })

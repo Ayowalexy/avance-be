@@ -5,7 +5,10 @@ const Schema = mongoose.Schema;
 
 
 const analysedStatement = new Schema({
-    report: Object,
+    report: {
+        type: Object,
+        default: {}
+    },
     analysedBy: {
         type: Schema.Types.ObjectId,
         ref: "accountOfficer"
@@ -20,7 +23,10 @@ const analysedStatement = new Schema({
         default: false,
 
     },
-    reportOwnerId: String,
+    reportOwnerId: {
+        type: String,
+        default: ''
+    },
     accepted: {
         type: Boolean,
         default: false
@@ -28,13 +34,14 @@ const analysedStatement = new Schema({
     status: {
         type: String,
         enum: ['idle', 'processing', 'declined', 'completed'],
-        default: 'idle'
+        default: 'processing'
     },
     documents: [{
         type: Object
     }],
     amountThatCanBeRecouped: Number,
-    reportLink: String
+    reportLink: String,
+    bankStatementLink: String
 }, { timeseries: true })
 
 
