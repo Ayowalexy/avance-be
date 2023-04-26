@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { statementProcessSchema, statementReportSchema, statementStatusSchema, statusSchema, manualStatementAssign } from "../utils/schema.js";
+import { statementProcessSchema, statementReportSchema, statementStatusSchema, statusSchema, manualStatementAssign, recoveryReequestSchema } from "../utils/schema.js";
 import bcrypt from 'bcryptjs'
 import Admin from "../models/adminModel.js";
 import AnalysedStatement from "../models/analysedStatement.js";
@@ -15,6 +15,8 @@ import User from "../models/usermodel.js";
 import Status from "../models/statusModel.js";
 import sendAccountOfficerEmail from "../utils/sendEmail.js";
 import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccountOfficerInsightEmail.js";
+import sendAccountOfficerRecoveryEmail from "../utils/sendAccountOfficerRecoveryRequestEmail.js";
+import sendUserRecoveryCommencementEmail from "../utils/sendUserRecoveryCommencementEmail.js";
 
 const { sign, verify } = jwt;
 
@@ -346,6 +348,111 @@ const manualAssign = asyncHandler(async (req, res) => {
 
 })
 
+
+const sendRecoveryRequest = asyncHandler(async (req, res) => {
+    const { error, value } = recoveryReequestSchema.validate(req.body);
+
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+    const user = await User.findById({ _id: req.user.id });
+    const statement = await AnalysedStatement.findOne({ key: value.key }).populate('analysedBy');
+    const accountOfficer = await AccountOfficer.findById({ _id: statement.analysedBy._id });
+
+    if (statement && accountOfficer) {
+        statement.recoveryReequest = true;
+        statement.dateCustomerRequestedForRecovery = new Date();
+        statement.engagementLetterLink = value.pdfUrl;
+
+        if (statement.amountThatCanBeRecouped) {
+            const customer = user.firstName.concat(' ', user.lastName);
+            const amount = statement.amountThatCanBeRecouped;
+            const link = value.pdfUrl;
+            const id = accountOfficer._id.toString();
+            await statement.save();
+            await sendAccountOfficerRecoveryEmail(customer, amount, link, id);
+        } else {
+            throw new Error('Account officer has not entered the amount that can be recovered')
+        }
+    }
+
+    console.log('account officer', accountOfficer)
+    res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                message: 'Recovery request sent sucessfully',
+                meta: {}
+            })
+})
+
+
+const getAllStateWithRecoveryRequest = asyncHandler(async (req, res) => {
+    const statement = await AnalysedStatement.find({ recoveryReequest: true }).populate('analysedBy')
+    res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                message: 'All recovery request',
+                data: statement,
+                meta: {}
+            })
+
+})
+
+const commenceStatementRecovery = asyncHandler(async (req, res) => {
+
+    const statement = await AnalysedStatement.findOne({ key: Number(req.query.key) });
+    const user = await User.findById({ _id: statement?.reportOwnerId })
+
+    if (statement && user) {
+        if (statement.analysedBy.toString() === req.user.id.toString()) {
+            statement.dateAccountOfficerStartedRecovery = new Date();
+
+            const amount = statement.amountThatCanBeRecouped;
+            const id = statement.reportOwnerId;
+
+            await sendUserRecoveryCommencementEmail(amount, id);
+
+            await statement.save();
+
+            return res
+                .status(200)
+                .json(
+                    {
+                        status: "success",
+                        message: 'Recovery status updated succesfully',
+                        meta: {}
+                    })
+
+        } else {
+            throw new Error('You cannot commence the process of recovery because this report was not assigned to you')
+        }
+
+    } else {
+        res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    meta: { error: "invalid request" }
+                })
+    }
+})
+
+
+
 export {
     acceptStatementProcessing,
     statementReport,
@@ -354,5 +461,8 @@ export {
     addStatusReport,
     getAllReports,
     getAllAccountOfficers,
-    manualAssign
+    manualAssign,
+    sendRecoveryRequest,
+    getAllStateWithRecoveryRequest,
+    commenceStatementRecovery
 }

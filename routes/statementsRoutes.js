@@ -25,8 +25,10 @@ import {
     deletebankAccount,
     addStatusReport,
     getUserbanks,
-    deleteUserStatment
+    deleteUserStatment,
+    getAllRecoverableReqeuest
 } from "../controllers/statementControllers2.js";
+import { sendRecoveryRequest } from "../controllers/accountOfficer.js";
 
 
 const upload = multer()
@@ -57,5 +59,8 @@ router.route('/get-user-banks').get(protect, getUserbanks)
 
 router.route('/delete-user-statement/:key').delete(protect, deleteUserStatment)
 
+router.route('/reovery-request')
+.post(protect, sendRecoveryRequest)
+.get(protect, getAllRecoverableReqeuest)
 
 export default router

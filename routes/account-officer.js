@@ -13,7 +13,9 @@ import {
     addStatusReport,
     getAllReports,
     getAllAccountOfficers,
-    manualAssign
+    manualAssign,
+    getAllStateWithRecoveryRequest,
+    commenceStatementRecovery
 } from '../controllers/accountOfficer.js';
 import { getAllUsers } from '../controllers/statementControllers2.js';
 import { adminProtect, isAdmin } from '../middleware/adminmiddleware.js';
@@ -43,6 +45,9 @@ router.route('/statement-status').post(accountOfficerProtect, addStatusReport);
 router.route('/all-reports/:type').get(accountOfficerProtect, getAllReports)
 router.route('/all-account-officer').get(accountOfficerProtect, getAllAccountOfficers)
 router.route('/manual-assign').post(accountOfficerProtect, manualAssign)
+
+router.route('/all-recovery-request').get(accountOfficerProtect, isAccountOfficer, getAllStateWithRecoveryRequest)
+router.route('/commence-recovery').patch(accountOfficerProtect, isAccountOfficer, commenceStatementRecovery)
 
 
 

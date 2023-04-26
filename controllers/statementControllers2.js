@@ -192,7 +192,6 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
         .populate('analyzedStatements')
 
     const statements = user?.analyzedStatements?.map(ele => {
-        console.log(ele)
         return {
             analysedBy: ele.analysedBy,
             key: ele.key,
@@ -203,7 +202,8 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
             reportLink: ele.reportLink,
             bankName: ele.report.bankName ? ele.report.bankName : 'ACCESS BANK',
             accountId: ele.report.accountId ? ele.report.accountId : '073****183',
-            createdAt: ele.report.createdDate
+            createdAt: ele.report.createdDate,
+            hasRequestedForRecover: ele.recoveryReequest
         }
     })
 
@@ -320,7 +320,6 @@ const getUserbanks = asyncHandler(async (req, res) => {
 
 
     const data = user.bankAccounts;
-    console.log(user.bankAccounts)
     res
         .status(200)
         .json(
@@ -333,6 +332,21 @@ const getUserbanks = asyncHandler(async (req, res) => {
 })
 
 
+const getAllRecoverableReqeuest = asyncHandler(async( req, res) => {
+    const user = await User.findById({_id: req.user.id}).populate('analyzedStatements');
+
+    const statement = user.analyzedStatements.filter(ele => Boolean(ele.amountThatCanBeRecouped));
+    res
+    .status(200)
+    .json(
+        {
+            data: statement,
+            status: "success",
+            meta: {}
+        })
+
+
+})
 
 export {
     deletebankAccount,
@@ -345,5 +359,6 @@ export {
     getAllStatus,
     addStatusReport,
     getUserbanks,
-    deleteUserStatment
+    deleteUserStatment,
+    getAllRecoverableReqeuest
 }

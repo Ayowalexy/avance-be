@@ -41,7 +41,15 @@ const analysedStatement = new Schema({
     }],
     amountThatCanBeRecouped: Number,
     reportLink: String,
-    bankStatementLink: String
+    bankStatementLink: String,
+    engagementLetterLink: String,
+    recoveryReequest: {
+        type: Boolean,
+        default: false
+    },
+    dateCustomerRequestedForRecovery: String,
+    dateAccountOfficerStartedRecovery: String,
+    dateAccountOfficerCompletedRecovery: String,
 }, { timeseries: true })
 
 

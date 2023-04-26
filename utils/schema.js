@@ -204,6 +204,11 @@ const manualStatementAssign = Joi.object({
     id: Joi.string().required()
 })
 
+const recoveryReequestSchema = Joi.object({
+    key: Joi.number().required(),
+    pdfUrl: Joi.string().required()
+})
+
 
 export {
     signupscchema,
@@ -222,5 +227,6 @@ export {
     loand_d,
     statement,
     statusSchema,
-    manualStatementAssign
+    manualStatementAssign,
+    recoveryReequestSchema
 }
