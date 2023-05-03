@@ -23,8 +23,9 @@ const protect = asyncHandler(async (req, res, next) => {
         req.user = user
         next()
       } else {
-        res.status(401)
         throw new Error('User does not exists')
+
+        res.status(401)
       }
     } catch (error) {
       console.error(error)

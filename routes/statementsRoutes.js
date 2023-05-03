@@ -35,8 +35,8 @@ const upload = multer()
 
 router.route('/available-banks').get(protect, getListOfAvailableBanks);
 router.route('/request').post(protect, automateStatements)
-router.route('/confirm').post(protect, confirmChargeCustomer)
-router.route('/status').get(protect, hasRequestId, getStatementStatus)
+router.route('/confirm/:requestId').post(protect, confirmChargeCustomer)
+router.route('/status/:requestId').get(protect, hasRequestId, getStatementStatus)
 router.route('/').get(protect, hasTicketId, getPdfStatement)
 // router.route('/automatic').post(protect, addMessageToQueue)
 router.route('/manual-upload',).post(protect, upload.single('statement'), manualStatement)
