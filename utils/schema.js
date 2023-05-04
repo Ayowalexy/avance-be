@@ -51,6 +51,13 @@ const otpSchema = Joi.object({
         .required()
 })
 
+const waitlistSchema = Joi.object({
+    email: Joi
+        .string()
+        .email()
+        .required()
+})
+
 const passwordSchema = Joi.object({
     password: Joi
         .string()
@@ -228,5 +235,6 @@ export {
     statement,
     statusSchema,
     manualStatementAssign,
-    recoveryReequestSchema
+    recoveryReequestSchema,
+    waitlistSchema
 }

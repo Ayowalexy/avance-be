@@ -1,9 +1,10 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/usermodel.js";
-import { signupscchema, loginSchema, emailSchema, otpSchema, passwordSchema } from "../utils/schema.js";
+import { signupscchema, loginSchema, emailSchema, otpSchema, passwordSchema, waitlistSchema } from "../utils/schema.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 import sendAAuthOtp from "../utils/sendAuthEmail.js";
+import Waitlist from "../models/waitlistModal.js";
 
 
 const { sign, verify } = jwt;
@@ -59,8 +60,8 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const user = await User.findOne({ email: value.email })
-                            .populate('bankAccounts')
-                            .populate('analyzedStatements')
+        .populate('bankAccounts')
+        .populate('analyzedStatements')
 
 
 
@@ -386,11 +387,42 @@ const verifyEmail = asyncHandler(async (req, res) => {
 })
 
 
+const joinWaitlist = asyncHandler(async (req, res) => {
+    const { error, value } = waitlistSchema.validate(req.body);
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+
+    const user = new Waitlist(value);
+    await user.save();
+
+    res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                message: "Email added successfully",
+                meta: {}
+            })
+
+})
+
+
 export {
     signUp,
     loginUser,
     getPasswordResetToken,
     verifyOtp,
     resetPassword,
-    verifyEmail
+    verifyEmail,
+    joinWaitlist
 }
