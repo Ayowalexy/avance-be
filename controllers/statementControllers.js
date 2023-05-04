@@ -549,7 +549,7 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
 
 
 const statementWebhook = asyncHandler(async (req, res) => {
-    console.log(req.body)
+    console.log(req, req.body)
     res.sendStatus(200)
 })
 
