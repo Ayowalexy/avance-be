@@ -29,7 +29,7 @@ import {
     getAllRecoverableReqeuest
 } from "../controllers/statementControllers2.js";
 import { sendRecoveryRequest } from "../controllers/accountOfficer.js";
-
+import bodyParser from "body-parser";
 
 const upload = multer()
 
@@ -41,7 +41,7 @@ router.route('/').get(protect, hasTicketId, getPdfStatement)
 // router.route('/automatic').post(protect, addMessageToQueue)
 router.route('/manual-upload',).post(protect, upload.single('statement'), manualStatement)
 router.route('/analytics').get(protect, hasStatemetKey, getStatementAnalytics)
-router.route('/webhook').post(statementWebhook)
+router.route('/webhook').post(bodyParser.text({type: '*/*'}), statementWebhook)
 router.route('/paystack-webhook').post(insightPaymentWebhook)
 router.route('/banks/:id').delete(protect, bankExist, deletebankAccount)
 router.route('/manual-banks').get(protect, getManualBanks)
