@@ -204,6 +204,8 @@ const confirmChargeCustomer = asyncHandler(async (req, res) => {
             user.ticketStatus = 'pending'
         }
 
+        user.statementKey.push(periculum?.data?.key);
+
         await user.save();
 
         const queueResp = await addMessageToQueue(value.ticketNo, value.password, user._id.toString());
@@ -550,17 +552,21 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
 const statementWebhook = asyncHandler(async (req, res) => {
 
 
-    function decrypt(key, ivCiphertextB64) {
-        const ivCiphertext = Buffer.from(ivCiphertextB64, 'base64');
-        const iv = ivCiphertext.slice(0, 16);
-        const ciphertext = ivCiphertext.slice(16);
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        let decryptedData = decipher.update(ciphertext);
-        decryptedData = Buffer.concat([decryptedData, decipher.final()]);
-        console.log(decryptedData.toString());
-    }
+    try {
+        function decrypt(key, ivCiphertextB64) {
+            const ivCiphertext = Buffer.from(ivCiphertextB64, 'base64');
+            const iv = ivCiphertext.slice(0, 16);
+            const ciphertext = ivCiphertext.slice(16);
+            const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+            let decryptedData = decipher.update(ciphertext);
+            decryptedData = Buffer.concat([decryptedData, decipher.final()]);
+            console.log(decryptedData.toString());
+        }
 
-    decrypt(process.env.DECRYPTION_KEY, req.body);
+        decrypt(process.env.DECRYPTION_KEY, req.body);
+    } catch (e) {
+        console.log('This is the error', e)
+    }
 
     res.sendStatus(200)
 })
