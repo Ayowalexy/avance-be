@@ -204,7 +204,7 @@ const confirmChargeCustomer = asyncHandler(async (req, res) => {
             user.ticketStatus = 'pending'
         }
 
-        user.statementKey.push(periculum?.data?.key);
+        // user.statementKey.push(periculum?.data?.key);
 
         await user.save();
 
@@ -551,7 +551,8 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
 
 const statementWebhook = asyncHandler(async (req, res) => {
 
-
+    console.log('The request got here')
+    console.log(req)
     try {
         function decrypt(key, ivCiphertextB64) {
             const ivCiphertext = Buffer.from(ivCiphertextB64, 'base64');
