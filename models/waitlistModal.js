@@ -11,6 +11,14 @@ const waitlistSchema = new Schema({
         unique: true,
         index: true
     },
+    category: String,
+    firstName: String,
+    lastName: String,
+    phoneNumber: String,
+    occupation: String,
+    website: String,
+    companyName: String,
+    companyEmail: String,
 }, { timestamps: true })
 
 

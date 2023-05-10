@@ -55,6 +55,30 @@ const waitlistSchema = Joi.object({
     email: Joi
         .string()
         .email()
+        .required(),
+    category: Joi
+        .string()
+        .required(),
+    firstName: Joi
+        .string()
+        .required(),
+    lastName: Joi
+        .string()
+        .required(),
+    phoneNumber: Joi
+        .string()
+        .required(),
+    occupation: Joi
+        .string()
+        .required(),
+    website: Joi
+        .string()
+        .required(),
+    companyName: Joi
+        .string()
+        .required(),
+    companyEmail: Joi
+        .string()
         .required()
 })
 
