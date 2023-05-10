@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/usermodel.js";
-import { signupscchema, loginSchema, emailSchema, otpSchema, passwordSchema, waitlistSchema } from "../utils/schema.js";
+import { signupscchema, loginSchema, emailSchema, otpSchema, passwordSchema, waitlistSchemaIndividual, waitlistSchemaOrganization } from "../utils/schema.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 import sendAAuthOtp from "../utils/sendAuthEmail.js";
@@ -388,31 +388,46 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
 
 const joinWaitlist = asyncHandler(async (req, res) => {
-    const { error, value } = waitlistSchema.validate(req.body);
-    if (error) {
-        return res
+
+    if (req.body.typeOfOrganization) {
+
+        const { error, value } = req.body?.typeOfOrganization === 'Individual' ? waitlistSchemaOrganization.validate(req.body) : waitlistSchemaOrganization.validate(req.body);
+        if (error) {
+            return res
+                .status(401)
+                .json(
+                    {
+                        status: "error",
+                        message: "invalid request",
+                        meta: {
+                            error: error.message
+                        }
+                    })
+        }
+
+        const user = new Waitlist(value);
+        await user.save();
+
+        res
+            .status(200)
+            .json(
+                {
+                    status: "success",
+                    message: "User added successfully",
+                    meta: {}
+                })
+    } else {
+        res
             .status(401)
             .json(
                 {
                     status: "error",
                     message: "invalid request",
                     meta: {
-                        error: error.message
+                        error: 'typeOfOrganization must be Individual or Organization'
                     }
                 })
     }
-
-    const user = new Waitlist(value);
-    await user.save();
-
-    res
-        .status(200)
-        .json(
-            {
-                status: "success",
-                message: "Email added successfully",
-                meta: {}
-            })
 
 })
 

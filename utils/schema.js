@@ -51,13 +51,10 @@ const otpSchema = Joi.object({
         .required()
 })
 
-const waitlistSchema = Joi.object({
+const waitlistSchemaIndividual = Joi.object({
     email: Joi
         .string()
         .email()
-        .required(),
-    category: Joi
-        .string()
         .required(),
     firstName: Joi
         .string()
@@ -69,6 +66,30 @@ const waitlistSchema = Joi.object({
         .string()
         .required(),
     occupation: Joi
+        .string()
+        .required(),
+    typeOfOrganization: Joi
+        .string()
+        .valid('Individual', 'Organization')
+        .required(),
+})
+
+const waitlistSchemaOrganization = Joi.object({
+    email: Joi
+        .string()
+        .email()
+        .required(),
+    typeOfOrganization: Joi
+        .string()
+        .valid('Individual', 'Organization')
+        .required(),
+    firstName: Joi
+        .string()
+        .required(),
+    lastName: Joi
+        .string()
+        .required(),
+    phoneNumber: Joi
         .string()
         .required(),
     website: Joi
@@ -260,5 +281,6 @@ export {
     statusSchema,
     manualStatementAssign,
     recoveryReequestSchema,
-    waitlistSchema
+    waitlistSchemaIndividual,
+    waitlistSchemaOrganization
 }
