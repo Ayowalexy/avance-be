@@ -555,7 +555,6 @@ const getStatementAnalytics = asyncHandler(async (req, res) => {
 const statementWebhook = asyncHandler(async (req, res) => {
 
     console.log('The request got here')
-    console.log(req)
     try {
         function decrypt(key, ivCiphertextB64) {
             const ivCiphertext = Buffer.from(ivCiphertextB64, 'base64');
@@ -567,7 +566,7 @@ const statementWebhook = asyncHandler(async (req, res) => {
             console.log(decryptedData.toString());
         }
 
-        decrypt(process.env.DECRYPTION_KEY, req.body);
+        decrypt(process.env.DECRYPTION_KEY, req.body.data);
     } catch (e) {
         console.log('This is the error', e)
     }
