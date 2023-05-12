@@ -391,7 +391,7 @@ const joinWaitlist = asyncHandler(async (req, res) => {
 
     if (req.body.typeOfOrganization) {
 
-        const { error, value } = req.body?.typeOfOrganization === 'Individual' ? waitlistSchemaOrganization.validate(req.body) : waitlistSchemaOrganization.validate(req.body);
+        const { error, value } = req.body?.category === 'Individual' ? waitlistSchemaOrganization.validate(req.body) : waitlistSchemaOrganization.validate(req.body);
         if (error) {
             return res
                 .status(401)

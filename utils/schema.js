@@ -68,7 +68,7 @@ const waitlistSchemaIndividual = Joi.object({
     occupation: Joi
         .string()
         .required(),
-    typeOfOrganization: Joi
+    category: Joi
         .string()
         .valid('Individual', 'Organization')
         .required(),
@@ -81,7 +81,6 @@ const waitlistSchemaOrganization = Joi.object({
         .required(),
     typeOfOrganization: Joi
         .string()
-        .valid('Individual', 'Organization')
         .required(),
     firstName: Joi
         .string()
@@ -100,7 +99,11 @@ const waitlistSchemaOrganization = Joi.object({
         .required(),
     companyEmail: Joi
         .string()
-        .required()
+        .required(),
+    category: Joi
+        .string()
+        .valid('Individual', 'Organization')
+        .required(),
 })
 
 const passwordSchema = Joi.object({
