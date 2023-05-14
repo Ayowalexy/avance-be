@@ -567,7 +567,7 @@ const statementWebhook = asyncHandler(async (req, res) => {
             let decryptedData = decipher.update(ciphertext);
             decryptedData = Buffer.concat([decryptedData, decipher.final()]);
             // console.log(decryptedData.toString());
-            return `{"MetaData": {"s`.concat(decryptedData.toString())
+            return `{"MetaData": {"st`.concat(decryptedData.toString())
         }
 
         const decryptedStatement = decrypt(process.env.DECRYPTION_KEY, req.body.data);
