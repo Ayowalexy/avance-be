@@ -23,6 +23,7 @@ import { uploadBankStatement } from "../utils/generate-pdf-statement.js";
 import { generateStatementHtml } from "../utilities/generate-statement-html.js";
 import { statementFileGenerator } from "../pdf.js";
 import StatementStatus from "../models/statement-status.js";
+import handler from "../utilities/pdf-handler.js";
 
 
 const access_token_1 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc0MzQ2Njk3LCJleHAiOjE2NzQ5NTE0OTcsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.TH1_KUdGNXeHhKO0kHSW_QCR56kPs-4MiNfqjri5BeIAm9XuRp9zTBs07FZRRR26P1q_4xJCVd2yjUDu1X2YRD0RiyvDuEjZKfQ2L51ruOL-gfklEqsFazn6xVtx8y4uWm0kBotbcXhNa7h3YgHIGkShw3SrMwYBFmQnupberkEhVlxb1oCCtPS4U8SbWZzyz62b4ik797dZN2qmWlBI4pMwF-N8x705KCzbyMv2V4XqavY7xkhBd6g_yAYCnT-Me1jwsjqPInRldcdnr1oqfK9I440E9rVOIZMvndysW60HabUcihjE4DPT8uJvQ9QufWBY55-kZAJgOZHmG0ouyA'
@@ -577,7 +578,7 @@ const statementWebhook = asyncHandler(async (req, res) => {
         console.log('*'.repeat(20), 'STAGE 0', '*'.repeat(20))
 
         if (statementParsed?.MetaData?.statusMessage === 'SUCCESSFUL' && Boolean(statementParsed?.MetaData?.hmacMessage)) {
-            const uniqueKey = Number(statementParsed?.MetaData?.uniqueKey) || 1;
+            const uniqueKey = Number(statementParsed?.MetaData?.uniqueKey) || 6;
             const statement = await AnalysedStatement.findOne({ uniqueKey });
 
             console.log('*'.repeat(20), 'STAGE 1', '*'.repeat(20))
@@ -588,8 +589,8 @@ const statementWebhook = asyncHandler(async (req, res) => {
                 if (!Boolean(statement.reportLink)) {
                     console.log('*'.repeat(20), 'STAGE 3', '*'.repeat(20))
                     const statementHtml = await generateStatementHtml(statementParsed);
-                    console.log('string html', statementHtml)
-                    await statementFileGenerator(statementHtml, undefined, statement.reportId);
+                    await handler(statementHtml, undefined, statement.reportId)
+                    // await statementFileGenerator(statementHtml, undefined, statement.reportId);
                     const statementStatus = new StatementStatus({
                         message: 'Your statement has been analysed',
                         status: 'document available'
