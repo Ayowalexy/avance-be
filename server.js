@@ -33,6 +33,7 @@ import manualFlow from './routes/manual-statement/manual-statement.js'
 import automaticFlow from './routes/automatic-statement/automatic-statement.js'
 import misc from './routes/misc/get-all-analysed-statement.js'
 import { DB } from "./config/db.js";
+import UniqueKey from "./models/unique-key.js";
 
 const app = express();
 
@@ -42,18 +43,21 @@ const app = express();
 
 
 const clearBd = async() => {
- await User.deleteMany({});
- await AnalysedStatement.deleteMany({})
- await Subscription.deleteMany({})
+//  await User.deleteMany({});
+//  await AnalysedStatement.deleteMany({})
+//  await Subscription.deleteMany({})
+
 }
 
-// clearBd()
+
 
 dotenv.config();
 
 
 
 connectDB();
+
+// clearBd()
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

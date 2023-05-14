@@ -579,10 +579,13 @@ const statementWebhook = asyncHandler(async (req, res) => {
             const uniqueKey = Number(statementParsed?.MetaData?.uniqueKey);
             const statement = await AnalysedStatement.findOne({ uniqueKey });
 
+            console.log('*'.repeat(20), 'STAGE 1', '*'.repeat(20))
             if (statement) {
                 statement.status = 'processed'
+                console.log('*'.repeat(20), 'STAGE 2', '*'.repeat(20))
                 //checks if statement file has been generated, if not, generate.
                 if (!Boolean(statement.reportLink)) {
+                    console.log('*'.repeat(20), 'STAGE 3', '*'.repeat(20))
                     const statementHtml = await generateStatementHtml(statementParsed);
                     await statementFileGenerator(statementHtml, key);
                     const statementStatus = new StatementStatus({
