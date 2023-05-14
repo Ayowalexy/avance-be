@@ -566,7 +566,7 @@ const statementWebhook = asyncHandler(async (req, res) => {
             const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
             let decryptedData = decipher.update(ciphertext);
             decryptedData = Buffer.concat([decryptedData, decipher.final()]);
-            console.log(decryptedData.toString());
+            // console.log(decryptedData.toString());
             return `{"MetaData": {"s`.concat(decryptedData.toString())
         }
 
@@ -574,6 +574,8 @@ const statementWebhook = asyncHandler(async (req, res) => {
 
         const statementStringify = JSON.stringify(decryptedStatement);
         const statementParsed = JSON.parse(statementStringify);
+        console.log('*'.repeat(20), 'STAGE 0', '*'.repeat(20))
+        console.log(statementParsed)
 
         if (statementParsed?.MetaData?.statusMessage === 'SUCCESSFUL' && Boolean(statementParsed?.MetaData?.hmacMessage)) {
             const uniqueKey = Number(statementParsed?.MetaData?.uniqueKey);

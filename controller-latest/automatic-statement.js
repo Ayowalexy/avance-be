@@ -115,7 +115,7 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
 
         const doesReportIdExits = user.analyzedStatements.find(ele => Number(ele?.reportId) === Number(requestId));
         if (doesReportIdExits) {
-            throw new Error(`Statement with ${requestId} is already analysed`);
+            // throw new Error(`Statement with ${requestId} is already analysed`);
         }
 
         await useAxios({
