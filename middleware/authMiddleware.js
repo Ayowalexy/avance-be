@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import User from '../models/usermodel.js';
 import Admin from '../models/adminModel.js';
+import AnalysedStatement from '../models/analysedStatement.js';
 
 const { verify } = jwt;
 
@@ -87,7 +88,27 @@ const bankExist = asyncHandler(async (req, res, next) => {
   }
 })
 
+const isManual = asyncHandler(async(req, res, next) => {
+  const statement = await AnalysedStatement.findOne({key: Number(req.query?.key)});
+  if(statement.statementRecoveryType === 'manual'){
+    next()
+  } else {
+    res.status(401)
+    throw new Error(`Statement with ${req.query?.key} was analysed manually and cannot access this route`)
+  }
+})
 
+
+const isAutomatic = asyncHandler(async(req, res, next) => {
+  const requestId = req.query.requestId;
+  const statement = await AnalysedStatement.findOne({reportId: Number(requestId)});
+  if(statement && statement.statementRecoveryType === 'automatic'){
+    next()
+  } else {
+    res.status(401)
+    throw new Error(`Statement with ${requestId} was analysed automatically and cannot access this route`)
+  }
+})
 
 
 export {
@@ -95,5 +116,7 @@ export {
   hasRequestId,
   hasTicketId,
   hasStatemetKey,
-  bankExist
+  bankExist,
+  isManual,
+  isAutomatic
 }

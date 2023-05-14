@@ -15,8 +15,15 @@ const analysedStatement = new Schema({
     },
     key: {
         type: Number,
-        unique: true,
-        index: true
+        // unique: true,
+        // index: true
+    },
+    reportId: Number,
+    uniqueKey: Number,
+    statementRecoveryType: {
+        type: String,
+        default: '',
+        enum: ['manual', 'automatic', '']
     },
     isPaid: {
         type: Boolean,
@@ -33,12 +40,24 @@ const analysedStatement = new Schema({
     },
     status: {
         type: String,
-        enum: ['idle', 'processing', 'declined', 'completed', 'analyzing', 'available'],
+        enum: ['idle', 'processing', 'declined', 'completed', 'analyzing', 'available', 'pending', 'processed'],
         default: 'processing'
     },
     documents: [{
         type: Object
     }],
+    statementStatus: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'statementStatus'
+        }
+    ],
+    account: {
+        name: String,
+        bankImg: String,
+        accountNo: String,
+        createdAt: String
+    },
     amountThatCanBeRecouped: Number,
     reportLink: String,
     bankStatementLink: String,

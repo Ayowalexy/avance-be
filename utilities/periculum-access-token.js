@@ -1,0 +1,13 @@
+import getPericulumAccessToken from "../utils/periculumAccessToken.js";
+import PericulumToken from "../models/token.js";
+import cron from 'node-cron'
+
+
+const periculumToken = async () => {
+    //   const token  = await getPericulumAccessToken();
+    const access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjgzNzI0MDE4LCJleHAiOjE2ODQzMjg4MTgsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.qUxmdftb8o_lmhwrUfBrexQ470js1FxcHr2_PZrh89MzvPTxPqxarprFvKJYb5nrrn2rnZfOmfJkTgQ_t7Bplt_V4hUnbBUpBJ05SaRGq01e5xvuW_HZHupMSEj_tz78-DV2inxRVb7v-VgdNfHj--n6JCp-AfLO27ZEdEJRwyTX7-0faUsFvrZFsoKh3Sxp60Wk6eshz_e2iTz03fmvwB9nNT4LR5ncAT0KbjmfR2eNMnEEUShIxRAPp3QMw-dfAyxvlesc_OTw_NRJl4WbM2viQMsYiTMAdEsKCl4-Bn6F_268iE_ElkHgWaDXK8EfUXC8DA_H7HAv7FXWPogRww'
+    return access_token
+}
+
+
+export default periculumToken

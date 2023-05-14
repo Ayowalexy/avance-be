@@ -20,6 +20,9 @@ import { banks } from "../utils/banks.js";
 import generator from "../utils/generate-pdf-statement.js";
 import { create_pdf } from "../utils/pdf.js";
 import { uploadBankStatement } from "../utils/generate-pdf-statement.js";
+import { generateStatementHtml } from "../utilities/generate-statement-html.js";
+import { statementFileGenerator } from "../pdf.js";
+import StatementStatus from "../models/statement-status.js";
 
 const access_token_1 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc0MzQ2Njk3LCJleHAiOjE2NzQ5NTE0OTcsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.TH1_KUdGNXeHhKO0kHSW_QCR56kPs-4MiNfqjri5BeIAm9XuRp9zTBs07FZRRR26P1q_4xJCVd2yjUDu1X2YRD0RiyvDuEjZKfQ2L51ruOL-gfklEqsFazn6xVtx8y4uWm0kBotbcXhNa7h3YgHIGkShw3SrMwYBFmQnupberkEhVlxb1oCCtPS4U8SbWZzyz62b4ik797dZN2qmWlBI4pMwF-N8x705KCzbyMv2V4XqavY7xkhBd6g_yAYCnT-Me1jwsjqPInRldcdnr1oqfK9I440E9rVOIZMvndysW60HabUcihjE4DPT8uJvQ9QufWBY55-kZAJgOZHmG0ouyA'
 const access_token_2 = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoiYWxhZGRpbiIsImlzcyI6Imh0dHBzOi8vcGVyaWN1bHVtLXRlY2hub2xvZ2llcy1pbmMuYXV0aDAuY29tLyIsInN1YiI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS5pbnNpZ2h0cy1wZXJpY3VsdW0uY29tIiwiaWF0IjoxNjc1MzQ3MTIxLCJleHAiOjE2NzU5NTE5MjEsImF6cCI6IjUwaW0yTHl4ZGhTaTBwTDhuOW1ycmRKaUEyZlJKV2tnIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.LmQPUoJnZG3Pszytjb4XqUODCxtkvksej9_E5X7s10Yme2yBLiR7ARrr6pGpu0G8NhZCinJSKKBSl1Rvr84lqma1nh9CKMAmoXoJgSTbNlBjS5aawn_ErC4GvGY_YHh-Y8L97Lc4gqp7Z7la30Bm0L1sIwSlAaukZHA_aUqPSqr4_SdpLywFYjKAKPqvL4kwwVM_bAxfVHXbsld4j7Z_TCev2b-iOW5xaacuM2sNgqVpEI1jPdp9T_0Np9JqZrXGz33LloQY1G3YprhnHovXXPo2WH6QXBLOS_1HmafqOStGx3-5XR7ViamW5G7KbUUFCxeiLumjmA0oJGwYYyrrBg'
@@ -564,9 +567,38 @@ const statementWebhook = asyncHandler(async (req, res) => {
             let decryptedData = decipher.update(ciphertext);
             decryptedData = Buffer.concat([decryptedData, decipher.final()]);
             console.log(decryptedData.toString());
+            return `{"MetaData": {"s`.concat(decryptedData.toString())
         }
 
-        decrypt(process.env.DECRYPTION_KEY, req.body.data);
+        const decryptedStatement = decrypt(process.env.DECRYPTION_KEY, req.body.data);
+
+        const statementStringify = JSON.stringify(decryptedStatement);
+        const statementParsed = JSON.parse(statementStringify);
+
+        if (statementParsed?.MetaData?.statusMessage === 'SUCCESSFUL' && Boolean(statementParsed?.MetaData?.hmacMessage)) {
+            const uniqueKey = Number(statementParsed?.MetaData?.uniqueKey);
+            const statement = await AnalysedStatement.findOne({ uniqueKey });
+
+            if (statement) {
+                statement.status = 'processed'
+                //checks if statement file has been generated, if not, generate.
+                if (!Boolean(statement.reportLink)) {
+                    const statementHtml = await generateStatementHtml(statementParsed);
+                    await statementFileGenerator(statementHtml, key);
+                    const statementStatus = new StatementStatus({
+                        message: 'Your statement has been analysed',
+                        status: 'document available'
+                    })
+                    await statementStatus.save();
+                    statement.statementStatus.push(statementStatus);
+                }
+                await statement.save();
+            }
+
+        }
+
+
+
     } catch (e) {
         console.log('This is the error', e)
     }
@@ -593,7 +625,6 @@ const insightPaymentWebhook = asyncHandler(async (req, res) => {
         const reference = data.data.reference
 
         const user = await User.findById(userId);
-        console.log(user, key, 'here-0-')
 
         if (user && key) {
             await AnalysedStatement.findOneAndUpdate({ key }, { isPaid: true })
