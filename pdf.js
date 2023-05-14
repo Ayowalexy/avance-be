@@ -7,9 +7,15 @@ import AnalysedStatement from './models/analysedStatement.js';
 const options = { format: 'Letter', timeout: 90000 };
 
 
-export const statementFileGenerator = async (html, key) => {
+export const statementFileGenerator = async (html, key, reportId) => {
     try {
-        const statement = await AnalysedStatement.findOne({ key });
+        let statement;
+
+        if (key) {
+            statement = await AnalysedStatement.findOne({ key });
+        } else if (reportId) {
+            statement = await AnalysedStatement.findOne({ reportId });
+        }
         if (statement) {
             pdf.create(html, options).toBuffer(function (err, buffer) {
                 let _buffer = new Buffer.from(buffer, 'base64');
