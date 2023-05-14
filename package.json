@@ -46,8 +46,7 @@
     "pdfkit": "^0.13.0",
     "ssh-keygen": "^0.5.0",
     "sshpk": "^1.17.0",
-    "streamifier": "^0.1.1",
-    "string-to-object-convert": "^1.0.4"
+    "streamifier": "^0.1.1"
   },
   "type": "module"
 }
