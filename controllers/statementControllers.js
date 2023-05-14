@@ -588,6 +588,7 @@ const statementWebhook = asyncHandler(async (req, res) => {
                 if (!Boolean(statement.reportLink)) {
                     console.log('*'.repeat(20), 'STAGE 3', '*'.repeat(20))
                     const statementHtml = await generateStatementHtml(statementParsed);
+                    console.log('string html', statementHtml)
                     await statementFileGenerator(statementHtml, undefined, statement.reportId);
                     const statementStatus = new StatementStatus({
                         message: 'Your statement has been analysed',

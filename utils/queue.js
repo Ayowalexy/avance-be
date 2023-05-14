@@ -80,7 +80,7 @@ const addMessageToQueue = async (data) => {
     }
 
     const params = {
-        "MessageBody": `{\"uniqueKey\":1,\"mbsParameters\":{\"apiParameters\":{\"clientId\":\"${Client_ID}\",\"clientSecret\":\"${Client_Secret}\"},\"customerParameters\":{\"destinationId\":${Number(Client_ID)},\"accountNo\":\"${accountNo}\",\"bankId\":${Number(bankId)},\"role\":\"Applicant\",\"username\":\"musideen@aladdin.ng\",\"country\":\"NG\",\"phone\":\"${phone}\",\"applicants\":[{\"name\":\"${name}\",\"applicationNo\":\"\"}]},\"ticketNo\":\"${ticketNo}\",\"password\":\"${pwd}\",\"startDate\":\"${startDate}\",\"endDate\":\"${endDate}\"},\"insightsParameters\":{\"accessToken\":\"${token}\"}}`,
+        "MessageBody": `{\"uniqueKey\":${uniqueKey},\"mbsParameters\":{\"apiParameters\":{\"clientId\":\"${Client_ID}\",\"clientSecret\":\"${Client_Secret}\"},\"customerParameters\":{\"destinationId\":${Number(Client_ID)},\"accountNo\":\"${accountNo}\",\"bankId\":${Number(bankId)},\"role\":\"Applicant\",\"username\":\"musideen@aladdin.ng\",\"country\":\"NG\",\"phone\":\"${phone}\",\"applicants\":[{\"name\":\"${name}\",\"applicationNo\":\"\"}]},\"ticketNo\":\"${ticketNo}\",\"password\":\"${pwd}\",\"startDate\":\"${startDate}\",\"endDate\":\"${endDate}\"},\"insightsParameters\":{\"accessToken\":\"${token}\"}}`,
         "QueueUrl": queueUrl
       }
 
