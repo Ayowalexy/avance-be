@@ -10,6 +10,7 @@ import { allBanksArray } from "../utilities/all-banks.js";
 import { uploadBankStatement } from "../utils/generate-pdf-statement.js";
 import { statementFileGenerator } from "../pdf.js";
 import { generateStatementHtml } from "../utilities/generate-statement-html.js";
+import handler from "../utilities/pdf-handler.js";
 
 dotenv.config()
 
@@ -90,10 +91,9 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
                     })
 
         } catch (e) {
-            console.log(e.response)
+            console.log(e)
             const error = e?.response?.data?.message || "provider not available"
             res.status(400).json({ "status": "error", "message": "invalid error", "meta": { "error": error } })
-
         }
     } else {
         res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": 'Account number and bank name is required' } })
@@ -104,59 +104,94 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
 
 const getManualStatementStatus = asyncHandler(async (req, res) => {
     const statementKey = req.query.key;
+    const type = req.query.type;
     const access_token = await periculumToken();
     try {
-        const response = await axios(`${PERICULUM_BASE_URL}/statements/${statementKey}`, {
-            headers: {
-                "Authorization": `Bearer ${access_token}`,
-                "Content-Type": "application/json"
-            },
-            method: 'get'
-        })
+        const statement = await AnalysedStatement.findOne({ key: Number(key) });
 
-        const data = response.data;
+        if (!statement.analysed) {
+            const response = await axios(`${PERICULUM_BASE_URL}/statements/${statementKey}`, {
+                headers: {
+                    "Authorization": `Bearer ${access_token}`,
+                    "Content-Type": "application/json"
+                },
+                method: 'get'
+            })
 
-        if (data.processingStatus === 'PROCESSED') {
-            const key = req.query.key;
+            const data = response.data;
 
-            const statement = await AnalysedStatement.findOne({ key: Number(key) });
-            statement.status = 'processed'            
+            if (data.processingStatus === 'PROCESSED') {
+                const key = req.query.key;
+                const val = data[type];
 
-            //checks if statement file has been generated, if not, generate.
-            if(!Boolean(statement.reportLink)){
-                const statementHtml = await generateStatementHtml(data);
-                await statementFileGenerator(statementHtml, key);
-                const statementStatus = new StatementStatus({
-                    message: 'Your statement has been analysed',
-                    status: 'document available'
-                })
-                await statementStatus.save();
-                statement.statementStatus.push(statementStatus);
+                statement.status = 'processed';
+                statement.spendAnalysis = data?.spendAnalysis;
+                statement.behavioralAnalysis = data?.behavioralAnalysis;
+                statement.transactionPatternAnalysis = data?.transactionPatternAnalysis;
+                statement.cashFlowAnalysis = data?.cashFlowAnalysis;
+                statement.analysed = true;
+
+                //checks if statement file has been generated, if not, generate.
+                if (!Boolean(statement.reportLink)) {
+                    const statementHtml = await generateStatementHtml(data);
+                    await handler(statementHtml, key);
+                    // await statementFileGenerator(statementHtml, key);
+                    const statementStatus = new StatementStatus({
+                        message: 'Your statement has been analysed',
+                        status: 'document available'
+                    })
+                    await statementStatus.save();
+                    statement.statementStatus.push(statementStatus);
+                }
+                await statement.save();
+
+                return res
+                    .status(200)
+                    .json(
+                        {
+                            status: 'success',
+                            message: "Statement has been proceed and report now available",
+                            type,
+                            data: val,
+                            meta: {}
+                        })
+
+
+            } else {
+                return res
+                    .status(401)
+                    .json(
+                        {
+                            status: 'error',
+                            message: "Report for this statement is still being processed",
+                            meta: {}
+                        })
+
+
             }
-            await statement.save();
-
+        } else {
+            const val = statement[type];
             return res
                 .status(200)
                 .json(
                     {
                         status: 'success',
                         message: "Statement has been proceed and report now available",
-                        meta: {}
-                    })
-
-        } else {
-            return res
-                .status(401)
-                .json(
-                    {
-                        status: 'error',
-                        message: "Report for this statement is still being processed",
+                        type,
+                        data: val,
                         meta: {}
                     })
         }
-
     } catch (e) {
         console.log(e)
+        res
+            .status(401)
+            .json(
+                {
+                    status: 'error',
+                    message: "Error occured",
+                    meta: {}
+                })
     }
 
 })

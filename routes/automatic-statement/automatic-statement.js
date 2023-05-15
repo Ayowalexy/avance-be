@@ -1,14 +1,16 @@
 import express from 'express';
-import { protect, isAutomatic } from '../../middleware/authMiddleware.js';
-import { automateStatementAnalysis, confirmAutomaticCredentials, getAutomaticProcessingStatus } from '../../controller-latest/automatic-statement.js';
+import { protect, isAutomatic, isAuto } from '../../middleware/authMiddleware.js';
+import { automateStatementAnalysis, confirmAutomaticCredentials, getAutomaticProcessingStatus, getAutomaticStatementAnalysis } from '../../controller-latest/automatic-statement.js';
 
 const router = express.Router();
 
 router.route('/analysis')
-.post(protect, automateStatementAnalysis)
-.get(protect, isAutomatic, getAutomaticProcessingStatus)
+    .post(protect, automateStatementAnalysis)
+    .get(protect, isAuto, getAutomaticStatementAnalysis)
 
-router.route('/analysis/:requestId')
-.put(protect, confirmAutomaticCredentials)
+router.route('/analysis/:key')
+    .put(protect, confirmAutomaticCredentials);
+// .get(protect, isAutomatic, getAutomaticProcessingStatus)
+
 
 export default router;

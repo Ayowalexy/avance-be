@@ -98,6 +98,16 @@ const isManual = asyncHandler(async(req, res, next) => {
   }
 })
 
+const isAuto = asyncHandler(async(req, res, next) => {
+  
+  if(req.query.type && req.query.reportId){
+    next()
+  } else {
+    res.status(401)
+    throw new Error(`Type or reportId is missing`)
+  }
+})
+
 
 const isAutomatic = asyncHandler(async(req, res, next) => {
   const requestId = req.query.requestId;
@@ -118,5 +128,6 @@ export {
   hasStatemetKey,
   bankExist,
   isManual,
-  isAutomatic
+  isAutomatic,
+  isAuto
 }

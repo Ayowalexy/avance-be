@@ -111,9 +111,9 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
             }
         })
 
-        const requestId = req.params.requestId;
+        const requestId = req.params.key;
 
-        const doesReportIdExits = user.analyzedStatements.find(ele => Number(ele?.reportId) === Number(requestId));
+        const doesReportIdExits = user.analyzedStatements.find(ele => Number(ele?.key) === Number(requestId));
         if (doesReportIdExits) {
             // throw new Error(`Statement with ${requestId} is already analysed`);
         }
@@ -173,8 +173,9 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
             reportOwnerId: req.user.id,
             statementRecoveryType: 'automatic',
             account,
-            reportId: requestId,
-            uniqueKey:  unique
+            // reportId: requestId,
+            uniqueKey: unique,
+            key: requestId
         })
 
         analysedStatement.statementStatus.push(statementStatus);
@@ -221,7 +222,7 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
 
 const getAutomaticProcessingStatus = asyncHandler(async (req, res) => {
 
-    const requestId = req.query.reportId
+    const requestId = req.query.key;
     try {
 
         const feedback = await useAxios({
@@ -248,8 +249,45 @@ const getAutomaticProcessingStatus = asyncHandler(async (req, res) => {
 
 })
 
+
+const getAutomaticStatementAnalysis = asyncHandler(async (req, res) => {
+    const reportId = req.query.reportId;
+    const type = req.query.type;
+
+    const statement = await AnalysedStatement.findOne({ reportId });
+
+    if (statement) {
+        if (statement.analysed) {
+            const val = statement[type];
+            return res
+                .status(200)
+                .json(
+                    {
+                        status: 'success',
+                        message: "Statement has been proceed and report now available",
+                        type,
+                        data: val,
+                        meta: {}
+                    })
+
+        } else {
+            return res
+                .status(401)
+                .json(
+                    {
+                        status: 'error',
+                        message: "Report for this statement is still being processed",
+                        meta: {}
+                    })
+        }
+    } else {
+        res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": `Statement with ${reportId} not found` } })
+    }
+})
+
 export {
     automateStatementAnalysis,
     confirmAutomaticCredentials,
-    getAutomaticProcessingStatus
+    getAutomaticProcessingStatus,
+    getAutomaticStatementAnalysis
 }

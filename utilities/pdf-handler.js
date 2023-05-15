@@ -17,11 +17,7 @@ const handler = async (htmlString, key, reportId) => {
 
     try {
 
-        if (key) {
-            statement = await AnalysedStatement.findOne({ key });
-        } else if (reportId) {
-            statement = await AnalysedStatement.findOne({ reportId });
-        }
+        statement = statement = await AnalysedStatement.findOne({ key });
         const page = await browser.newPage();
         await page.setContent(htmlString, { waitUntil: 'networkidle0' });
         result = await page.pdf({ path: 'page2.pdf', format: 'A4' });

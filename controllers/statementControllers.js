@@ -583,14 +583,20 @@ const statementWebhook = asyncHandler(async (req, res) => {
 
             console.log('*'.repeat(20), 'STAGE 1', '*'.repeat(20))
             if (statement) {
-                statement.status = 'processed'
+                statement.status = 'processed';
+                statement.spendAnalysis = statementParsed?.SpendAnalysis;
+                statement.behavioralAnalysis = statementParsed?.BehavioralAnalysis;
+                statement.transactionPatternAnalysis = statementParsed?.TransactionPatternAnalysis;
+                statement.cashFlowAnalysis = statementParsed?.CashFlowAnalysis;
+                statement.analysed = true;
+
                 console.log('*'.repeat(20), 'STAGE 2', '*'.repeat(20))
                 //checks if statement file has been generated, if not, generate.
                 if (!Boolean(statement.reportLink)) {
                     console.log('*'.repeat(20), 'STAGE 3', '*'.repeat(20))
                     const statementHtml = await generateStatementHtml(statementParsed);
-                    await handler(statementHtml, undefined, statement.reportId)
-                    // await statementFileGenerator(statementHtml, undefined, statement.reportId);
+
+                    await handler(statementHtml, statement.key)
                     const statementStatus = new StatementStatus({
                         message: 'Your statement has been analysed',
                         status: 'document available'
@@ -628,21 +634,18 @@ const insightPaymentWebhook = asyncHandler(async (req, res) => {
         const meta = data.data.metadata;
         const userId = meta.userId;
         const key = meta.key;
+        const reportId = meta.reportId;
         const reference = data.data.reference
 
         const user = await User.findById(userId);
 
         if (user && key) {
-            await AnalysedStatement.findOneAndUpdate({ key }, { isPaid: true })
-            const subscription = new Subscription({
-                key,
-                reference,
-                amount
-            })
-            console.log('herer--')
+            if (key) {
+                await AnalysedStatement.findOneAndUpdate({ key }, { isPaid: true })
+            } else {
+                await AnalysedStatement.findOneAndUpdate({ reportId }, { isPaid: true })
+            }
 
-
-            await subscription.save();
             // user.paidInsights.push(subscription);
             // await user.save();
             await User.findOneAndUpdate({ _id: userId }, {

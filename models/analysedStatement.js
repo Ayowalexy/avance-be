@@ -20,6 +20,14 @@ const analysedStatement = new Schema({
     },
     reportId: Number,
     uniqueKey: Number,
+    spendAnalysis: Object,
+    transactionPatternAnalysis: Object,
+    behavioralAnalysis: Object,
+    cashFlowAnalysis: Object,
+    analysed: {
+        type: Boolean,
+        default: false
+    },
     statementRecoveryType: {
         type: String,
         default: '',
