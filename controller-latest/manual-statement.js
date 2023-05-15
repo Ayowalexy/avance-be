@@ -56,6 +56,8 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
 
             const key = periculum?.data?.key;
 
+            console.log(periculum.data)
+
             //initialized statement status with default manual message
             const statementStatus = new StatementStatus({
                 message: 'Your have successfully uploaded you bank statement manually',
@@ -76,7 +78,7 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
 
             await analysedStatement.save();
             user.analyzedReports = Number(user.analyzedReports) + 1;
-            await uploadBankStatement(req.file.buffer, key);
+            // await uploadBankStatement(req.file.buffer, key);
             user.analyzedStatements.push(analysedStatement);
             await user.save();
 
@@ -107,7 +109,7 @@ const getManualStatementStatus = asyncHandler(async (req, res) => {
     const type = req.query.type;
     const access_token = await periculumToken();
     try {
-        const statement = await AnalysedStatement.findOne({ key: Number(key) });
+        const statement = await AnalysedStatement.findOne({ key: Number(statementKey) });
 
         if (!statement.analysed) {
             const response = await axios(`${PERICULUM_BASE_URL}/statements/${statementKey}`, {

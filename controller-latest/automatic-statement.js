@@ -128,8 +128,8 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
         const parsed = JSON.parse(userBankDetails);
 
         //live url
-        const currentUniqueKey = await UniqueKey.findById('6460b210f346e27a3aa77b34');
-        // const currentUniqueKey = await UniqueKey.findById(UNIQUE_KEY_ID);
+        // const currentUniqueKey = await UniqueKey.findById('6460b210f346e27a3aa77b34');
+        const currentUniqueKey = await UniqueKey.findById(UNIQUE_KEY_ID);
 
         const unique = currentUniqueKey.uniqueKey;
         const userFullName = user.firstName.concat(' ', user.lastName);

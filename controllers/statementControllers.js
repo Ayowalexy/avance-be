@@ -52,17 +52,115 @@ const PAYSTACK_SK = process.env.PAYSTACK_SK
 const getListOfAvailableBanks = asyncHandler(async (req, res) => {
 
     try {
-        const response = await useAxios({
-            url: `${STATEMENT_URL}/SelectActiveRequestBanks`,
-            method: "post",
-        });
+        // const response = await useAxios({
+        //     url: `${STATEMENT_URL}/SelectActiveRequestBanks`,
+        //     method: "post",
+        // });
+
+        let arr = [
+            {
+                "id": 6,
+                "name": "Access Bank",
+                "sortCode": "044"
+            },
+            {
+                "id": 32,
+                "name": "Eco Bank",
+                "sortCode": "050"
+            },
+            {
+                "id": 5,
+                "name": "FCMB",
+                "sortCode": "214"
+            },
+            {
+                "id": 15,
+                "name": "Fidelity Bank",
+                "sortCode": "070"
+            },
+            {
+                "id": 3,
+                "name": "First Bank",
+                "sortCode": "011"
+            },
+            {
+                "id": 44,
+                "name": "FSDH Merchant Bank",
+                "sortCode": "400001"
+            },
+            {
+                "id": 13,
+                "name": "GT Bank",
+                "sortCode": "058"
+            },
+            {
+                "id": 7,
+                "name": "Heritage Bank",
+                "sortCode": "030"
+            },
+            {
+                "id": 4,
+                "name": "Keystone Bank",
+                "sortCode": "082"
+            },
+            {
+                "id": 2,
+                "name": "Polaris Bank Limited",
+                "sortCode": "076"
+            },
+            {
+                "id": 37,
+                "name": "Providus Bank",
+                "sortCode": "101"
+            },
+            {
+                "id": 10,
+                "name": "Stanbic IBTC Bank",
+                "sortCode": "221"
+            },
+            {
+                "id": 1,
+                "name": "Sterling Bank",
+                "sortCode": "232"
+            },
+            {
+                "id": 14,
+                "name": "UBA ",
+                "sortCode": "033"
+            },
+            {
+                "id": 11,
+                "name": "Union Bank",
+                "sortCode": "032"
+            },
+            {
+                "id": 9,
+                "name": "Unity Bank",
+                "sortCode": "215"
+            },
+            {
+                "id": 95,
+                "name": "VFD MFB",
+                "sortCode": "566"
+            },
+            {
+                "id": 12,
+                "name": "Wema Bank",
+                "sortCode": "035"
+            },
+            {
+                "id": 17,
+                "name": "Zenith Bank",
+                "sortCode": "057"
+            }
+        ]
 
         res
             .status(200)
             .json(
                 {
                     status: "success",
-                    data: response?.data?.result,
+                    data: arr || response?.data?.result,
                     meta: {}
                 })
     } catch (e) {

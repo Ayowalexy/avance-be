@@ -84,6 +84,8 @@ const addMessageToQueue = async (data) => {
         "QueueUrl": queueUrl
       }
 
+      console.log(params)
+
     try {
         const data = await client.send(new SendMessageCommand(params));
         console.log("Success, message sent. MessageID:", data.MessageId);
