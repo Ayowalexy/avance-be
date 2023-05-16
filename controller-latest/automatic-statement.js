@@ -77,7 +77,7 @@ const automateStatementAnalysis = asyncHandler(async (req, res) => {
                     meta: {}
                 })
     } catch (e) {
-        console.log(e)
+        console.log(e.response)
         res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": "provider not available" } })
 
     }
