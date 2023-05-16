@@ -147,6 +147,18 @@ const getManualStatementStatus = asyncHandler(async (req, res) => {
                 }
                 await statement.save();
 
+                const creditTurnOver = data?.cashFlowAnalysis?.totalCreditTurnover
+
+                let amountPayable = 0;
+                if (creditTurnOver < 5000000000) {
+                    amountPayable = Number(creditTurnOver) * 0.05
+                } else if (creditTurnOver > 5000000000 && creditTurnOver < 25000000000) {
+                    amountPayable = Number(creditTurnOver) * 0.025;
+                } else if (creditTurnOver > 25000000000) {
+                    amountPayable = Number(creditTurnOver) * 0.15;
+                }
+                const rate = creditTurnOver < 5000000000 ? '0.05%' : creditTurnOver > 5000000000 && creditTurnOver < 25000000000 ? '0.025%' : creditTurnOver > 25000000000 ? '0.15%' : ''
+
                 return res
                     .status(200)
                     .json(
@@ -155,6 +167,9 @@ const getManualStatementStatus = asyncHandler(async (req, res) => {
                             message: "Statement has been proceed and report now available",
                             type,
                             data: val,
+                            amountPayable: Number(amountPayable) + 25000,
+                            rate,
+                            creditTurnOver,
                             meta: {}
                         })
 
@@ -173,6 +188,18 @@ const getManualStatementStatus = asyncHandler(async (req, res) => {
             }
         } else {
             const val = statement[type];
+            const creditTurnOver = statement?.cashFlowAnalysis?.totalCreditTurnover
+
+            let amountPayable = 0;
+            if (creditTurnOver < 5000000000) {
+                amountPayable = Number(creditTurnOver) * 0.05
+            } else if (creditTurnOver > 5000000000 && creditTurnOver < 25000000000) {
+                amountPayable = Number(creditTurnOver) * 0.025;
+            } else if (creditTurnOver > 25000000000) {
+                amountPayable = Number(creditTurnOver) * 0.15;
+            }
+            const rate = creditTurnOver < 5000000000 ? '0.05%' : creditTurnOver > 5000000000 && creditTurnOver < 25000000000 ? '0.025%' : creditTurnOver > 25000000000 ? '0.15%' : ''
+
             return res
                 .status(200)
                 .json(
@@ -181,6 +208,11 @@ const getManualStatementStatus = asyncHandler(async (req, res) => {
                         message: "Statement has been proceed and report now available",
                         type,
                         data: val,
+                        type,
+                        data: val,
+                        amountPayable: Number(amountPayable) + 25000,
+                        rate,
+                        creditTurnOver,
                         meta: {}
                     })
         }
