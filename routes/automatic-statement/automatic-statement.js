@@ -8,8 +8,8 @@ router.route('/analysis')
     .post(protect, automateStatementAnalysis)
     .get(protect, isAuto, getAutomaticStatementAnalysis)
 
-router.route('/analysis-statement/:key')
-    .post(protect, confirmAutomaticCredentials);
+router.route('/analysis/:key')
+    .put(protect, confirmAutomaticCredentials);
 // .get(protect, isAutomatic, getAutomaticProcessingStatus)
 
 
