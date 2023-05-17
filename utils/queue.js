@@ -44,8 +44,8 @@ const addMessageToQueue = async (data) => {
         'region': 'us-east-1',
         'version': 'latest',
         'credentials': {
-            'accessKeyId': AWS_KEY,
-            'secretAccessKey': AWS_SECRET,
+            'accessKeyId': 'AKIATTGIS7NIC6L77N5Y',
+            'secretAccessKey': '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',
         },
     });
 
