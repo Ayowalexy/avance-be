@@ -275,9 +275,9 @@ const getAllReports = asyncHandler(async (req, res) => {
 
     let reports = [];
     if (req.params.type === 'all') {
-        reports = await AnalysedStatement.find().populate('reportOwnerId')
+        reports = await AnalysedStatement.find().populate('analysedBy')
     } else {
-        reports = await AnalysedStatement.find({ status: req.params.type }).populate('reportOwnerId')
+        reports = await AnalysedStatement.find({ status: req.params.type }).populate('analysedBy')
     }
 
     console.log(reports)
