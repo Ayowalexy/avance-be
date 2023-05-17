@@ -124,6 +124,7 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
             data: value
         })
 
+        console.log(req.session, 'session')
         const userBankDetails = req.session.bankDetails;
         const parsed = JSON.parse(userBankDetails);
 
