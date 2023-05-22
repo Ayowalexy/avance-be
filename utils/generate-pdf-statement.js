@@ -19,7 +19,7 @@ const generator = async (content, key) => {
         let cld_upload_stream = cloudinary.uploader.upload_stream(
             {
                 folder: "foo",
-               
+
             },
             async function (error, result) {
                 if (error) {
@@ -42,32 +42,32 @@ const generator = async (content, key) => {
 }
 
 export const uploadBankStatement = async (buffer, key) => {
-    const statement = new AnalysedStatement({key: key});
+    
+    const statement = await AnalysedStatement.findOne({ key });
 
     console.log(buffer, key)
 
+    let _buffer = new Buffer.from(buffer, 'base64');
 
-        let _buffer = new Buffer.from(buffer, 'base64');
-
-        let cld_upload_stream = cloudinary.uploader.upload_stream(
-            {
-                folder: "foo",
-                resource_type: 'raw'
-            },
-            async function (error, result) {
-                if (error) {
-                    console.log("upload statement error", error);
-                    return null
-                }
-
-                console.log(result)
-                statement.bankStatementLink = result.url;
-                await statement.save()
-
+    let cld_upload_stream = cloudinary.uploader.upload_stream(
+        {
+            folder: "foo",
+            resource_type: 'raw'
+        },
+        async function (error, result) {
+            if (error) {
+                console.log("upload statement error", error);
+                return null
             }
-        );
 
-        streamifier.createReadStream(_buffer).pipe(cld_upload_stream);
+            console.log(result)
+            statement.bankStatementLink = result.url;
+            await statement.save()
+
+        }
+    );
+
+    streamifier.createReadStream(_buffer).pipe(cld_upload_stream);
 
 }
 

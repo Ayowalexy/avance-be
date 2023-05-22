@@ -15,14 +15,14 @@ const getFreeAccountOfficer = async (accountOfficerId) => {
 
     if (accountOfficerId) {
         let acc_officer = await AccountOfficer.findById(accountOfficerId.toString())
-        if(acc_officer){
+        if (acc_officer) {
             free_officer = acc_officer
         } else {
             throw new Error(`Account officer with id ${accountOfficerId} does not exit`)
         }
     } else {
         const account_officers = await AccountOfficer.find(
-            { status: 'active', analyseStatus: 'idle' },
+            { status: 'active', },
         ).sort({ queueNumber: -1 })
         free_officer = account_officers.pop();
     }
@@ -42,8 +42,6 @@ export const sendAccountOfficerEmailOfNewSignmentInsight = async (key, accountOf
             freeOfficer = await getFreeAccountOfficer();
         }
 
-        console.log('free officer', freeOfficer)
-
         if (freeOfficer) {
             let user = await AccountOfficer.findById({ _id: freeOfficer._id.toString() })
 
@@ -55,23 +53,9 @@ export const sendAccountOfficerEmailOfNewSignmentInsight = async (key, accountOf
                 $push: { pendingReports: key }
             })
             const account_officer_statements = await AnalysedStatement.findOne({ key: { $in: [key] } })
-            console.log(freeOfficer.email, account_officer_statements)
+            account_officer_statements.analysedBy = freeOfficer;
+            await account_officer_statements.save();
 
-            const data = {
-                spendAnalysis: account_officer_statements?.report?.spendAnalysis,
-                transactionPatternAnalysis: account_officer_statements?.report?.transactionPatternAnalysis,
-                behavioralAnalysis: account_officer_statements?.report?.behavioralAnalysis,
-                cashFlowAnalysis: account_officer_statements?.report?.cashFlowAnalysis,
-                incomeAnalysis: account_officer_statements?.report?.incomeAnalysis,
-                name: 'Biyi'
-            }
-
-            // const reportPdf = new InvoiceGenerator(data);
-            // reportPdf.generate()
-            // console.log(data)
-            // console.log(path.resolve('Biyi.pdf'))
-            // const url = await uploadToCloudinary(path.resolve('Biyi.pdf'))
-            // console.log(url)
             await sendAccountOfficerEmail(freeOfficer._id.toString());
 
             return 'success'

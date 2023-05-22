@@ -78,7 +78,7 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
 
             await analysedStatement.save();
             user.analyzedReports = Number(user.analyzedReports) + 1;
-            // await uploadBankStatement(req.file.buffer, key);
+            await uploadBankStatement(req.file.buffer, key);
             user.analyzedStatements.push(analysedStatement);
             await user.save();
 
@@ -136,7 +136,7 @@ const getManualStatementStatus = asyncHandler(async (req, res) => {
                 //checks if statement file has been generated, if not, generate.
                 if (!Boolean(statement.reportLink)) {
                     const statementHtml = await generateStatementHtml(data);
-                    await handler(statementHtml, key);
+                    await handler(statementHtml, key, Math.floor(Math.random() * 100000000000).toString());
                     // await statementFileGenerator(statementHtml, key);
                     const statementStatus = new StatementStatus({
                         message: 'Your statement has been analysed',

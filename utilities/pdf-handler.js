@@ -3,9 +3,8 @@ import { cloudinary } from '../cloudinary/cloudinary.js';
 import streamifier from 'streamifier'
 import AnalysedStatement from '../models/analysedStatement.js';
 
-const handler = async (htmlString, key, reportId) => {
+const handler = async (htmlString, key, name) => {
 
-    console.log(htmlString.length, key, reportId)
     let result = null;
     let statement;
 
@@ -20,7 +19,7 @@ const handler = async (htmlString, key, reportId) => {
         statement = statement = await AnalysedStatement.findOne({ key });
         const page = await browser.newPage();
         await page.setContent(htmlString, { waitUntil: 'networkidle0' });
-        result = await page.pdf({ path: 'page2.pdf', format: 'A4' });
+        result = await page.pdf({ path: name?.concat('.pdf'), format: 'A4' });
         console.log('result', result)
 
         let _buffer = new Buffer.from(result, 'base64');

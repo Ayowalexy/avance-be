@@ -694,7 +694,7 @@ const statementWebhook = asyncHandler(async (req, res) => {
                     console.log('*'.repeat(20), 'STAGE 3', '*'.repeat(20))
                     const statementHtml = await generateStatementHtml(statementParsed);
 
-                    await handler(statementHtml, statement.key)
+                    await handler(statementHtml, statement.key, Math.floor(Math.random() * 10000000000).toString())
                     const statementStatus = new StatementStatus({
                         message: 'Your statement has been analysed',
                         status: 'document available'
@@ -746,9 +746,10 @@ const insightPaymentWebhook = asyncHandler(async (req, res) => {
 
             // user.paidInsights.push(subscription);
             // await user.save();
-            await User.findOneAndUpdate({ _id: userId }, {
-                $push: { paidInsights: subscription }
-            })
+            // await User.findOneAndUpdate({ _id: userId }, {
+            //     $push: { paidInsights: subscription }
+            // })
+            console.log('key', key)
             await sendAccountOfficerEmailOfNewSignmentInsight(key)
         }
     }

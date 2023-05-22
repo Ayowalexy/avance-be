@@ -365,6 +365,7 @@ const sendRecoveryRequest = asyncHandler(async (req, res) => {
                     }
                 })
     }
+    // https://relieved-plum-wetsuit.cyclic.app/api/bank/fund
     const user = await User.findById({ _id: req.user.id });
     const statement = await AnalysedStatement.findOne({ key: value.key }).populate('analysedBy');
     const accountOfficer = await AccountOfficer.findById({ _id: statement.analysedBy._id });
