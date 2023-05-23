@@ -252,15 +252,17 @@ const getAutomaticProcessingStatus = asyncHandler(async (req, res) => {
 
 
 const getAutomaticStatementAnalysis = asyncHandler(async (req, res) => {
-    const reportId = req.query.reportId;
+    const key = req.query.key;
     const type = req.query.type;
 
-    const statement = await AnalysedStatement.findOne({ reportId });
+    let statement = await AnalysedStatement.findOne({ key });
+    
 
-    if (statement) {
+    if (statement.length) {
+        // statement = statement.length > 1 ? statement[statement.length - 1] : statement[0];
         if (statement.analysed) {
             const val = statement[type];
-            const creditTurnOver = val?.cashFlowAnalysis?.totalCreditTurnover
+            const creditTurnOver = statement?.cashFlowAnalysis?.totalCreditTurnover
 
             let amountPayable = 0;
             if (creditTurnOver < 5000000000) {

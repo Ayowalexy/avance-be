@@ -39,7 +39,7 @@
             e.preventDefault();
 
             let handler = PaystackPop.setup({
-                key: 'pk_test_28d2e0f6c806854b898be87d1d21f0759aa9520b', // Replace with your public key
+                key: 'pk_test_3020e4b22aa2fe57012ee38f5bc158c2e7a91b7b', // Replace with your public key
                 email: document.getElementById("email-address").value,
                 amount: document.getElementById("amount").value * 100,
                 ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
@@ -50,7 +50,7 @@
                 metadata: {
                     userId: '6441600902e8a3059735081a',
                     email: "ayowalexy@gmail.com",
-                    key: 946
+                    key: 983
                 },
                 callback: function (response) {
                     let message = 'Payment complete! Reference: ' + response.reference;

@@ -17,6 +17,9 @@ const handler = async (htmlString, key, name) => {
     try {
 
         statement = statement = await AnalysedStatement.findOne({ key });
+
+        // statement = statement.length > 1 ? statement[statement.length - 1] : statement[0];
+
         const page = await browser.newPage();
         await page.setContent(htmlString, { waitUntil: 'networkidle0' });
         result = await page.pdf({ path: name?.concat('.pdf'), format: 'A4' });

@@ -77,7 +77,7 @@ const analysedStatement = new Schema({
     dateCustomerRequestedForRecovery: String,
     dateAccountOfficerStartedRecovery: String,
     dateAccountOfficerCompletedRecovery: String,
-}, { timeseries: true })
+}, { timestamps: true })
 
 
 analysedStatement.plugin(mongooseUniqueValidator, {

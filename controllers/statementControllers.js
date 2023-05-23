@@ -690,18 +690,20 @@ const statementWebhook = asyncHandler(async (req, res) => {
 
                 console.log('*'.repeat(20), 'STAGE 2', '*'.repeat(20))
                 //checks if statement file has been generated, if not, generate.
-                if (!Boolean(statement.reportLink)) {
-                    console.log('*'.repeat(20), 'STAGE 3', '*'.repeat(20))
-                    const statementHtml = await generateStatementHtml(statementParsed);
 
-                    await handler(statementHtml, statement.key, Math.floor(Math.random() * 10000000000).toString())
-                    const statementStatus = new StatementStatus({
-                        message: 'Your statement has been analysed',
-                        status: 'document available'
-                    })
-                    await statementStatus.save();
-                    statement.statementStatus.push(statementStatus);
-                }
+                console.log('*'.repeat(20), 'STAGE 3', '*'.repeat(20))
+                const statementHtml = await generateStatementHtml(statementParsed);
+
+                await handler(statementHtml, statement.key, Math.floor(Math.random() * 10000000000).toString())
+                const statementStatus = new StatementStatus({
+                    message: 'Your statement has been analysed',
+                    status: 'document available'
+                })
+                await statementStatus.save();
+                statement.statementStatus.push(statementStatus);
+                // if (!Boolean(statement.reportLink)) {
+
+                // }
                 await statement.save();
             }
 

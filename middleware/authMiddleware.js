@@ -20,6 +20,7 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = verify(token, process.env.SECRET)
 
       const user = await User.findById(decoded.id)
+      // console.log(user)
       if (user) {
         req.user = user
         next()
@@ -100,7 +101,7 @@ const isManual = asyncHandler(async(req, res, next) => {
 
 const isAuto = asyncHandler(async(req, res, next) => {
   
-  if(req.query.type && req.query.reportId){
+  if(req.query.type && req.query.key){
     next()
   } else {
     res.status(401)
@@ -110,8 +111,8 @@ const isAuto = asyncHandler(async(req, res, next) => {
 
 
 const isAutomatic = asyncHandler(async(req, res, next) => {
-  const requestId = req.query.requestId;
-  const statement = await AnalysedStatement.findOne({reportId: Number(requestId)});
+  const requestId = req.query.key;
+  const statement = await AnalysedStatement.findOne({key: Number(requestId)});
   if(statement && statement.statementRecoveryType === 'automatic'){
     next()
   } else {

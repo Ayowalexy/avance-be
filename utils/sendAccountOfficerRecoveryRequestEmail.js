@@ -13,10 +13,10 @@ const { sign, verify } = jwt;
 dotenv.config();
 
 
-const sendAccountOfficerRecoveryEmail = async ( ) => {
+const sendAccountOfficerRecoveryEmail = async (customer, amount, link, id ) => {
 
-    // const user = await AccountOfficer.findById(id);
-    if (true) {
+    const user = await AccountOfficer.findById(id);
+    if (user) {
 
         // console.log('account officer', user)
         const API_KEY = process.env.SG_API;
@@ -24,15 +24,10 @@ const sendAccountOfficerRecoveryEmail = async ( ) => {
         sgMail.setApiKey(API_KEY);
         
 
-        // const name = user.firstName.concat(' ', user.lastName)
-
-        let customer = 'James Bando';
-        let amount = '40,000'
-        let name = 'Olaseinde Biyi'
-        let link = 'https://res.cloudinary.com/dquiwka6j/image/upload/v1684320989/foo/klculwjyohdqlaevbvk9.pdf';
+        const name = user.firstName.concat(' ', user.lastName)
 
         const message = {
-            to: 'seinde4@gmail.com', //user.email,
+            to: user.email,
             from: {
                 name: "Avance Insight team",
                 email: "goldenimperialswifttech@gmail.com"

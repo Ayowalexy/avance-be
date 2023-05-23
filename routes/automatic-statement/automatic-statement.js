@@ -9,8 +9,10 @@ router.route('/analysis')
     .get(protect, isAuto, getAutomaticStatementAnalysis)
 
 router.route('/analysis/:key')
-    .put(protect, confirmAutomaticCredentials);
-// .get(protect, isAutomatic, getAutomaticProcessingStatus)
+    .put(protect, confirmAutomaticCredentials)
+
+router.route('/analysis-status/:key')
+.get(protect, getAutomaticProcessingStatus)
 
 
 export default router;
