@@ -176,7 +176,9 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
             account,
             // reportId: requestId,
             uniqueKey: unique,
-            key: requestId
+            key: requestId,
+            automatickTicketId: value.ticketNo,
+            bankStatementPassword: value.password
         })
 
         analysedStatement.statementStatus.push(statementStatus);

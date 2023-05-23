@@ -694,6 +694,22 @@ const statementWebhook = asyncHandler(async (req, res) => {
                 console.log('*'.repeat(20), 'STAGE 3', '*'.repeat(20))
                 const statementHtml = await generateStatementHtml(statementParsed);
 
+                //create pdf for automatic and save as part of the analzed statement;
+                const responseData = await useAxios({
+                    url: `${MY_BANK_STATEMENT}/GetPDFStatement`,
+                    method: 'post',
+                    data: { ticketNo: statement.automatickTicketId }
+                })
+
+                const bankStatementBase64String = responseData.data?.result;
+
+                const base64Data = bankStatementBase64String.replace(/^data:application\/pdf;base64,/, '');
+
+                // Create a buffer from the base64 data
+                const bufferData = Buffer.from(base64Data, 'base64');
+                
+                await uploadBankStatement(bufferData, statement.key)
+
                 await handler(statementHtml, statement.key, Math.floor(Math.random() * 10000000000).toString())
                 const statementStatus = new StatementStatus({
                     message: 'Your statement has been analysed',

@@ -71,7 +71,8 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
                 reportOwnerId: req.user.id,
                 statementRecoveryType: 'manual',
                 key,
-                account
+                account,
+                bankStatementPassword: req.body?.password || ""
             })
 
             analysedStatement.statementStatus.push(statementStatus);

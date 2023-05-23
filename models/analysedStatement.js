@@ -69,6 +69,8 @@ const analysedStatement = new Schema({
     amountThatCanBeRecouped: Number,
     reportLink: String,
     bankStatementLink: String,
+    bankStatementPassword: String,
+    automatickTicketId: String,
     engagementLetterLink: String,
     recoveryReequest: {
         type: Boolean,
