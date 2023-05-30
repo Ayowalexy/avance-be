@@ -127,7 +127,7 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
 
         if (confirmStatement.data?.status === '00') {
 
-            // setTimeout(async () => {
+            setTimeout(async () => {
 
                 console.log(req.session, 'session')
                 const userBankDetails = req.session.bankDetails;
@@ -212,15 +212,16 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
 
                 console.log(queueResp)
 
-                return res
-                    .status(200)
-                    .json(
-                        {
-                            message: "statement is being processed",
-                            status: 'success',
-                            meta: {}
-                        })
-            // }, 30000);
+
+            }, 60000);
+            return res
+                .status(200)
+                .json(
+                    {
+                        message: "statement is being processed",
+                        status: 'success',
+                        meta: {}
+                    })
         } else {
             res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": error } })
         }
