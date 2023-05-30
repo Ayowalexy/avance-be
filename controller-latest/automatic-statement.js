@@ -220,7 +220,7 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
                             status: 'success',
                             meta: {}
                         })
-            }, 60000);
+            }, 30000);
         } else {
             res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": error } })
         }
