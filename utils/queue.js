@@ -69,6 +69,7 @@ const addMessageToQueue = async (data) => {
                     "applicationNo": ""
                 }]
             },
+            "ConfirmStatementFlag": true,
             "ticketNo": ticketNo,
             "password": pwd,
             "startDate": startDate,

@@ -15,7 +15,8 @@ import {
     getAllAccountOfficers,
     manualAssign,
     getAllStateWithRecoveryRequest,
-    commenceStatementRecovery
+    commenceStatementRecovery,
+    sendEmailToUser
 } from '../controllers/accountOfficer.js';
 import { getAllUsers } from '../controllers/statementControllers2.js';
 import { adminProtect, isAdmin } from '../middleware/adminmiddleware.js';
@@ -48,6 +49,8 @@ router.route('/manual-assign').post(accountOfficerProtect, manualAssign)
 
 router.route('/all-recovery-request').get(accountOfficerProtect, isAccountOfficer, getAllStateWithRecoveryRequest)
 router.route('/commence-recovery').patch(accountOfficerProtect, isAccountOfficer, commenceStatementRecovery)
+
+router.route('/send-user-email').post(accountOfficerProtect, sendEmailToUser)
 
 
 

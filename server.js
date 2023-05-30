@@ -21,7 +21,7 @@ import cron from 'node-cron'
 
 const vl = async () => {
   // await getPericulumAccessToken()
-  // await periculumToken()
+  await periculumToken()
 }
 
 vl()

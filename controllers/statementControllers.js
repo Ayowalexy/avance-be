@@ -347,7 +347,7 @@ const getStatementStatus = asyncHandler(async (req, res) => {
             const response = await useAxios({
                 url: `${MY_BANK_STATEMENT}/GetFeedbackByRequestID`,
                 method: 'post',
-                data: { requestId }
+                data: { requestId: req.params.requestId }
             })
 
             const status = response?.data?.result?.status

@@ -118,103 +118,112 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
             // throw new Error(`Statement with ${requestId} is already analysed`);
         }
 
-        await useAxios({
+        const confirmStatement = await useAxios({
             url: `${MY_BANK_STATEMENT}/ConfirmStatement`,
             method: 'post',
             data: value
         })
+        console.log(confirmStatement.data, 'confirmStatement')
 
-        console.log(req.session, 'session')
-        const userBankDetails = req.session.bankDetails;
-        const parsed = JSON.parse(userBankDetails);
+        if (confirmStatement.data?.status === '00') {
 
-        //live url
-        const currentUniqueKey = await UniqueKey.findById('6460b210f346e27a3aa77b34');
-        // const currentUniqueKey = await UniqueKey.findById(UNIQUE_KEY_ID);
+            setTimeout(async () => {
 
-        const unique = currentUniqueKey.uniqueKey;
-        const userFullName = user.firstName.concat(' ', user.lastName);
+                console.log(req.session, 'session')
+                const userBankDetails = req.session.bankDetails;
+                const parsed = JSON.parse(userBankDetails);
+
+                //live url
+                const currentUniqueKey = await UniqueKey.findById('6460b210f346e27a3aa77b34');
+                // const currentUniqueKey = await UniqueKey.findById(UNIQUE_KEY_ID);
+
+                const unique = currentUniqueKey.uniqueKey;
+                const userFullName = user.firstName.concat(' ', user.lastName);
 
 
-        const {
-            bankName = '',
-            accountNo = '',
-            ticketNo = value.ticketNo,
-            pwd = value.password,
-            uniqueKey = unique,
-            bankId,
-            phone,
-            name = userFullName,
-            startDate,
-            endDate
-        } = parsed;
+                const {
+                    bankName = '',
+                    accountNo = '',
+                    ticketNo = value.ticketNo,
+                    pwd = value.password,
+                    uniqueKey = unique,
+                    bankId,
+                    phone,
+                    name = userFullName,
+                    startDate,
+                    endDate
+                } = parsed;
 
-        currentUniqueKey.uniqueKey = Number(unique) + 1;
-        await currentUniqueKey.save();
+                currentUniqueKey.uniqueKey = Number(unique) + 1;
+                await currentUniqueKey.save();
 
-        const matchingBank = allBanksArray.find(ele => ele.name.toLowerCase()?.includes(bankName.toLowerCase().trim()));
+                const matchingBank = allBanksArray.find(ele => ele.name.toLowerCase()?.includes(bankName.toLowerCase().trim()));
 
-        const account = {
-            name: matchingBank?.name || bankName,
-            accountNo: accountNo,
-            bankImg: matchingBank?.logo || '',
-            createdAt: new Date()
-        }
+                const account = {
+                    name: matchingBank?.name || bankName,
+                    accountNo: accountNo,
+                    bankImg: matchingBank?.logo || '',
+                    createdAt: new Date()
+                }
 
-        //initialized statement status with default automatic message
-        const statementStatus = new StatementStatus({
-            message: 'Your have successfully retrieved your statement automatically',
-            status: 'pending'
-        })
-
-        await statementStatus.save();
-
-        const analysedStatement = new AnalysedStatement({
-            status: 'pending',
-            reportOwnerId: req.user.id,
-            statementRecoveryType: 'automatic',
-            account,
-            // reportId: requestId,
-            uniqueKey: unique,
-            key: requestId,
-            automatickTicketId: value.ticketNo,
-            bankStatementPassword: value.password
-        })
-
-        analysedStatement.statementStatus.push(statementStatus);
-
-        await analysedStatement.save();
-        user.analyzedReports = Number(user.analyzedReports) + 1;
-        user.analyzedStatements.push(analysedStatement);
-
-        await user.save();
-
-        const payload = {
-            ticketNo,
-            pwd,
-            accountNo,
-            uniqueKey,
-            bankId,
-            phone,
-            name,
-            startDate,
-            endDate,
-            id: user._id.toString()
-        }
-
-        const queueResp = await addMessageToQueue(payload);
-
-        console.log(queueResp)
-
-        return res
-            .status(200)
-            .json(
-                {
-                    message: "statement is being processed",
-                    status: 'success',
-                    meta: {}
+                //initialized statement status with default automatic message
+                const statementStatus = new StatementStatus({
+                    message: 'Your have successfully retrieved your statement automatically',
+                    status: 'pending'
                 })
 
+                await statementStatus.save();
+
+                const analysedStatement = new AnalysedStatement({
+                    status: 'pending',
+                    reportOwnerId: req.user.id,
+                    statementRecoveryType: 'automatic',
+                    account,
+                    user: req.user,
+                    // reportId: requestId,
+                    uniqueKey: unique,
+                    key: requestId,
+                    automatickTicketId: value.ticketNo,
+                    bankStatementPassword: value.password
+                })
+
+                analysedStatement.statementStatus.push(statementStatus);
+
+                await analysedStatement.save();
+                user.analyzedReports = Number(user.analyzedReports) + 1;
+                user.analyzedStatements.push(analysedStatement);
+
+                await user.save();
+
+                const payload = {
+                    ticketNo,
+                    pwd,
+                    accountNo,
+                    uniqueKey,
+                    bankId,
+                    phone,
+                    name,
+                    startDate,
+                    endDate,
+                    id: user._id.toString()
+                }
+
+                const queueResp = await addMessageToQueue(payload);
+
+                console.log(queueResp)
+
+                return res
+                    .status(200)
+                    .json(
+                        {
+                            message: "statement is being processed",
+                            status: 'success',
+                            meta: {}
+                        })
+            }, 60000);
+        } else {
+            res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": error } })
+        }
     } catch (e) {
         const error = e?.response?.data?.message || e.toString() || "provider not available"
         console.log(e)
@@ -258,7 +267,7 @@ const getAutomaticStatementAnalysis = asyncHandler(async (req, res) => {
     const type = req.query.type;
 
     let statement = await AnalysedStatement.findOne({ key });
-    
+
 
     if (statement.length) {
         // statement = statement.length > 1 ? statement[statement.length - 1] : statement[0];

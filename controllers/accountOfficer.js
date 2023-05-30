@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { statementProcessSchema, statementReportSchema, statementStatusSchema, statusSchema, manualStatementAssign, recoveryReequestSchema } from "../utils/schema.js";
+import { statementProcessSchema, statementReportSchema, statementStatusSchema, statusSchema, manualStatementAssign, recoveryReequestSchema, sendEmailShema } from "../utils/schema.js";
 import bcrypt from 'bcryptjs'
 import Admin from "../models/adminModel.js";
 import AnalysedStatement from "../models/analysedStatement.js";
@@ -17,6 +17,7 @@ import sendAccountOfficerEmail from "../utils/sendEmail.js";
 import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccountOfficerInsightEmail.js";
 import sendAccountOfficerRecoveryEmail from "../utils/sendAccountOfficerRecoveryRequestEmail.js";
 import sendUserRecoveryCommencementEmail from "../utils/sendUserRecoveryCommencementEmail.js";
+import AccountOfficerToUserEmail from "../utils/account_officer-user-email.js";
 
 const { sign, verify } = jwt;
 
@@ -275,9 +276,9 @@ const getAllReports = asyncHandler(async (req, res) => {
 
     let reports = [];
     if (req.params.type === 'all') {
-        reports = await AnalysedStatement.find().populate('analysedBy')
+        reports = await AnalysedStatement.find().populate('analysedBy').populate('user')
     } else {
-        reports = await AnalysedStatement.find({ status: req.params.type }).populate('analysedBy')
+        reports = await AnalysedStatement.find({ status: req.params.type }).populate('analysedBy').populate('user')
     }
 
     console.log(reports)
@@ -453,6 +454,36 @@ const commenceStatementRecovery = asyncHandler(async (req, res) => {
     }
 })
 
+const sendEmailToUser = asyncHandler(async (req, res) => {
+    const { error, value } = sendEmailShema.validate(req.body);
+
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+
+
+    const { id, header, message } = value;
+    await AccountOfficerToUserEmail(id, header, message);
+    return res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                message: 'Message sent succesfully',
+                meta: {}
+            })
+
+})
+
 
 
 export {
@@ -466,5 +497,6 @@ export {
     manualAssign,
     sendRecoveryRequest,
     getAllStateWithRecoveryRequest,
-    commenceStatementRecovery
+    commenceStatementRecovery,
+    sendEmailToUser
 }

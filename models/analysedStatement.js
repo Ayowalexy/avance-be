@@ -42,6 +42,10 @@ const analysedStatement = new Schema({
         type: String,
         default: ''
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     accepted: {
         type: Boolean,
         default: false

@@ -229,6 +229,12 @@ const statement = Joi.object({
     file: Joi.string().required()
 })
 
+const sendEmailShema = Joi.object({
+    header: Joi.string().required(),
+    message: Joi.string().required(),
+    id: Joi.string().required()
+})
+
 
 const loand_d = Joi.object({
     loans: Joi.array().items(
@@ -285,5 +291,6 @@ export {
     manualStatementAssign,
     recoveryReequestSchema,
     waitlistSchemaIndividual,
-    waitlistSchemaOrganization
+    waitlistSchemaOrganization,
+    sendEmailShema
 }
