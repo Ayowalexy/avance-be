@@ -270,7 +270,7 @@ const getAutomaticStatementAnalysis = asyncHandler(async (req, res) => {
     let statement = await AnalysedStatement.findOne({ key });
 
 
-    if (statement.length) {
+    if (statement) {
         // statement = statement.length > 1 ? statement[statement.length - 1] : statement[0];
         if (statement.analysed) {
             const val = statement[type];
@@ -311,7 +311,7 @@ const getAutomaticStatementAnalysis = asyncHandler(async (req, res) => {
                     })
         }
     } else {
-        res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": `Statement with ${reportId} not found` } })
+        res.status(401).json({ "status": "error", "message": "invalid error", "meta": { "error": `Statement with ${key} not found` } })
     }
 })
 
