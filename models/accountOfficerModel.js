@@ -12,6 +12,7 @@ const accountOfficerSchema = new Schema({
         unique: true,
         index: true
     },
+    phoneNumber: String,
     password: String,
     otpToken: String,
     canResetPassword: {

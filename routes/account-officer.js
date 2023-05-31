@@ -16,7 +16,8 @@ import {
     manualAssign,
     getAllStateWithRecoveryRequest,
     commenceStatementRecovery,
-    sendEmailToUser
+    sendEmailToUser,
+    createMultipleAccountOfficers
 } from '../controllers/accountOfficer.js';
 import { getAllUsers } from '../controllers/statementControllers2.js';
 import { adminProtect, isAdmin } from '../middleware/adminmiddleware.js';
@@ -30,6 +31,7 @@ const router = express.Router();
 // adminProtect, isAdmin,
 router.route('/signup').post( createAccountOfficerAccount)
 router.route('/login').post(accountOfficerLogin);
+router.route('/multiple').post(createMultipleAccountOfficers);
 
 router.route('/accept-statement').post(accountOfficerProtect, isAccountOfficer, acceptStatementProcessing)
 router.route('/statement-report').post(

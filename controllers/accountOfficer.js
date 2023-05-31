@@ -18,6 +18,7 @@ import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccoun
 import sendAccountOfficerRecoveryEmail from "../utils/sendAccountOfficerRecoveryRequestEmail.js";
 import sendUserRecoveryCommencementEmail from "../utils/sendUserRecoveryCommencementEmail.js";
 import AccountOfficerToUserEmail from "../utils/account_officer-user-email.js";
+import sendAccountOfficerAccountCreationEmail from "../utils/sendAccountOfficerAccountCreationEmail.js";
 
 const { sign, verify } = jwt;
 
@@ -484,7 +485,29 @@ const sendEmailToUser = asyncHandler(async (req, res) => {
 
 })
 
+const createMultipleAccountOfficers = asyncHandler(async (req, res) => {
 
+
+    const data = req.body.data;
+    console.log(data)
+
+    await AccountOfficer.insertMany(data);
+
+    data.forEach(async e => {
+        let name = e['First name']?.concat(' ', e['Last name']);
+        let password = Math.floor(Math.random() * 7);
+        await sendAccountOfficerAccountCreationEmail(e.email, name, password)
+    })
+
+    res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                message: 'Accounts created succesfully',
+                meta: {}
+            })
+})
 
 export {
     acceptStatementProcessing,
@@ -498,5 +521,6 @@ export {
     sendRecoveryRequest,
     getAllStateWithRecoveryRequest,
     commenceStatementRecovery,
-    sendEmailToUser
+    sendEmailToUser,
+    createMultipleAccountOfficers
 }

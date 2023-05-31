@@ -162,6 +162,30 @@ const confirmSchema = Joi.object({
         .required(),
     password: Joi
         .string()
+        .required(),
+
+//new schema addtition
+    accountNo: Joi
+        .string()
+        .required(),
+    phone: Joi
+        .number()
+        .required(),
+    startDate: Joi
+        .string()
+        .required(),
+    endDate: Joi
+        .string()
+        .required(),
+    bankId: Joi
+        .number()
+        .required(),
+    role: Joi
+        .string()
+        .valid('Applicant', 'Sponsor', 'Guarantor')
+        .required(),
+    bankName: Joi
+        .string()
         .required()
 })
 

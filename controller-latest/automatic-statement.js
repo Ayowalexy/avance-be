@@ -128,10 +128,33 @@ const confirmAutomaticCredentials = asyncHandler(async (req, res) => {
         if (confirmStatement.data?.status === '00') {
 
             setTimeout(async () => {
-
                 console.log(req.session, 'session')
-                const userBankDetails = req.session.bankDetails;
-                const parsed = JSON.parse(userBankDetails);
+                // const userBankDetails = req.session.bankDetails;
+                // const parsed = JSON.parse(userBankDetails);
+                const applicants = [
+                    {
+                        name: user.firstName.concat(' ', user.lastName),
+                        applicationNo: ""
+                    }
+                ]
+                const val = {
+                    accountNo: value.accountNo,
+                    phone: value.phone,
+                    startDate: value.startDate,
+                    endDate: value.endDate,
+                    bankId: value.bankId,
+                    role: value.role,
+                    bankName: value.bankName
+                }
+                const parsed = {
+                    ...val,
+                    username: "musideen@aladdin.ng",
+                    destinationId: Number(Client_ID),
+                    applicants,
+                    country: 'NG',
+                    startDate: formarDate(value.startDate),
+                    endDate: formarDate(value.endDate)
+                }
 
                 //live url
                 const currentUniqueKey = await UniqueKey.findById('6460b210f346e27a3aa77b34');
