@@ -5,5 +5,6 @@ import { getAllAnalysedStatements } from "../../controller-latest/manual-stateme
 const router = express.Router();
 
 router.route('/all-analysed-statement').get(protect, getAllAnalysedStatements)
+router.route('/statement-status/:key').get(protect)
 
 export default router
