@@ -6,6 +6,7 @@ import otpGenerator from 'otp-generator'
 import User from "../models/usermodel.js";
 import AnalysedStatement from "../models/analysedStatement.js";
 import AccountOfficer from "../models/accountOfficerModel.js";
+import { formatNumber } from "./formatNumber.js";
 
 const { sign, verify } = jwt;
 
@@ -17,6 +18,7 @@ const sendUserInsightCompletedEmail = async (id, key) => {
 
     const user = await User.findById(id);
     const statement = await AnalysedStatement.findOne({key: key});
+    console.log('statement', statement)
     if (user) {
 
         const API_KEY = process.env.SG_API;
@@ -103,7 +105,7 @@ const sendUserInsightCompletedEmail = async (id, key) => {
                         <div style="font-family: Poppins-SemiBold; font-size: 20px; padding-top: 40px; color: #243656;">Hi ${name},</div>
                         <div
                             style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 17px; padding-top: 30px; color: #121212;">
-                            Your account statement has been analysed and the amount the can be recouped has been updated on your dashboard.
+                            Your account statement has been analysed and ${formatNumber(statement.amountThatCanBeRecouped)} has been entered as the amount that can be recovered, you can also view this on your dashboard with a link to download. 
                                      Download the report made on your statement by our account officer. <a href=${statement.reportLink}>Account Report</a>
                                 </div>
             
