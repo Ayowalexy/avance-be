@@ -106,7 +106,7 @@ const sendUserInsightCompletedEmail = async (id, key) => {
                         <div
                             style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 17px; padding-top: 30px; color: #121212;">
                             Your account statement has been analysed and ${formatNumber(statement.amountThatCanBeRecouped)} has been entered as the amount that can be recovered, you can also view this on your dashboard with a link to download. 
-                                     Download the report made on your statement by our account officer. <a href=${statement.reportLink}>Account Report</a>
+                                     Download the report made on your statement by our account officer. <a href=${statement.finalReportLink}>Account Report</a>
                                 </div>
             
                        

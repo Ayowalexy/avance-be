@@ -140,7 +140,7 @@ const statementReport = asyncHandler(async (req, res) => {
             const url = response.data.secure_url;
 
             const accountStatement = await AnalysedStatement.findOne({ key: value.key });
-            accountStatement.reportLink = url;
+            accountStatement.finalReportLink = url;
             accountStatement.analysedBy = account_officer;
             accountStatement.amountThatCanBeRecouped = value.amount;
 

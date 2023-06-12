@@ -72,6 +72,7 @@ const analysedStatement = new Schema({
     },
     amountThatCanBeRecouped: Number,
     reportLink: String,
+    finalReportLink: String,
     bankStatementLink: String,
     bankStatementPassword: String,
     automatickTicketId: String,
