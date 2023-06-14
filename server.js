@@ -43,7 +43,6 @@ const app = express();
 
 
 const clearBd = async() => {
-//  await User.deleteMany({});
 //  await AnalysedStatement.deleteMany({})
 //  await Subscription.deleteMany({})
 
