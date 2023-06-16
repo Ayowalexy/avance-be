@@ -92,14 +92,12 @@ const waitlistSchemaOrganization = Joi.object({
         .string()
         .required(),
     website: Joi
-        .string()
-        .required(),
+        .string(),
     companyName: Joi
         .string()
         .required(),
     companyEmail: Joi
-        .string()
-        .required(),
+        .string(),
     category: Joi
         .string()
         .valid('Individual', 'Organization')
