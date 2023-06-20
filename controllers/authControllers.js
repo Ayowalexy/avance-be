@@ -64,7 +64,6 @@ const loginUser = asyncHandler(async (req, res) => {
         .populate('analyzedStatements')
 
 
-
     if (user) {
         if (await user.isEmailVerified()) {
 
@@ -156,8 +155,7 @@ const getPasswordResetToken = asyncHandler(async (req, res) => {
 
     const user = await User.findOne({ email: value.email });
     if (user) {
-
-
+        await sendAAuthOtp(user._id);
         res
             .status(201)
             .json(
