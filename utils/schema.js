@@ -293,6 +293,13 @@ const recoveryReequestSchema = Joi.object({
 })
 
 
+const createAccountOfficerSchema = Joi.object({
+    email: Joi.string().email().required(),
+    fullName: Joi.string().required(),
+    phoneNumber: Joi.string().required()
+})
+
+
 export {
     signupscchema,
     loginSchema,
@@ -314,5 +321,6 @@ export {
     recoveryReequestSchema,
     waitlistSchemaIndividual,
     waitlistSchemaOrganization,
-    sendEmailShema
+    sendEmailShema,
+    createAccountOfficerSchema
 }
