@@ -315,6 +315,18 @@ const changePasswordShema = Joi.object({
         .required(),
 })
 
+
+const createNewAccountingFirmSchema = Joi.object({
+    name: Joi.string().required(),
+    no_of_accountants: Joi.number().required()
+})
+
+const createNewAccountSchema = Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    role: Joi.string().valid('admin', 'user')
+})
+
 export {
     signupscchema,
     loginSchema,
@@ -338,5 +350,7 @@ export {
     waitlistSchemaOrganization,
     sendEmailShema,
     createBusinessDeveloperSchema,
-    changePasswordShema
+    changePasswordShema,
+    createNewAccountingFirmSchema,
+    createNewAccountSchema
 }

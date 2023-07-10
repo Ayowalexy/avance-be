@@ -5,6 +5,10 @@ import sendBDAccountSetupEmail from "../../utils/email/bd/account-creation.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
+import User from "../../models/usermodel.js";
+import AnalysedStatement from "../../models/analysedStatement.js";
+import AccountOfficer from "../../models/accountOfficerModel.js";
+
 
 dotenv.config();
 
@@ -123,7 +127,7 @@ const changePassword = (asyncHandler(async (req, res) => {
     if (match) {
         const hash = await bcrypt.hashSync(value.new_password, 12);
 
-        await BusinessDevelopers.findOneAndUpdate({ _id: req.user._id.toString() }, { password: hash });
+        await BusinessDevelopers.findOneAndUpdate({ _id: req.user._id.toString() }, { password: hash, isUpadated: true });
         res
             .status(200)
             .json(
@@ -149,8 +153,62 @@ const changePassword = (asyncHandler(async (req, res) => {
 
 }))
 
+
+const getUserDetails = asyncHandler(async (req, res) => {
+
+    const user = await BusinessDevelopers.findById(req.user._id);
+    const data = {
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        fullName: user.fullName,
+        isUpdated: user.isUpdated
+    }
+    res
+        .status(200)
+        .json(
+            {
+                status: 'success',
+                data,
+                meta: {}
+            })
+
+})
+
+const getStats = asyncHandler(async (req, res) => {
+
+    const totalNoUsers = await User.countDocuments();
+    const totalReports = await AnalysedStatement.countDocuments();
+    const totalNoOfAccountants = await AccountOfficer.countDocuments();
+    const newRequest = 3;
+    const totoalNoOfAccountingFirm = 10;
+    const totalNoOfCompletedRequest = await AnalysedStatement.find({ status: "completed" }).countDocuments()
+    const totalNoOfOngoingRequest = await AnalysedStatement.find({ status: 'processing' }).countDocuments()
+    const totalNoOfPendingRequest = await AnalysedStatement.find({ status: "pending" }).countDocuments()
+
+    res
+        .status(200)
+        .json(
+            {
+                status: 'success',
+                data: {
+                    totalNoUsers,
+                    totalReports,
+                    totalNoOfAccountants,
+                    newRequest,
+                    totoalNoOfAccountingFirm,
+                    totalNoOfCompletedRequest,
+                    totalNoOfOngoingRequest,
+                    totalNoOfPendingRequest
+                },
+                meta: {}
+            })
+
+})
+
 export {
     createNewBDAccount,
     login,
-    changePassword
+    changePassword,
+    getUserDetails,
+    getStats
 }

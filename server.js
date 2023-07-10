@@ -11,6 +11,7 @@ import statementRoutes from './routes/statementsRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import accountOfficerRoutes from './routes/account-officer.js'
 import businessDevelopersRoutes from './routes/business-developers/index.js'
+import accountingFirm from './routes/business-developers/acounting-firm.js'
 import session from "express-session";
 import MongoStore from 'connect-mongo'
 
@@ -99,6 +100,8 @@ app.use('/api/v1/automatic', automaticFlow)
 app.use('/api/v1/misc', misc)
 
 app.use('/api/v1/bd', businessDevelopersRoutes)
+app.use('/api/v1/bd', accountingFirm)
+
 
 
 app.use(notFound);
