@@ -78,7 +78,7 @@ userSchema.plugin(mongooseUniqueValidator, {
 });
 
 userSchema.methods.isEmailVerified = async function () {
-    return this.emailVerified
+return this.emailVerified
 }
 
 const User = mongoose.model("User", userSchema);

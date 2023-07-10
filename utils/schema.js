@@ -162,7 +162,7 @@ const confirmSchema = Joi.object({
         .string()
         .required(),
 
-//new schema addtition
+    //new schema addtition
     accountNo: Joi
         .string()
         .required(),
@@ -293,12 +293,27 @@ const recoveryReequestSchema = Joi.object({
 })
 
 
-const createAccountOfficerSchema = Joi.object({
+const createBusinessDeveloperSchema = Joi.object({
     email: Joi.string().email().required(),
     fullName: Joi.string().required(),
     phoneNumber: Joi.string().required()
 })
 
+
+const changePasswordShema = Joi.object({
+    password: Joi
+        .string()
+        .required(),
+    confirm_password: Joi
+        .any()
+        .equal(Joi.ref('password'))
+        .required()
+        .label('Confirm password')
+        .options({ messages: { 'any.only': '{{#label}} does not match password' } }),
+    new_password: Joi
+        .string()
+        .required(),
+})
 
 export {
     signupscchema,
@@ -322,5 +337,6 @@ export {
     waitlistSchemaIndividual,
     waitlistSchemaOrganization,
     sendEmailShema,
-    createAccountOfficerSchema
+    createBusinessDeveloperSchema,
+    changePasswordShema
 }

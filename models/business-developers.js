@@ -11,12 +11,20 @@ const businessDevelopersSchema = new Schema({
     },
     password: String,
     phoneNumber: String,
-    fullName: String
+    fullName: String,
+    isUpdated: {
+        type: Boolean,
+        default: false
+    }
 })
 
 businessDevelopersSchema.plugin(mongooseUniqueValidator, {
     message: 'Error, {VALUE} already exists.'
 });
+
+businessDevelopersSchema.methods.checkIsUpdated = async function () {
+    return this.isUpdated
+}
 
 
 const BusinessDevelopers = mongoose.model('businessDeveloper', businessDevelopersSchema);
