@@ -84,6 +84,10 @@ const analysedStatement = new Schema({
     dateCustomerRequestedForRecovery: String,
     dateAccountOfficerStartedRecovery: String,
     dateAccountOfficerCompletedRecovery: String,
+    analysingFirm: {
+        type: Schema.Types.ObjectId,
+        ref: "accounting firm"
+    }
 }, { timestamps: true })
 
 

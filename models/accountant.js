@@ -16,7 +16,7 @@ const accountantSchema = new Schema({
         type: String,
         enum: ['admin', 'user'],
         default: 'user'
-    }
+    },
 }, { timestamps: true})
 
 accountantSchema.plugin(mongooseUniqueValidator, {

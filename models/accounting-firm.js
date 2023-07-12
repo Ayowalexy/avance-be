@@ -35,6 +35,10 @@ const accountingFirmSchema = new Schema({
     accounts: [{
         type: Schema.Types.ObjectId,
         ref: "accountants"
+    }],
+    reports: [{
+        type: Schema.Types.ObjectId,
+        ref: "anaylsedStatement"
     }]
 }, { timestamps: true })
 

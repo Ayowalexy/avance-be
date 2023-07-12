@@ -1,7 +1,9 @@
 import AccountingFirm from "../../models/accounting-firm.js";
 import asyncHandler from "express-async-handler";
-import { createNewAccountSchema, createNewAccountingFirmSchema } from "../../utils/schema.js";
+import { assignReportSchema, createNewAccountSchema, createNewAccountingFirmSchema } from "../../utils/schema.js";
 import Accountants from "../../models/accountant.js";
+import AnalysedStatement from "../../models/analysedStatement.js";
+import notifyFirmOfNewReport from "../../utils/notify-firm.js";
 
 
 
@@ -33,7 +35,15 @@ const createNewAccountingFirm = asyncHandler(async (req, res) => {
 })
 
 const getAllAccountingFirms = asyncHandler(async (req, res) => {
-    const allAccountingFirms = await AccountingFirm.find();
+    const allAccountingFirms = await AccountingFirm.aggregate([
+        {
+            $match: {
+                $expr: {
+                    $gt: [{ $size: '$accounts' }, 0]
+                }
+            }
+        }
+    ])
     res
         .status(200)
         .json(
@@ -143,10 +153,69 @@ const createNewAccountant = asyncHandler(async (req, res) => {
 })
 
 
+const assignReportToFirm = asyncHandler(async (req, res) => {
+    const { error, value } = assignReportSchema.validate(req.body);
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+
+    const { firm_id, report_id, comment = '' } = value;
+
+    const firm = await AccountingFirm.findById({ _id: firm_id }).populate('accountants');
+    const report = await AnalysedStatement.findById({ _id: report_id });
+
+    if (firm && report) {
+        firm.reports.push(report);
+        report.analysingFirm = firm;
+
+        await firm.save();
+        await report.save();
+
+        const firmAdmin = firm.accounts?.find((oneAccountant) => oneAccountant.role === 'admin');
+        if (firmAdmin) {
+            await notifyFirmOfNewReport(firmAdmin.email, firmAdmin.name, comment)
+        } else {
+            const oneUser = firm.accounts[0];
+            await notifyFirmOfNewReport(oneUser.email, oneUser.name, comment)
+        }
+
+        res
+            .status(200)
+            .json(
+                {
+                    status: 'success',
+                    message: "Report assigned successfully",
+                    meta: {}
+                })
+    } else {
+        res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: 'An Error occured'
+                    }
+                })
+    }
+})
+
+
 export {
     createNewAccountingFirm,
     getAllAccountingFirms,
     deleteAccountingFirm,
     getOneAccountingFirm,
-    createNewAccountant
+    createNewAccountant,
+    assignReportToFirm
 }

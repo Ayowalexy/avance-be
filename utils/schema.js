@@ -327,6 +327,12 @@ const createNewAccountSchema = Joi.object({
     role: Joi.string().valid('admin', 'user')
 })
 
+const assignReportSchema = Joi.object({
+    firm_id: Joi.string().required(),
+    report_id: Joi.string().required(),
+    comment: Joi.string().optional()
+})
+
 export {
     signupscchema,
     loginSchema,
@@ -352,5 +358,6 @@ export {
     createBusinessDeveloperSchema,
     changePasswordShema,
     createNewAccountingFirmSchema,
-    createNewAccountSchema
+    createNewAccountSchema,
+    assignReportSchema
 }
