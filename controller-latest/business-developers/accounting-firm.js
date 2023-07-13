@@ -30,6 +30,7 @@ const createNewAccountingFirm = asyncHandler(async (req, res) => {
             {
                 status: 'success',
                 message: "Account firm created successfully",
+                firm_id: af._id.toString(),
                 meta: {}
             })
 })
