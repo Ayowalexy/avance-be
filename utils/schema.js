@@ -333,6 +333,12 @@ const assignReportSchema = Joi.object({
     comment: Joi.string().optional()
 })
 
+const reassignReportSchema = Joi.object({
+    firm_id: Joi.string().required(),
+    report_id: Joi.string().required(),
+    analysingFirm: Joi.string().required()
+})
+
 export {
     signupscchema,
     loginSchema,
@@ -359,5 +365,6 @@ export {
     changePasswordShema,
     createNewAccountingFirmSchema,
     createNewAccountSchema,
-    assignReportSchema
+    assignReportSchema,
+    reassignReportSchema
 }

@@ -1,9 +1,11 @@
 import AccountingFirm from "../../models/accounting-firm.js";
 import asyncHandler from "express-async-handler";
-import { assignReportSchema, createNewAccountSchema, createNewAccountingFirmSchema } from "../../utils/schema.js";
+import { assignReportSchema, createNewAccountSchema, createNewAccountingFirmSchema, reassignReportSchema } from "../../utils/schema.js";
 import Accountants from "../../models/accountant.js";
 import AnalysedStatement from "../../models/analysedStatement.js";
 import notifyFirmOfNewReport from "../../utils/notify-firm.js";
+import { assignReport } from "../../services/business-developers/assign-report.js";
+import mongoose from "mongoose";
 
 
 
@@ -173,10 +175,24 @@ const assignReportToFirm = asyncHandler(async (req, res) => {
 
     const { firm_id, report_id, comment = '' } = value;
 
-    const firm = await AccountingFirm.findById({ _id: firm_id }).populate('accounts');
-    const report = await AnalysedStatement.findById({ _id: report_id });
+    await assignReport(firm_id, report_id, comment);
 
-    if (firm.accounts.length === 0) {
+    res
+        .status(200)
+        .json(
+            {
+                status: 'success',
+                message: "Report assigned successfully",
+                meta: {}
+            })
+
+})
+
+
+const reasignStatementAnalysis = asyncHandler(async (req, res) => {
+
+    const { error, value } = reassignReportSchema.validate(req.body);
+    if (error) {
         return res
             .status(401)
             .json(
@@ -184,46 +200,30 @@ const assignReportToFirm = asyncHandler(async (req, res) => {
                     status: "error",
                     message: "invalid request",
                     meta: {
-                        error: 'No accountant has been created for this firm'
+                        error: error.message
                     }
                 })
     }
 
-    if (firm && report) {
-        firm.reports.push(report);
-        report.analysingFirm = firm;
+    const { firm_id, report_id, analysingFirm } = value;
 
-        await firm.save();
-        await report.save();
+    await assignReport(firm_id, report_id);
 
-        const firmAdmin = firm.accounts?.find((oneAccountant) => oneAccountant.role === 'admin');
-        if (firmAdmin) {
-            await notifyFirmOfNewReport(firmAdmin.email, firmAdmin.name, comment)
-        } else {
-            const oneUser = firm.accounts[0];
-            await notifyFirmOfNewReport(oneUser.email, oneUser.name, comment)
-        }
+    await AccountingFirm.updateOne(
+        { _id: analysingFirm },
+        { $pull: { reports: new mongoose.Types.ObjectId(report_id) } }
+    )
 
-        res
-            .status(200)
-            .json(
-                {
-                    status: 'success',
-                    message: "Report assigned successfully",
-                    meta: {}
-                })
-    } else {
-        res
-            .status(401)
-            .json(
-                {
-                    status: "error",
-                    message: "invalid request",
-                    meta: {
-                        error: 'An Error occured'
-                    }
-                })
-    }
+    res
+        .status(200)
+        .json(
+            {
+                status: 'success',
+                message: "Report re-assigned successfully",
+                meta: {}
+            })
+
+
 })
 
 
@@ -233,5 +233,6 @@ export {
     deleteAccountingFirm,
     getOneAccountingFirm,
     createNewAccountant,
-    assignReportToFirm
+    assignReportToFirm,
+    reasignStatementAnalysis
 }
