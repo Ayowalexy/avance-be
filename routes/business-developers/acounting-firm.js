@@ -4,7 +4,8 @@ import {
     getAllAccountingFirms,
     deleteAccountingFirm,
     getOneAccountingFirm,
-    createNewAccountant
+    createNewAccountant,
+    assignReportToFirm
 } from '../../controller-latest/business-developers/accounting-firm.js';
 import { bdprotect } from '../../middleware/business-developers.js';
 
@@ -20,6 +21,9 @@ router.route('/firm/:id')
 
 router.route('/firm/accountant')
     .post(bdprotect, createNewAccountant)
+
+router.route('/firm/assign')
+    .post(bdprotect, assignReportToFirm)
 
 
 export default router

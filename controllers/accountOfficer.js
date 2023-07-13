@@ -282,7 +282,6 @@ const getAllReports = asyncHandler(async (req, res) => {
         reports = await AnalysedStatement.find({ status: req.params.type }).populate('analysedBy').populate('user')
     }
 
-    console.log(reports)
     res
         .status(201)
         .json(

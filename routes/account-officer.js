@@ -45,7 +45,7 @@ router.route('/report-status').patch(accountOfficerProtect, isAccountOfficer, up
 router.route('/all-users').get(getAllUsers)
 router.route('/statement-status').post(accountOfficerProtect, addStatusReport);
 
-router.route('/all-reports/:type').get(accountOfficerProtect, getAllReports)
+router.route('/all-reports/:type').get(getAllReports)
 router.route('/all-account-officer').get(accountOfficerProtect, getAllAccountOfficers)
 router.route('/manual-assign').post(accountOfficerProtect, manualAssign)
 

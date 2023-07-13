@@ -173,8 +173,21 @@ const assignReportToFirm = asyncHandler(async (req, res) => {
 
     const { firm_id, report_id, comment = '' } = value;
 
-    const firm = await AccountingFirm.findById({ _id: firm_id }).populate('accountants');
+    const firm = await AccountingFirm.findById({ _id: firm_id }).populate('accounts');
     const report = await AnalysedStatement.findById({ _id: report_id });
+
+    if (firm.accounts.length === 0) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: 'No accountant has been created for this firm'
+                    }
+                })
+    }
 
     if (firm && report) {
         firm.reports.push(report);
