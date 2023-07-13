@@ -36,15 +36,17 @@ const createNewAccountingFirm = asyncHandler(async (req, res) => {
 })
 
 const getAllAccountingFirms = asyncHandler(async (req, res) => {
-    const allAccountingFirms = await AccountingFirm.aggregate([
-        {
-            $match: {
-                $expr: {
-                    $gt: [{ $size: '$accounts' }, 0]
-                }
-            }
-        }
-    ])
+    const allAccountingFirms = await AccountingFirm.find();
+
+    // aggregate([
+    //     {
+    //         $match: {
+    //             $expr: {
+    //                 $gt: [{ $size: '$accounts' }, 0]
+    //             }
+    //         }
+    //     }
+    // ])
     res
         .status(200)
         .json(
