@@ -11,6 +11,7 @@ import { uploadBankStatement } from "../utils/generate-pdf-statement.js";
 import { statementFileGenerator } from "../pdf.js";
 import { generateStatementHtml } from "../utilities/generate-statement-html.js";
 import handler from "../utilities/pdf-handler.js";
+import BusinessDevelopers from "../models/business-developers.js";
 
 dotenv.config()
 
@@ -76,8 +77,13 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
                 bankStatementPassword: req.body?.password || ""
             }
 
-            if(req.body.businessDeveloper){
-                obj.businessDeveloper = req.body.businessDeveloper
+            if (req.body.businessDeveloper) {
+                const businessDeveloper = await BusinessDevelopers.findById(req.body.businessDeveloper)
+                obj.businessDeveloper = businessDeveloper;
+                businessDeveloper.total_uploads = businessDeveloper.total_uploads + 1;
+                businessDeveloper.ongoing_request = businessDeveloper.ongoing_request + 1
+                await businessDeveloper.save();
+
             }
 
             const analysedStatement = new AnalysedStatement(obj)
@@ -85,10 +91,13 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
             analysedStatement.statementStatus.push(statementStatus);
 
             await analysedStatement.save();
-            user.analyzedReports = Number(user.analyzedReports) + 1;
             await uploadBankStatement(req.file.buffer, key);
-            user.analyzedStatements.push(analysedStatement);
-            await user.save();
+
+            if (user) {
+                user.analyzedReports = Number(user.analyzedReports) + 1;
+                user.analyzedStatements.push(analysedStatement);
+                await user.save();
+            }
 
             return res
                 .status(200)
@@ -140,6 +149,26 @@ const getManualStatementStatus = asyncHandler(async (req, res) => {
                 statement.transactionPatternAnalysis = data?.transactionPatternAnalysis;
                 statement.cashFlowAnalysis = data?.cashFlowAnalysis;
                 statement.analysed = true;
+                statement.details = {
+                    uniqueCode: data.uniqueCode,
+                    name: data.name,
+                    source: data.source,
+                    clientFullName: data.clientFullName,
+                    clientPhoneNumber: data.clientPhoneNumber,
+                    accountType: data.accountType,
+                    accountBalance: data.accountBalance,
+                    accountId: data.accountId,
+                    accountName: data.accountName,
+                    bankName: data.bankName,
+                    statementType: data.statementType,
+                    uploadedBy: data.uploadedBy,
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    createdDate: data.createdDate,
+                    confidenceOnParsing: data.confidenceOnParsing,
+                    pdfCreatedDate: data.pdfCreatedDate,
+                    pdfModifiedDate: data.pdfModifiedDate
+                }
 
                 //checks if statement file has been generated, if not, generate.
                 if (!Boolean(statement.reportLink)) {
@@ -239,6 +268,7 @@ const getManualStatementStatus = asyncHandler(async (req, res) => {
 })
 
 const getAllAnalysedStatements = asyncHandler(async (req, res) => {
+
     const user = await User.findById(req.user.id).populate({
         path: 'analyzedStatements',
         populate: {
@@ -260,8 +290,34 @@ const getAllAnalysedStatements = asyncHandler(async (req, res) => {
 })
 
 
+const getOneStatement = asyncHandler(async(req, res) => {
+    const statement = await AnalysedStatement.findById({_id: req.params.id}).populate('statementStatus')
+    if(statement){
+        return res
+        .status(200)
+        .json(
+            {
+                status: 'success',
+                message: "All analysed statement",
+                data: statement,
+                meta: {}
+            })
+    } else {
+        res
+            .status(401)
+            .json(
+                {
+                    status: 'error',
+                    message: `Statement with id ${req.params.id} not found`,
+                    meta: {}
+                })
+    }
+})
+
+
 export {
     manualStatementAnalysis,
     getAllAnalysedStatements,
-    getManualStatementStatus
+    getManualStatementStatus,
+    getOneStatement
 }

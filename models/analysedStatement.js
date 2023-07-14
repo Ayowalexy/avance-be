@@ -70,7 +70,14 @@ const analysedStatement = new Schema({
         accountNo: String,
         createdAt: String
     },
-    amountThatCanBeRecouped: Number,
+    amountThatCanBeRecouped: {
+        type: Number,
+        default: 0
+    },
+    amount_paid: {
+        type: Number,
+        default: 0
+    },
     reportLink: String,
     finalReportLink: String,
     bankStatementLink: String,
@@ -91,6 +98,9 @@ const analysedStatement = new Schema({
     businessDeveloper: {
         type: Schema.Types.ObjectId,
         ref: 'businessDeveloper'
+    },
+    details: {
+        type: Object
     }
 }, { timestamps: true })
 

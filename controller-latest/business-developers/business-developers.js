@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import Accountants from "../../models/accountant.js";
 import BusinessDevelopers from "../../models/business-developers.js";
 import { updateStatusSchema } from "../../utils/schema.js";
+import AnalysedStatement from "../../models/analysedStatement.js";
 
 
 const getAllBusinessDevelopers = asyncHandler(async (req, res) => {
@@ -20,13 +21,20 @@ const getAllBusinessDevelopers = asyncHandler(async (req, res) => {
 const getOneBusinessDeveloper = asyncHandler(async (req, res) => {
     const { id } = req.params
     const bd = await BusinessDevelopers.findById({ _id: id }, { password: 0 });
+    const uploads = await AnalysedStatement.find({
+        businessDeveloper: id
+    })
+
     if (bd) {
         res
             .status(200)
             .json(
                 {
                     status: 'success',
-                    data: bd,
+                    data: {
+                        bd,
+                        uploads
+                    },
                     meta: {}
                 })
     } else {
@@ -86,6 +94,11 @@ const deleteBusinesDeveloper = asyncHandler(async (req, res) => {
                 message: "Status updates successfully",
                 meta: {}
             })
+})
+
+
+const initialAnalysis = asyncHandler(async(req, res) => {
+    
 })
 
 export {

@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler'
 import User from '../models/usermodel.js';
 import Admin from '../models/adminModel.js';
 import AnalysedStatement from '../models/analysedStatement.js';
+import BusinessDevelopers from '../models/business-developers.js';
 
 const { verify } = jwt;
 
@@ -24,6 +25,45 @@ const protect = asyncHandler(async (req, res, next) => {
       if (user) {
         req.user = user
         next()
+      } else {
+        throw new Error('User does not exists')
+
+        res.status(401)
+      }
+    } catch (error) {
+      console.error(error)
+      res.status(401)
+      throw new Error('Not authorized, token failed')
+    }
+  }
+
+  if (!token) {
+    res.status(401)
+    throw new Error('Not authorized, no token')
+  }
+})
+
+const protect_ = asyncHandler(async (req, res, next) => {
+  let token
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    try {
+      token = req.headers.authorization.split(' ')[1]
+
+      const decoded = verify(token, process.env.SECRET)
+
+      const user = await User.findById(decoded.id)
+      const bd = await BusinessDevelopers.findById(decoded.id);
+      // console.log(user)
+      if (user) {
+        req.user = user
+        next()
+      } else if(bd){
+        req.user = bd
+        next();
       } else {
         throw new Error('User does not exists')
 
@@ -130,5 +170,6 @@ export {
   bankExist,
   isManual,
   isAutomatic,
-  isAuto
+  isAuto,
+  protect_
 }
