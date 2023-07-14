@@ -39,9 +39,17 @@ const bdprotect = asyncHandler(async (req, res, next) => {
 })
 
 
+const isAdmin = asyncHandler(async( req, res, next) => {
+    if(req.user?.role == 'admin'){
+        throw new Error('Only admins can perform this action')
+    } else {
+        next()
+    }
+})
 
 
 
 export {
-    bdprotect
+    bdprotect,
+    isAdmin
 }

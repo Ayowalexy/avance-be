@@ -12,6 +12,16 @@ const businessDevelopersSchema = new Schema({
     password: String,
     phoneNumber: String,
     fullName: String,
+    role: {
+        type: String,
+        default: 'developer',
+        enum: ['developer', 'admin']
+    },
+    status: {
+        type: String,
+        default: 'active',
+        enum: ['active', 'suspended']
+    },
     isUpdated: {
         type: Boolean,
         default: false

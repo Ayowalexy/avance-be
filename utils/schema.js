@@ -327,6 +327,10 @@ const createNewAccountSchema = Joi.object({
     role: Joi.string().valid('admin', 'user')
 })
 
+const updateStatusSchema = Joi.object({
+    status: Joi.string().valid('active', 'suspended').required()
+})
+
 const assignReportSchema = Joi.object({
     firm_id: Joi.string().required(),
     report_id: Joi.string().required(),
@@ -366,5 +370,6 @@ export {
     createNewAccountingFirmSchema,
     createNewAccountSchema,
     assignReportSchema,
-    reassignReportSchema
+    reassignReportSchema,
+    updateStatusSchema
 }
