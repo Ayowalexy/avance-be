@@ -44,7 +44,7 @@ router.route('/analytics').get(protect, hasStatemetKey, getStatementAnalytics)
 router.route('/webhook').post(bodyParser.text({type: '*/*'}), statementWebhook)
 router.route('/paystack-webhook').post(insightPaymentWebhook)
 router.route('/banks/:id').delete(protect, bankExist, deletebankAccount)
-router.route('/manual-banks').get(protect, getManualBanks)
+router.route('/manual-banks').get( getManualBanks)
 
 router.route('/deposit-types').get(getAllDepositTypes)
 router.route('/loan-types').get(getAllLoanTypes)
