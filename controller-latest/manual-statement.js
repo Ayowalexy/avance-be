@@ -66,7 +66,7 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
 
             await statementStatus.save();
 
-            const analysedStatement = new AnalysedStatement({
+            let obj = {
                 status: 'pending',
                 reportOwnerId: req.user.id,
                 statementRecoveryType: 'manual',
@@ -74,7 +74,13 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
                 account,
                 user: req.user,
                 bankStatementPassword: req.body?.password || ""
-            })
+            }
+
+            if(req.body.businessDeveloper){
+                obj.businessDeveloper = req.body.businessDeveloper
+            }
+
+            const analysedStatement = new AnalysedStatement(obj)
 
             analysedStatement.statementStatus.push(statementStatus);
 

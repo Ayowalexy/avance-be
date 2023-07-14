@@ -87,6 +87,10 @@ const analysedStatement = new Schema({
     analysingFirm: {
         type: Schema.Types.ObjectId,
         ref: "accounting firm"
+    },
+    businessDeveloper: {
+        type: Schema.Types.ObjectId,
+        ref: 'businessDeveloper'
     }
 }, { timestamps: true })
 

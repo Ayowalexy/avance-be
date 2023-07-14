@@ -12,6 +12,22 @@ const businessDevelopersSchema = new Schema({
     password: String,
     phoneNumber: String,
     fullName: String,
+    total_uploads: {
+        type: Number,
+        default: 0
+    },
+    completed_reports: {
+        type: Number,
+        default: 0
+    },
+    ongoing_request: {
+        type: Number,
+        default: 0
+    },
+    amount_recouped: {
+        type: Number,
+        default: 0
+    },
     role: {
         type: String,
         default: 'developer',
