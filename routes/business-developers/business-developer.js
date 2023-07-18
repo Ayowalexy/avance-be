@@ -25,7 +25,7 @@ router.route('/:id')
     .delete(bdprotect, isAdmin, deleteBusinesDeveloper)
 
 router.route('/payment-proof')
-    .post(bdprotect, upload.single('file'), uploadProveOfPayment)
+    .post(bdprotect, upload.single('proof'), uploadProveOfPayment)
 
 
 export default router;

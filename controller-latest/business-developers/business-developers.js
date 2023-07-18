@@ -99,6 +99,7 @@ const deleteBusinesDeveloper = asyncHandler(async (req, res) => {
 
 const uploadProveOfPayment = asyncHandler(async (req, res) => {
 
+    console.log(req.file)
     const { statement_id, date_of_payment, amount_paid } = req.body;
     if (statement_id && date_of_payment && amount_paid && req.file?.path) {
 
@@ -132,6 +133,30 @@ const uploadProveOfPayment = asyncHandler(async (req, res) => {
                 })
     }
 
+})
+
+
+const sendInitialReport = asyncHandler(async(req, res) => {
+    const { id = '' } = req.params;
+
+    const statement = await AnalysedStatement.findById({_id: id});
+    if(statement){
+        if(statement.reportLink && statement.initial_report_sent){
+            const name = statement.details?.clientFullName || 'User'
+            await sendReportLinkEmail(name)
+        } else {
+            res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: 'This report has already been sent'
+                    }
+                })
+        }
+    }
 })
 
 export {
