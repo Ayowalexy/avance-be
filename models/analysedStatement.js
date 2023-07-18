@@ -101,6 +101,14 @@ const analysedStatement = new Schema({
     },
     details: {
         type: Object
+    },
+    proof_of_payment: {
+        type: String
+    },
+    date_of_payment: String,
+    initial_report_sent: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 

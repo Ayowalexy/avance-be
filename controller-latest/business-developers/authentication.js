@@ -69,7 +69,8 @@ const login = asyncHandler(async (req, res) => {
                 fullName: user.fullName,
                 email: user.email,
                 isUpadated: user.isUpdated,
-                phoneNumber: user.phoneNumber
+                phoneNumber: user.phoneNumber,
+                _id: user._id
             }
             res
                 .status(200)

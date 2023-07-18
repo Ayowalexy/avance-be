@@ -97,13 +97,47 @@ const deleteBusinesDeveloper = asyncHandler(async (req, res) => {
 })
 
 
-const initialAnalysis = asyncHandler(async(req, res) => {
-    
+const uploadProveOfPayment = asyncHandler(async (req, res) => {
+
+    const { statement_id, date_of_payment, amount_paid } = req.body;
+    if (statement_id && date_of_payment && amount_paid && req.file?.path) {
+
+        await AnalysedStatement.findByIdAndUpdate(
+            { _id: statement_id },
+            {
+                proof_of_payment: req.file?.path,
+                date_of_payment,
+                amount_paid
+            }
+        )
+
+        res
+            .status(200)
+            .json(
+                {
+                    status: 'success',
+                    message: "Payment proof added successfully",
+                    meta: {}
+                })
+    } else {
+        res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: 'Invalid request'
+                    }
+                })
+    }
+
 })
 
 export {
     getAllBusinessDevelopers,
     getOneBusinessDeveloper,
     deleteBusinesDeveloper,
-    suspendBusinessDeveloper
+    suspendBusinessDeveloper,
+    uploadProveOfPayment
 }
