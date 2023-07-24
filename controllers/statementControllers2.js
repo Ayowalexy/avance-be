@@ -5,6 +5,7 @@ import Account from "../models/banksAccountModel.js";
 import { loand_d, statement, statusSchema } from "../utils/schema.js";
 import AnalysedStatement from "../models/analysedStatement.js";
 import Status from "../models/statusModel.js";
+import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccountOfficerInsightEmail.js";
 
 
 dotenv.config()
@@ -140,6 +141,8 @@ const addDocumentToLoan = asyncHandler(async (req, res) => {
         statement.documents.push(loan);
     }
     await statement.save()
+
+    await sendAccountOfficerEmailOfNewSignmentInsight(value.key)
 
     res
         .status(201)

@@ -19,6 +19,7 @@ import sendAccountOfficerRecoveryEmail from "../utils/sendAccountOfficerRecovery
 import sendUserRecoveryCommencementEmail from "../utils/sendUserRecoveryCommencementEmail.js";
 import AccountOfficerToUserEmail from "../utils/account_officer-user-email.js";
 import sendAccountOfficerAccountCreationEmail from "../utils/sendAccountOfficerAccountCreationEmail.js";
+import sendUserNoAmountFoundEmail from "../utils/sendUserNoAmountFound.js";
 
 const { sign, verify } = jwt;
 
@@ -143,9 +144,18 @@ const statementReport = asyncHandler(async (req, res) => {
             accountStatement.finalReportLink = url;
             accountStatement.analysedBy = account_officer;
             accountStatement.amountThatCanBeRecouped = value.amount;
+            
 
+            if (Number(value.amount) > 10000) {
+                accountStatement.status = 'authorization';
+                await sendUserInsightCompletedEmail(accountStatement.reportOwnerId, value.key, value.amount);
+            } else {
+                accountStatement.status = 'no charge';
+                await sendUserNoAmountFoundEmail(accountStatement.reportOwnerId, value.key);
+            }
             await accountStatement.save();
-            await sendUserInsightCompletedEmail(accountStatement.reportOwnerId, value.key);
+
+
             // const user = await User.findById(accountStatement.reportOwnerId);
 
 

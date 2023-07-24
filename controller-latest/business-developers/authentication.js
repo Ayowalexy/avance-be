@@ -70,7 +70,8 @@ const login = asyncHandler(async (req, res) => {
                 email: user.email,
                 isUpadated: user.isUpdated,
                 phoneNumber: user.phoneNumber,
-                _id: user._id
+                _id: user._id,
+                role: 'business developer'
             }
             res
                 .status(200)

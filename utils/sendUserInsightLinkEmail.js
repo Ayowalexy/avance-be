@@ -10,14 +10,17 @@ import { formatNumber } from "./formatNumber.js";
 
 const { sign, verify } = jwt;
 
+// Your account statement has been analysed and ${formatNumber(statement.amountThatCanBeRecouped)} has been entered as the amount that can be recovered, you can also view this on your dashboard with a link to download. 
+//                                      Download the report made on your statement by our account officer. <a href=${statement.finalReportLink}>Account Report</a>
+
 
 dotenv.config();
 
 
-const sendUserInsightCompletedEmail = async (id, key) => {
+const sendUserInsightCompletedEmail = async (id, key, amount) => {
 
     const user = await User.findById(id);
-    const statement = await AnalysedStatement.findOne({key: key});
+    const statement = await AnalysedStatement.findOne({ key: key });
     console.log('statement', statement)
     if (user) {
 
@@ -35,7 +38,7 @@ const sendUserInsightCompletedEmail = async (id, key) => {
                 email: "goldenimperialswifttech@gmail.com"
             },
             text: "Hello Sample text",
-            subject: "INSIGHT REPORT COMPLETE",
+            subject: `${name.toUpperCase()} Account Statement Review - Excess Charges Found! `,
             html: `<!DOCTYPE html>
             <html lang="en">
             
@@ -102,28 +105,30 @@ const sendUserInsightCompletedEmail = async (id, key) => {
                 <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
                     <div
                         style="border: 0.6px solid #CBCBCB; border-radius: 12px; margin-top: 40px; background-color: #FFFFFF; width: 80%; height: fit-content; padding: 20px;">
-                        <div style="font-family: Poppins-SemiBold; font-size: 20px; padding-top: 40px; color: #243656;">Hi ${name},</div>
+                        <div style="font-family: Poppins-SemiBold; font-size: 20px; padding-top: 40px; color: #243656;">Dear ${name},</div>
                         <div
                             style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 17px; padding-top: 30px; color: #121212;">
-                            Your account statement has been analysed and ${formatNumber(statement.amountThatCanBeRecouped)} has been entered as the amount that can be recovered, you can also view this on your dashboard with a link to download. 
-                                     Download the report made on your statement by our account officer. <a href=${statement.finalReportLink}>Account Report</a>
-                                </div>
-            
+                                We hope this email finds you well. We wish to inform you that, following a thorough review of your account statement, Avance has uncovered a sum of ₦${formatNumber(amount)} in excess charges that we can recover on your behalf.
+                                <br /><br />
+                                To proceed with this process, we kindly ask you to find the attached documents and complete the following steps:
+                                <br /><br />
+                                1. Letter of authorization - Print this <a href='https://res.cloudinary.com/dquiwka6j/raw/upload/v1690034294/mguu8dealhsyyfq4fm1z.docx'> letter </a> on your preferred letterhead, sign it, and then upload a scanned copy to your <a>dashboard</a> or send the scanned copy to <a href="mailto:support@avance.ng">support@avance.ng</a>.
+                                <br>
+                                2. Service Level Agreement (SLA)- Kindly review this <a href='https://res.cloudinary.com/dquiwka6j/raw/upload/v1690148651/vua7uczltvlagwa3bqsx.docx'> document </a>, sign it, and upload the executed copy to your <a>dashboard</a> or send a copy to <a href="mailto:support@avance.ng">support@avance.ng</a>.
+                                <br /><br />
+                                Completing these steps will enable us to take the necessary actions promptly and efficiently.
+                                <br /><br />
+                                If you have any questions or need assistance with the documents, feel free to reach out to our dedicated support team at <a href="mailto:support@avance.ng">support@avance.ng</a>.
+                                <br /><br />
+                                We appreciate your cooperation and look forward to receiving your prompt response.
+                                <br /><br />
+                                Best regards,
+                                <br />
+                                Avance
+                                
+                        </div>
+                        
                        
-            
-                        <div
-                            style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 13px; padding-top: 80px; color: #121212;">
-                            Note: Do not share this OTP with a third party. Avance takes your account security very seriously. No
-                            Avance staff will ask you for your password or card details.
-                        </div>
-                        <div
-                            style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 13px; padding-top: 50px; color: #121212;">
-                            Thank you,
-                        </div>
-                        <div
-                            style="font-family: Poppins-SemiBold; src: url(./assets/Poppins-SemiBold.ttf); font-size: 14px;  color: #121212;">
-                            Avance Team
-                        </div>
                     </div>
                 </div>
             

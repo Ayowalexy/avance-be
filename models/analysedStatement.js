@@ -52,9 +52,10 @@ const analysedStatement = new Schema({
     },
     status: {
         type: String,
-        enum: ['idle', 'processing', 'declined', 'completed', 'analyzing', 'available', 'pending', 'processed'],
+        enum: ['idle', 'processing', 'authorization', 'no charge', 'awaiting', 'declined', 'completed', 'analyzing', 'available', 'pending', 'processed'],
         default: 'processing'
     },
+
     documents: [{
         type: Object
     }],

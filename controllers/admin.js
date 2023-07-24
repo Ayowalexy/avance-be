@@ -172,7 +172,8 @@ const accountOfficerLogin = asyncHandler(async (req, res) => {
                 pendingReports: account_officer.pendingReports,
                 status: account_officer.status,
                 analysedReports: account_officer?.analysedReports?.length,
-                analyseStatus: account_officer.analyseStatus
+                analyseStatus: account_officer.analyseStatus,
+                _id: account_officer._id
             }
 
             res

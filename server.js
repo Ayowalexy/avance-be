@@ -37,9 +37,14 @@ import automaticFlow from './routes/automatic-statement/automatic-statement.js'
 import misc from './routes/misc/get-all-analysed-statement.js'
 import { DB } from "./config/db.js";
 import UniqueKey from "./models/unique-key.js";
+import sendAccountOfficerEmail from "./utils/sendEmail.js";
+import sendUserInsightCompletedEmail from "./utils/sendUserInsightLinkEmail.js";
 
 const app = express();
 
+(async () => {
+  // await sendUserInsightCompletedEmail('64bbe7e1f79988d185226e7b', 1134);
+})()
 
 
 // generator()
@@ -57,9 +62,10 @@ dotenv.config();
 
 
 
+
 connectDB();
 
-// clearBd()
+clearBd()
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

@@ -27,6 +27,7 @@ const userSchema = new Schema({
         type: Number,
         default: 0
     },
+   
     amountRecouped: {
         type: Number,
         default: 0
@@ -69,7 +70,8 @@ const userSchema = new Schema({
     paidInsights: [{
         type: Schema.Types.ObjectId,
         ref: Subscription
-    }]
+    }],
+
 
 }, { timestamps: true })
 

@@ -1,27 +1,28 @@
 import dotenv from "dotenv";
-import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';
-import otpGenerator from 'otp-generator'
 import User from "../models/usermodel.js";
-import AccountOfficer from "../models/accountOfficerModel.js";
+import AnalysedStatement from "../models/analysedStatement.js";
 
 const { sign, verify } = jwt;
+
+// Your account statement has been analysed and ${formatNumber(statement.amountThatCanBeRecouped)} has been entered as the amount that can be recovered, you can also view this on your dashboard with a link to download. 
+//                                      Download the report made on your statement by our account officer. <a href=${statement.finalReportLink}>Account Report</a>
 
 
 dotenv.config();
 
 
-const sendAccountOfficerEmail = async (id) => {
+const sendUserNoAmountFoundEmail = async (id, key) => {
 
-    const user = await AccountOfficer.findById(id);
+    const user = await User.findById(id);
+    const statement = await AnalysedStatement.findOne({ key: key });
     if (user) {
 
-        console.log('account officer--', user)
         const API_KEY = process.env.SG_API;
 
         sgMail.setApiKey(API_KEY);
-        
+
 
         const name = user.firstName.concat(' ', user.lastName)
 
@@ -32,7 +33,7 @@ const sendAccountOfficerEmail = async (id) => {
                 email: "goldenimperialswifttech@gmail.com"
             },
             text: "Hello Sample text",
-            subject: "STATEMENT REPORT",
+            subject: `${name.toUpperCase()} Account Statement Review Result`,
             html: `<!DOCTYPE html>
             <html lang="en">
             
@@ -99,28 +100,25 @@ const sendAccountOfficerEmail = async (id) => {
                 <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
                     <div
                         style="border: 0.6px solid #CBCBCB; border-radius: 12px; margin-top: 40px; background-color: #FFFFFF; width: 80%; height: fit-content; padding: 20px;">
-                        <div style="font-family: Poppins-SemiBold; font-size: 20px; padding-top: 40px; color: #243656;">Hi ${name},</div>
+                        <div style="font-family: Poppins-SemiBold; font-size: 20px; padding-top: 40px; color: #243656;">Dear ${name},</div>
                         <div
                             style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 17px; padding-top: 30px; color: #121212;">
-                            A customer has requested for an insight review and has been assigned to you, log into your dashboard to accept this
-                                    insight request. 
+                            I hope this email finds you well. We have thoroughly reviewed the account statement you provided, and we are pleased to inform you that no excess charges were uncovered by Avance.
+                              <br /><br />
+                                To proceed with this process, we kindly ask you to find the attached documents and complete the following steps:
+                                <br /><br />
+                                If you have any other bank statement(s) you'd like us to analyze, please feel free to share them with us.
+                                <br /><br />
+                                Thank you for choosing Avance, and we look forward to continuing our collaboration.
+                                 <br /><br />
+                               
+                                Best regards,
+                                <br />
+                                Avance
+                                
                         </div>
-            
+                        
                        
-            
-                        <div
-                            style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 13px; padding-top: 80px; color: #121212;">
-                            Note: Do not share this OTP with a third party. Avance takes your account security very seriously. No
-                            Avance staff will ask you for your password or card details.
-                        </div>
-                        <div
-                            style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 13px; padding-top: 50px; color: #121212;">
-                            Thank you,
-                        </div>
-                        <div
-                            style="font-family: Poppins-SemiBold; src: url(./assets/Poppins-SemiBold.ttf); font-size: 14px;  color: #121212;">
-                            Avance Team
-                        </div>
                     </div>
                 </div>
             
@@ -199,4 +197,4 @@ const sendAccountOfficerEmail = async (id) => {
 
 }
 
-export default sendAccountOfficerEmail;
+export default sendUserNoAmountFoundEmail;

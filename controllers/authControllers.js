@@ -60,8 +60,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const user = await User.findOne({ email: value.email })
-        .populate('bankAccounts')
-        .populate('analyzedStatements')
+        .populate('bankAccounts analyzedStatements')
 
 
     if (user) {
@@ -429,6 +428,50 @@ const joinWaitlist = asyncHandler(async (req, res) => {
 
 })
 
+const getOneUserDetails = asyncHandler(async (req, res) => {
+    const user = await User.findById({ _id: req.user._id }, { password: 0 }).populate('bankAccounts analyzedStatements')
+
+    const statements = user?.analyzedStatements?.map(ele => {
+        return {
+            analysedBy: ele.analysedBy,
+            key: ele.key,
+            isPaid: ele.isPaid,
+            accepted: ele.accepted,
+            status: ele.status,
+            amountThatCanBeRecouped: ele.amountThatCanBeRecouped,
+            reportLink: ele.reportLink,
+            account: {
+                name: "Access Bank",
+                accountNo: "0739******83",
+                bankImg: "https://nigerianbanks.xyz/logo/access-bank.png",
+                createdAt: new Date()
+            }
+        }
+    })
+    const userData = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        accountsLinked: user.accountsLinked,
+        analyzedReports: user.analyzedReports,
+        amountRecouped: user.amountRecouped,
+        createdAt: user.createdAt,
+        emailVerified: user.emailVerified,
+        bankAccounts: user.bankAccounts,
+        analyzedStatements: statements,
+        _id: user._id.toString()
+    }
+
+    res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                data: userData,
+                meta: {}
+            })
+})
+
 
 export {
     signUp,
@@ -437,5 +480,6 @@ export {
     verifyOtp,
     resetPassword,
     verifyEmail,
-    joinWaitlist
+    joinWaitlist,
+    getOneUserDetails
 }
