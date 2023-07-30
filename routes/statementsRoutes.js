@@ -49,7 +49,7 @@ router.route('/manual-banks').get( getManualBanks)
 router.route('/deposit-types').get(getAllDepositTypes)
 router.route('/loan-types').get(getAllLoanTypes)
 router.route('/add-document').post(addDocumentToLoan)
-router.route('/add-statement').post(addBankStatementFile)
+router.route('/add-statement').post(protect, addBankStatementFile)
 router.route('/get-statements').get(protect, getAllAnalysedStatements)
 
 router.route('/track-statement/:key').get(protect, getAllStatus);

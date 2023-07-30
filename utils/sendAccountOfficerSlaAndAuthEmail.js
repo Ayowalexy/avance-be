@@ -4,26 +4,21 @@ import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';
 import otpGenerator from 'otp-generator'
 import User from "../models/usermodel.js";
-import AnalysedStatement from "../models/analysedStatement.js";
 import AccountOfficer from "../models/accountOfficerModel.js";
 import { formatNumber } from "./formatNumber.js";
 
 const { sign, verify } = jwt;
 
-// Your account statement has been analysed and ${formatNumber(statement.amountThatCanBeRecouped)} has been entered as the amount that can be recovered, you can also view this on your dashboard with a link to download. 
-//                                      Download the report made on your statement by our account officer. <a href=${statement.finalReportLink}>Account Report</a>
-
 
 dotenv.config();
 
 
-const sendUserInsightCompletedEmail = async (id, key, amount) => {
+const sendAccountOfficerSlaAndAuthEmail = async (id, sla, engagementLetterLink) => {
 
-    const user = await User.findById(id);
-    const statement = await AnalysedStatement.findOne({ key: key });
-    console.log('statement', statement)
+    const user = await AccountOfficer.findById(id);
     if (user) {
 
+        // console.log('account officer', user)
         const API_KEY = process.env.SG_API;
 
         sgMail.setApiKey(API_KEY);
@@ -35,10 +30,11 @@ const sendUserInsightCompletedEmail = async (id, key, amount) => {
             to: user.email,
             from: {
                 name: "Avance Insight team",
-                email: "goldenimperialswifttech@gmail.com"
+                email: "goldenimperialswifttech@gmail.com",
+                cc: "support@avance.ng"
             },
             text: "Hello Sample text",
-            subject: `${name.toUpperCase()} Account Statement Review - Excess Charges Found! `,
+            subject: "RECOVERY REQUEST",
             html: `<!DOCTYPE html>
             <html lang="en">
             
@@ -105,30 +101,24 @@ const sendUserInsightCompletedEmail = async (id, key, amount) => {
                 <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
                     <div
                         style="border: 0.6px solid #CBCBCB; border-radius: 12px; margin-top: 40px; background-color: #FFFFFF; width: 80%; height: fit-content; padding: 20px;">
-                        <div style="font-family: Poppins-SemiBold; font-size: 20px; padding-top: 40px; color: #243656;">Dear ${name},</div>
+                        <div style="font-family: Poppins-SemiBold; font-size: 20px; padding-top: 40px; color: #243656;">Hi ${name},</div>
                         <div
                             style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 17px; padding-top: 30px; color: #121212;">
-                                We hope this email finds you well. We wish to inform you that, following a thorough review of your account statement, Avance has uncovered a sum of ₦${formatNumber(amount)} in excess charges that we can recover on your behalf.
-                                <br /><br />
-                                To proceed with this process, we kindly ask you to find the attached documents and complete the following steps:
-                                <br /><br />
-                                1. Letter of authorization - Print this <a href='https://res.cloudinary.com/dquiwka6j/raw/upload/v1690531956/uacd05bpvtyqg85gz47f.docx'> letter </a> on your preferred letterhead, sign it, and then upload a scanned copy to your <a href='http://localhost:3000/dashboard?redirect=true#${key}'>dashboard</a> or send the scanned copy to <a href="mailto:support@avance.ng">support@avance.ng</a>.
-                                <br>
-                                2. Service Level Agreement (SLA)- Kindly review this <a href='https://res.cloudinary.com/dquiwka6j/raw/upload/v1690531611/msffm4j8p7woyzi6f6ld.docx'> document </a>, sign it, and upload the executed copy to your <a href='http://localhost:3000/dashboard?redirect=true#${key}'>dashboard</a> or send a copy to <a href="mailto:support@avance.ng">support@avance.ng</a>.
-                                <br /><br />
-                                Completing these steps will enable us to take the necessary actions promptly and efficiently.
-                                <br /><br />
-                                If you have any questions or need assistance with the documents, feel free to reach out to our dedicated support team at <a href="mailto:support@avance.ng">support@avance.ng</a>.
-                                <br /><br />
-                                We appreciate your cooperation and look forward to receiving your prompt response.
-                                <br /><br />
-                                Best regards,
-                                <br />
-                                Avance
-                                
+
+                            Concerning the statement that you analysed, the report owner has supplied the signed SLA agreement and the authorization
+                            letter to proceed with the recovery. Find attached copy of the submitted documents. 
+                            <a href=${sla}>SLA letter</a>
+                            <br />
+                            <a href=${engagementLetterLink}>Authorization letter</a>
                         </div>
-                        
-                       
+                        <div
+                            style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 13px; padding-top: 50px; color: #121212;">
+                            Thank you,
+                        </div>
+                        <div
+                            style="font-family: Poppins-SemiBold; src: url(./assets/Poppins-SemiBold.ttf); font-size: 14px;  color: #121212;">
+                            Avance Team
+                        </div>
                     </div>
                 </div>
             
@@ -199,6 +189,7 @@ const sendUserInsightCompletedEmail = async (id, key, amount) => {
 
         try {
             const response = await sgMail.send(message)
+            console.log(response)
             return response.data
         } catch (e) {
             console.log(e)
@@ -207,4 +198,4 @@ const sendUserInsightCompletedEmail = async (id, key, amount) => {
 
 }
 
-export default sendUserInsightCompletedEmail;
+export default sendAccountOfficerSlaAndAuthEmail;

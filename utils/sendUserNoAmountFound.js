@@ -105,8 +105,7 @@ const sendUserNoAmountFoundEmail = async (id, key) => {
                             style="font-family: Poppins-Regular; src: url(./assets/Poppins-Regular.ttf); font-size: 17px; padding-top: 30px; color: #121212;">
                             I hope this email finds you well. We have thoroughly reviewed the account statement you provided, and we are pleased to inform you that no excess charges were uncovered by Avance.
                               <br /><br />
-                                To proceed with this process, we kindly ask you to find the attached documents and complete the following steps:
-                                <br /><br />
+                                
                                 If you have any other bank statement(s) you'd like us to analyze, please feel free to share them with us.
                                 <br /><br />
                                 Thank you for choosing Avance, and we look forward to continuing our collaboration.

@@ -52,7 +52,7 @@ const analysedStatement = new Schema({
     },
     status: {
         type: String,
-        enum: ['idle', 'processing', 'authorization', 'no charge', 'awaiting', 'declined', 'completed', 'analyzing', 'available', 'pending', 'processed'],
+        enum: ['idle', 'processing',  'authorization', 'no charge', 'awaiting', 'declined', 'completed', 'analyzing', 'available', 'pending', 'processed'],
         default: 'processing'
     },
 
@@ -80,6 +80,7 @@ const analysedStatement = new Schema({
         default: 0
     },
     reportLink: String,
+    slaLink: String,
     finalReportLink: String,
     bankStatementLink: String,
     bankStatementPassword: String,

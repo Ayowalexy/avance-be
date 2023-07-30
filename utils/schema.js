@@ -248,7 +248,8 @@ const statementStatusSchema = Joi.object({
 
 const statement = Joi.object({
     key: Joi.number().required(),
-    file: Joi.string().required()
+    sla: Joi.string().required(),
+    engagementLetterLink: Joi.string().required()
 })
 
 const sendEmailShema = Joi.object({

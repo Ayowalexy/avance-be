@@ -6,6 +6,7 @@ import { loand_d, statement, statusSchema } from "../utils/schema.js";
 import AnalysedStatement from "../models/analysedStatement.js";
 import Status from "../models/statusModel.js";
 import { sendAccountOfficerEmailOfNewSignmentInsight } from "../utils/sendAccountOfficerInsightEmail.js";
+import sendAccountOfficerSlaAndAuthEmail from "../utils/sendAccountOfficerSlaAndAuthEmail.js";
 
 
 dotenv.config()
@@ -170,13 +171,16 @@ const addBankStatementFile = asyncHandler(async (req, res) => {
                 })
     }
 
-    const userStatement = await AnalysedStatement.findOne({ key: value.key });
+    const userStatement = await AnalysedStatement.findOne({ key: value.key }).populate('analysedBy')
     if (userStatement) {
-        const data = {
-            documents: [value.file],
-            type: "Bank statement"
-        }
-        userStatement.documents.push(data);
+        userStatement.slaLink = value.sla;
+        userStatement.engagementLetterLink = value.engagementLetterLink;
+        userStatement.status = 'awaiting';
+        await sendAccountOfficerSlaAndAuthEmail(
+            userStatement.analysedBy._id.toString(),
+            userStatement.slaLink,
+            userStatement.engagementLetterLink
+        )
         await userStatement.save()
     }
     res

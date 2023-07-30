@@ -146,7 +146,7 @@ const statementReport = asyncHandler(async (req, res) => {
             accountStatement.amountThatCanBeRecouped = value.amount;
             
 
-            if (Number(value.amount) > 10000) {
+            if (Number(value.amount) > 50000) {
                 accountStatement.status = 'authorization';
                 await sendUserInsightCompletedEmail(accountStatement.reportOwnerId, value.key, value.amount);
             } else {

@@ -38,10 +38,16 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
 
         const matchingBank = allBanksArray.find(ele => ele.name.toLowerCase()?.includes(bankName.toLowerCase().trim()));
 
+        // const account = {
+        //     name: matchingBank?.name || bankName,
+        //     accountNo: accountNo,
+        //     bankImg: matchingBank?.logo || '',
+        //     createdAt: new Date()
+        // }
         const account = {
-            name: matchingBank?.name || bankName,
+            name: "Access Bank",
             accountNo: accountNo,
-            bankImg: matchingBank?.logo || '',
+            bankImg: "https://nigerianbanks.xyz/logo/access-bank.png",
             createdAt: new Date()
         }
 
@@ -313,6 +319,7 @@ const getOneStatement = asyncHandler(async(req, res) => {
                 })
     }
 })
+
 
 
 export {
