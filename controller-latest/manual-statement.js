@@ -51,19 +51,19 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
             createdAt: new Date()
         }
 
-        const access_token = await periculumToken();
+        // const access_token = await periculumToken();
 
         try {
-            const periculum = await axios.put(`${PERICULUM_BASE_URL}/statements`, form, {
-                headers: {
-                    "Authorization": `Bearer ${access_token}`,
-                    ...form.getHeaders(),
-                }
-            })
+            // const periculum = await axios.put(`${PERICULUM_BASE_URL}/statements`, form, {
+            //     headers: {
+            //         "Authorization": `Bearer ${access_token}`,
+            //         ...form.getHeaders(),
+            //     }
+            // })
 
-            const key = periculum?.data?.key;
+            // const key = periculum?.data?.key;
 
-            console.log(periculum.data)
+            // console.log(periculum.data)
 
             //initialized statement status with default manual message
             const statementStatus = new StatementStatus({
@@ -77,11 +77,14 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
                 status: 'pending',
                 reportOwnerId: req.user.id,
                 statementRecoveryType: 'manual',
-                key,
+                // key,
                 account,
                 user: req.user,
-                bankStatementPassword: req.body?.password || ""
+                bankStatementPassword: req.body?.password || "",
+                bankStatementLink: req.file.path
             }
+
+            console.log('obj', obj, req.file)
 
             if (req.body.businessDeveloper) {
                 const businessDeveloper = await BusinessDevelopers.findById(req.body.businessDeveloper)
@@ -97,7 +100,7 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
             analysedStatement.statementStatus.push(statementStatus);
 
             await analysedStatement.save();
-            await uploadBankStatement(req.file.buffer, key);
+            // await uploadBankStatement(req.file.buffer, key);
 
             if (user) {
                 user.analyzedReports = Number(user.analyzedReports) + 1;
@@ -110,7 +113,7 @@ const manualStatementAnalysis = asyncHandler(async (req, res) => {
                 .json(
                     {
                         status: 'success',
-                        key: periculum?.data?.key,
+                        // key: periculum?.data?.key,
                         message: "We have sent your retrieved statements to our partners, we'll send you a feedback shortly",
                         meta: {}
                     })
